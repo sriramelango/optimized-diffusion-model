@@ -1,0 +1,68 @@
+2025-07-02 17:49:04,983 - 
+
+-- Process 0 terminated with the following error:
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 45, in run_multiprocess
+    setup(rank, world_size, port)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 34, in setup
+    dist.init_process_group(
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 907, in init_process_group
+    default_pg = _new_process_group_helper(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 1013, in _new_process_group_helper
+    raise RuntimeError("Distributed package doesn't have NCCL " "built in")
+RuntimeError: Distributed package doesn't have NCCL built in
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 48, in run_multiprocess
+    cleanup()
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 40, in cleanup
+    dist.destroy_process_group()
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 1125, in destroy_process_group
+    assert pg is not None
+           ^^^^^^^^^^^^^^
+AssertionError
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 202, in main
+    mp.spawn(run_multiprocess, args=(cfg.ngpus, cfg, work_dir, port), nprocs=cfg.ngpus, join=True)
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/multiprocessing/spawn.py", line 239, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method='spawn')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/multiprocessing/spawn.py", line 197, in start_processes
+    while not context.join():
+              ^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/multiprocessing/spawn.py", line 160, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 0 terminated with the following error:
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 45, in run_multiprocess
+    setup(rank, world_size, port)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 34, in setup
+    dist.init_process_group(
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 907, in init_process_group
+    default_pg = _new_process_group_helper(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 1013, in _new_process_group_helper
+    raise RuntimeError("Distributed package doesn't have NCCL " "built in")
+RuntimeError: Distributed package doesn't have NCCL built in
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 48, in run_multiprocess
+    cleanup()
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/Reflected-Diffusion/run_train.py", line 40, in cleanup
+    dist.destroy_process_group()
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/distributed/distributed_c10d.py", line 1125, in destroy_process_group
+    assert pg is not None
+           ^^^^^^^^^^^^^^
+AssertionError
+

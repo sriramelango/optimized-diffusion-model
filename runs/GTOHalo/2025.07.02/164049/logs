@@ -1,0 +1,311 @@
+2025-07-02 16:40:49,727 - Unet1D(
+  (init_conv): Conv1d(1, 64, kernel_size=(7,), stride=(1,), padding=(3,))
+  (time_mlp): Sequential(
+    (0): SinusoidalPosEmb()
+    (1): Linear(in_features=64, out_features=256, bias=True)
+    (2): GELU(approximate='none')
+    (3): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (classes_mlp): Sequential(
+    (0): Linear(in_features=1, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=64, bias=True)
+  )
+  (downs): ModuleList(
+    (0): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=64, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=64, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 64, kernel_size=(4,), stride=(2,), padding=(1,))
+    )
+    (1): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=64, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=64, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 128, kernel_size=(4,), stride=(2,), padding=(1,))
+    )
+    (2): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=128, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=128, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(128, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 128, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(128, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+    )
+  )
+  (ups): ModuleList(
+    (0): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=256, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=256, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(384, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Conv1d(384, 256, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(256, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Sequential(
+        (0): Upsample(size=33, mode='nearest')
+        (1): Conv1d(256, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+      )
+    )
+    (1): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=128, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=128, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(192, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Conv1d(192, 128, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(128, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 128, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Sequential(
+        (0): Upsample(size=67, mode='nearest')
+        (1): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      )
+    )
+    (2): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=256, out_features=64, bias=True)
+        )
+        (class_mlp): Sequential(
+          (0): GELU(approximate='none')
+          (1): Linear(in_features=64, out_features=64, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): GELU(approximate='none')
+        )
+        (res_conv): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+    )
+  )
+  (mid_block1): ResnetBlock(
+    (mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=256, out_features=256, bias=True)
+    )
+    (class_mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=64, out_features=256, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (block2): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (res_conv): Identity()
+  )
+  (mid_attn): Residual(
+    (fn): PreNorm(
+      (fn): Attention(
+        (to_qkv): Conv1d(256, 384, kernel_size=(1,), stride=(1,), bias=False)
+        (to_out): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+      )
+      (norm): RMSNorm()
+    )
+  )
+  (mid_block2): ResnetBlock(
+    (mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=256, out_features=256, bias=True)
+    )
+    (class_mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=64, out_features=256, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (block2): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (res_conv): Identity()
+  )
+  (final_res_block): ResnetBlock(
+    (mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=256, out_features=64, bias=True)
+    )
+    (class_mlp): Sequential(
+      (0): GELU(approximate='none')
+      (1): Linear(in_features=64, out_features=64, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (block2): Block(
+      (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+      (act): GELU(approximate='none')
+    )
+    (res_conv): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+  )
+  (final_conv): Conv1d(64, 1, kernel_size=(1,), stride=(1,))
+)
+2025-07-02 16:40:49,729 - EMA: <models.ema.ExponentialMovingAverage object at 0x17fe2a1d0>
+2025-07-02 16:40:49,729 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0002
+    maximize: False
+    weight_decay: 0
+)
+2025-07-02 16:40:49,729 - Scaler: None.
+2025-07-02 16:40:49,729 - No checkpoint found at runs/GTOHalo/2025.07.02/164049/checkpoints-meta/checkpoint.pth. Returned the same state as input
