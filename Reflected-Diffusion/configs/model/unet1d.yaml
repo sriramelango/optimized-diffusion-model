@@ -1,0 +1,17 @@
+name: unet1d
+dim: 64
+class_dim: 1
+seq_length: 67
+channels: 1
+dim_mults: [1, 2, 4]
+embed_class_layers_dims: [64, 64]
+self_condition: false
+resnet_block_groups: 4
+learned_variance: false
+learned_sinusoidal_cond: false
+random_fourier_features: false
+learned_sinusoidal_dim: 16
+sinusoidal_pos_emb_theta: 10000
+attn_dim_head: 32
+attn_heads: 4
+ema_rate: 0.999 
