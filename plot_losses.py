@@ -78,7 +78,7 @@ plt.text(0.02, 0.82, f'Progress: {current_step:,} / {total_steps:,} steps ({prog
 
 plt.tight_layout()
 plt.savefig('training_loss_plot.png', dpi=300, bbox_inches='tight')
-plt.show()
+#plt.show()
 
 print(f"Plot saved as 'training_loss_plot.png'")
 print(f"Current step: {current_step}")
