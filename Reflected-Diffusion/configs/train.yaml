@@ -8,8 +8,8 @@ ngpus: 1
 dataroot: datasets
 
 training:
-  batch_size: 1024
-  n_iters: 1500
+  batch_size: 8192
+  n_iters: 1000
   snapshot_freq: 500
   log_freq: 1
   eval_freq: 100
@@ -20,7 +20,7 @@ training:
   drop_label: 0.2
 
 eval:
-  batch_size: 1024
+  batch_size: 8192
 
 sde: 
   name: vesde
@@ -41,13 +41,12 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.00006
+  lr: 0.00048
   beta1: 0.9
   beta2: 0.999
   eps: 1e-8
   warmup: 5000
   grad_clip: 1.
-
 
 hydra:
   run:
