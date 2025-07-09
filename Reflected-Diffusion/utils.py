@@ -74,12 +74,13 @@ def load_denoising_model(ckpt_dir, model, device=torch.device('cpu')):
 
 
 def save_checkpoint(ckpt_dir, state):
-  saved_state = {
-    'optimizer': state['optimizer'].state_dict(),
-    'model': state['model'].module.state_dict(),
-    'ema': state['ema'].state_dict(),
-    'step': state['step'],
-    'scaler': state['scaler'].state_dict() if state['scaler'] else None
-  }
-  torch.save(saved_state, ckpt_dir)
+    checkpoint = {
+        'step': state['step'],
+        'model': state['model'].module.state_dict() if hasattr(state['model'], 'module') else state['model'].state_dict(),
+        'optimizer': state['optimizer'].state_dict(),
+        'ema': state['ema'].state_dict() if 'ema' in state else None,
+        'scaler': state['scaler'].state_dict() if ('scaler' in state and state['scaler'] is not None) else None,
+        'config': state['config'],
+    }
+    torch.save(checkpoint, ckpt_dir)
 

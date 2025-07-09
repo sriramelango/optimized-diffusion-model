@@ -126,7 +126,16 @@ def get_cf_score_fn(sde, model, class_labels, weight):
         score_conditioned = concat_score[:x.shape[0]]
         score_clean = concat_score[x.shape[0]:]
 
-        return (1 + weight)[:, None, None, None] * score_conditioned - weight[:, None, None, None] * score_clean
+        # Ensure weight is a tensor and not None
+        if weight is None:
+            weight_tensor = torch.zeros(x.shape[0], device=x.device)
+        elif isinstance(weight, (float, int)):
+            weight_tensor = torch.full((x.shape[0],), float(weight), device=x.device)
+        else:
+            weight_tensor = weight
+        weight_tensor = weight_tensor.view(-1, 1, 1, 1)
+
+        return (1 + weight_tensor) * score_conditioned - weight_tensor * score_clean
 
     return weighted_score_fn
 

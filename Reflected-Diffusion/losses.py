@@ -75,15 +75,12 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
         Returns:
             loss: A scalar that represents the average loss value across the mini-batch.
         """
-        print('DEBUG: [loss_fn] batch shape:', batch.shape)
         score_fn = mutils.get_score_fn(sde, model, train=train)
         t = torch.rand(batch.shape[0], device=batch.device) * (sde.T - eps) + eps
         z = torch.randn_like(batch)
         mean, std = sde.marginal_prob(batch, t)
         perturbed_data = cube.reflect(mean + std[:, None, None, None] * z)
-        print('DEBUG: [loss_fn] perturbed_data shape:', perturbed_data.shape)
         score = score_fn(perturbed_data, t, class_labels=class_labels)
-        print('DEBUG: [loss_fn] score shape:', score.shape)
         score_hk = cube.score_hk(perturbed_data, mean, std)
 
         if not likelihood_weighting:
@@ -94,6 +91,17 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
 
         losses = reduce_op(losses.reshape(losses.shape[0], -1), dim=-1)
         loss = torch.mean(losses)
+        # NaN check for loss
+        if torch.isnan(loss):
+            print('WARNING: NaN detected in loss!')
+        # NaN check for gradients (after backward)
+        def nan_hook(grad):
+            if torch.isnan(grad).any():
+                print('WARNING: NaN detected in gradients!')
+            return grad
+        for param in model.parameters():
+            if param.requires_grad:
+                param.register_hook(nan_hook)
         return loss
 
     return loss_fn

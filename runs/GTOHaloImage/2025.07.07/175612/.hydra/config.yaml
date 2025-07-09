@@ -1,0 +1,81 @@
+ngpus: 1
+dataroot: datasets
+training:
+  batch_size: 256
+  n_iters: 1500
+  snapshot_freq: 500
+  log_freq: 50
+  eval_freq: 100
+  snapshot_freq_for_preemption: 10000
+  snapshot_sampling: true
+  likelihood_weighting: false
+  reduce_mean: false
+  drop_label: 0.2
+eval:
+  batch_size: 256
+sde:
+  name: vesde
+  sigma_min: 0.01
+  sigma_max: 5
+  num_scales: 1000
+sampling:
+  n_steps_each: 1
+  noise_removal: true
+  probability_flow: false
+  snr: 0.01
+  method: pc
+  predictor: euler_maruyama
+  corrector: none
+  denoiser: none
+optim:
+  weight_decay: 0
+  optimizer: Adam
+  lr: 2.0e-05
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+  warmup: 5000
+  grad_clip: 1.0
+model:
+  name: ncsnpp
+  channels: 1
+  image_size: 8
+  image_width: 9
+  num_classes: 1
+  cond_drop_prob: 0.5
+  conditional: true
+  init_scale: 0.0
+  ema_rate: 0.999
+  nf: 64
+  ch_mult:
+  - 1
+  - 2
+  - 2
+  num_res_blocks: 2
+  attn_resolutions:
+  - 8
+  resamp_with_conv: true
+  embedding_type: fourier
+  progressive: none
+  progressive_input: none
+  progressive_combine: sum
+  progressive_output_skip: false
+  fourier_scale: 16
+  resblock_type: ddpm
+  skip_rescale: true
+  nonlinearity: swish
+  fir: false
+  fir_kernel:
+  - 1
+  - 3
+  - 3
+  - 1
+  dropout: 0.1
+  scale_by_sigma: false
+data:
+  dataset: GTOHaloImage
+  pkl_path: GTO_Halo_DM/data/training_data_boundary_100000.pkl
+  num_channels: 1
+  image_size: 8
+  image_width: 9
+  classes: true

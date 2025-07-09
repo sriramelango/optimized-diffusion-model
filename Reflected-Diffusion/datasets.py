@@ -70,22 +70,29 @@ class GTOHaloTrajectoryDataset(Dataset):
         with open(pkl_path, 'rb') as f:
             data = pickle.load(f)
         self.data = torch.tensor(data, dtype=torch.float32)
+        self.mean = 0.4652
+        self.std = 0.1811
     def __len__(self):
         return self.data.shape[0]
     def __getitem__(self, idx):
-        return self.data[idx], 0  # dummy label for compatibility
+        x = self.data[idx]
+        x = (x - self.mean) / self.std
+        return x, 0  # dummy label for compatibility
 
 class GTOHaloImageDataset(Dataset):
     def __init__(self, pkl_path):
         with open(pkl_path, 'rb') as f:
             data = pickle.load(f)
         self.data = data.astype(np.float32)
+        self.mean = 0.4652
+        self.std = 0.1811
     def __len__(self):
         return self.data.shape[0]
     def __getitem__(self, idx):
         vec = self.data[idx]
         classifier = np.array([vec[0]], dtype=np.float32)  # first value as label
         padded = np.pad(vec, (0, 72 - len(vec)), 'constant')
+        padded = (padded - self.mean) / self.std
         img = padded.reshape(1, 8, 9)
         return torch.tensor(img, dtype=torch.float32), torch.tensor(classifier, dtype=torch.float32)
 

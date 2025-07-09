@@ -84,7 +84,8 @@ def _run(rank, world_size, work_dir, cfg):
     mprint(f"Optimizer: {optimizer}")
     mprint(f"Scaler: {scaler}.")
     
-    state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0, scaler=scaler) 
+    state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0, scaler=scaler)
+    state['config'] = cfg
 
     state = utils.restore_checkpoint(checkpoint_meta_dir, state, device)
     initial_step = int(state['step'])
@@ -162,10 +163,10 @@ def _run(rank, world_size, work_dir, cfg):
 
                 if cfg.data.classes:
                     weight = 4 * torch.rand(sampling_shape[0]).to(device)
-                    class_labels = torch.randint(0, cfg.data.num_classes, (sampling_shape[0],)).to(device)
+                    class_labels = torch.zeros(sampling_shape[0], 1, device=weight.device)
                 else:
                     weight = None
-                    class_labels = None
+                    class_labels = torch.zeros(sampling_shape[0], 1, device=device)
 
                 ema.store(score_model.parameters())
                 ema.copy_to(score_model.parameters())
@@ -213,6 +214,7 @@ def _run_single(cfg, work_dir):
     mprint(f"Optimizer: {optimizer}")
     mprint(f"Scaler: {scaler}.")
     state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0, scaler=scaler)
+    state['config'] = cfg
     state = utils.restore_checkpoint(checkpoint_meta_dir, state, device)
     initial_step = int(state['step'])
     # Build data iterators
@@ -254,7 +256,7 @@ def _run_single(cfg, work_dir):
             if cfg.training.snapshot_sampling:
                 mprint(f"Generating samples at step: {step}")
                 weight = None
-                class_labels = None
+                class_labels = torch.zeros(sampling_shape[0], 1, device=device)
                 ema.store(score_model.parameters())
                 ema.copy_to(score_model.parameters())
                 sample, n = sampling_fn(score_model, weight=weight, class_labels=class_labels)
