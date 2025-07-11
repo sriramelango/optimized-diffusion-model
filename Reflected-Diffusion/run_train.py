@@ -134,6 +134,8 @@ def _run(rank, world_size, work_dir, cfg):
         batch = next(train_iter)
         batch_imgs = batch[0].to(device)
         batch_class = batch[1].to(device) if cfg.data.classes else None
+        if step == initial_step:
+            print('TRAINING: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
         loss = train_step_fn(state, batch_imgs, class_labels=batch_class)
 
         if step % cfg.training.log_freq == 0:
@@ -148,7 +150,8 @@ def _run(rank, world_size, work_dir, cfg):
             eval_batch = next(eval_iter)
             batch_imgs = eval_batch[0].to(device)
             batch_class = eval_batch[1].to(device) if cfg.data.classes else None
-            eval_loss = eval_step_fn(state, batch_imgs)
+            print('VALIDATION: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
+            eval_loss = eval_step_fn(state, batch_imgs, class_labels=batch_class)
             mprint("step: %d, evaluation_loss: %.5e" % (step, eval_loss.item()))
 
         if step != 0 and step % cfg.training.snapshot_freq == 0 or step == num_train_steps:
@@ -239,6 +242,8 @@ def _run_single(cfg, work_dir):
         batch = next(train_iter)
         batch_imgs = batch[0].to(device)
         batch_class = batch[1].to(device) if hasattr(cfg.data, 'classes') and cfg.data.classes else None
+        if step == initial_step:
+            print('TRAINING: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
         loss = train_step_fn(state, batch_imgs, class_labels=batch_class)
         if step % cfg.training.log_freq == 0:
             mprint("step: %d, training_loss: %.5e" % (step, loss.item()))
@@ -248,6 +253,8 @@ def _run_single(cfg, work_dir):
             eval_batch = next(eval_iter)
             batch_imgs = eval_batch[0].to(device)
             batch_class = eval_batch[1].to(device) if hasattr(cfg.data, 'classes') and cfg.data.classes else None
+            if step == initial_step:
+                print('VALIDATION: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
             eval_loss = eval_step_fn(state, batch_imgs, class_labels=batch_class)
             mprint("step: %d, evaluation_loss: %.5e" % (step, eval_loss.item()))
         if step != 0 and step % cfg.training.snapshot_freq == 0 or step == num_train_steps:
@@ -270,14 +277,26 @@ from run_train import run_multiprocess
 @hydra.main(version_base=None, config_path="configs", config_name="train")
 def main(cfg):
     hydra_cfg = HydraConfig.get()
-    work_dir = hydra_cfg.run.dir if hydra_cfg.mode == RunMode.RUN else os.path.join(hydra_cfg.sweep.dir, hydra_cfg.sweep.subdir)
-    utils.makedirs(work_dir)
-
+    
+    # Create new training runs directory structure
+    training_runs_dir = "Training Runs"
+    utils.makedirs(training_runs_dir)
+    
+    # Create datetime-based subdirectory
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y.%m.%d_%H%M%S")
+    run_dir = os.path.join(training_runs_dir, timestamp)
+    utils.makedirs(run_dir)
+    
+    # Set work_dir to the new structure
+    work_dir = run_dir
+    
     # Run the training pipeline
     port = int(np.random.randint(10000, 20000))
     logger = utils.get_logger(os.path.join(work_dir, "logs"))
-    if hydra_cfg.mode != RunMode.RUN:
-        logger.info(f"Run id: {hydra_cfg.job.id}")
+    logger.info(f"Training run started at: {timestamp}")
+    logger.info(f"Run directory: {work_dir}")
+    
     # If ngpus == 1, skip distributed
     if cfg.ngpus == 1:
         _run_single(cfg, work_dir)

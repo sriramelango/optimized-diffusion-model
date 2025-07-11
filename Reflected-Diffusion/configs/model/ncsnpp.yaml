@@ -1,6 +1,6 @@
 name: ncsnpp
 channels: 1
-image_size: 8
+image_size: 9
 image_width: 9
 num_classes: 1
 cond_drop_prob: 0.5
@@ -10,7 +10,7 @@ ema_rate: 0.999
 nf: 64
 ch_mult: [1, 2, 2]
 num_res_blocks: 2
-attn_resolutions: [8]
+attn_resolutions: [9]
 resamp_with_conv: true
 embedding_type: fourier
 progressive: none

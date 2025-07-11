@@ -91,9 +91,10 @@ class GTOHaloImageDataset(Dataset):
     def __getitem__(self, idx):
         vec = self.data[idx]
         classifier = np.array([vec[0]], dtype=np.float32)  # first value as label
-        padded = np.pad(vec, (0, 72 - len(vec)), 'constant')
+        # Pad to 81 values (9×9) instead of 72 (8×9) to make it square
+        padded = np.pad(vec, (0, 81 - len(vec)), 'constant')
         padded = (padded - self.mean) / self.std
-        img = padded.reshape(1, 8, 9)
+        img = padded.reshape(1, 9, 9)  # 9×9 = 81 values
         return torch.tensor(img, dtype=torch.float32), torch.tensor(classifier, dtype=torch.float32)
 
 def get_dataset(config, evaluation=False, distributed=True):

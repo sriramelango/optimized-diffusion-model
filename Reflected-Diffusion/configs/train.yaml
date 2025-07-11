@@ -8,7 +8,7 @@ ngpus: 1
 dataroot: datasets
 
 training:
-  batch_size: 8192
+  batch_size: 1024
   n_iters: 1000
   snapshot_freq: 500
   log_freq: 1
@@ -20,7 +20,7 @@ training:
   drop_label: 0.2
 
 eval:
-  batch_size: 8192
+  batch_size: 1024
 
 sde: 
   name: vesde
@@ -41,7 +41,7 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.00048
+  lr: 0.0004
   beta1: 0.9
   beta2: 0.999
   eps: 1e-8
@@ -50,9 +50,9 @@ optim:
 
 hydra:
   run:
-    dir: runs/${data.dataset}/${now:%Y.%m.%d}/${now:%H%M%S}
+    dir: Training Runs/${now:%Y.%m.%d_%H%M%S}
   sweep:
-    dir: runs/${data.dataset}/${now:%Y.%m.%d}/${now:%H%M%S}
+    dir: Training Runs/${now:%Y.%m.%d_%H%M%S}
     subdir: ${hydra.job.num}
   # launcher:
   #   max_num_timeout: null
