@@ -176,7 +176,7 @@ Examples:
     # Set device
     if args.device == 'auto':
         import torch
-        args.device = "cuda" if torch.cuda.is_available() else "cpu"
+        args.device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
     
     # Test mode adjustments
     if args.test_mode:

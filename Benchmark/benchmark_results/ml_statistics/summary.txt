@@ -3,19 +3,19 @@ ML STATISTICS BENCHMARK RESULTS
 ============================================================
 
 STANDARD METRICS:
-  mse: 0.113003
-  mae: 0.285711
-  mean_error: 0.285711
-  std_error: 0.177123
-  kl_divergence: 2.036811
-  wasserstein_distance: 0.195828
+  mse: 0.132835
+  mae: 0.323459
+  mean_error: 0.323459
+  std_error: 0.167955
+  kl_divergence: 2.875381
+  wasserstein_distance: 0.243532
 
 SAMPLING EFFICIENCY:
-  total_sampling_time: 42.726671
-  average_sampling_time_per_sample: 21.363335
-  sampling_time_std: 1.905305
-  samples_per_second: 0.046809
-  min_sampling_time: 19.458031
-  max_sampling_time: 23.268640
+  total_sampling_time: 59.460327
+  average_sampling_time_per_sample: 29.730163
+  sampling_time_std: 0.242529
+  samples_per_second: 0.033636
+  min_sampling_time: 29.487635
+  max_sampling_time: 29.972692
 
 ============================================================

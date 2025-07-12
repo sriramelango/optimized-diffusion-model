@@ -136,7 +136,7 @@ class RVESDE(SDE):
         sigma = self.sigma_min * (self.sigma_max / self.sigma_min) ** t
         drift = torch.zeros_like(x)
         diffusion = sigma * torch.sqrt(torch.tensor(2 * (np.log(self.sigma_max) - np.log(self.sigma_min)),
-                                                    device=t.device))
+                                                    device=t.device, dtype=torch.float32))
         return drift, diffusion
 
     def marginal_prob(self, x, t):

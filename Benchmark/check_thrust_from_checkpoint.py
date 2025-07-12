@@ -28,7 +28,7 @@ def load_config(base_config_path, data_config_path, model_config_path):
 def main(checkpoint_path, base_config_path, data_config_path, model_config_path, num_samples, output_dir):
     print("[INFO] Loading config...")
     cfg = load_config(base_config_path, data_config_path, model_config_path)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
     print("[INFO] Creating model and loading checkpoint...")
     score_model = mutils.create_model(cfg).to(device)

@@ -65,7 +65,7 @@ class MLStatisticsConfig:
     save_plots: bool = True
     
     # Device config
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
 
 class MLStatisticsBenchmarker:

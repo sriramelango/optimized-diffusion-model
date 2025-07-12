@@ -39,7 +39,7 @@ import datasets
 
 # Import from GTO_Halo_DM
 try:
-    sys.path.append('../GTO_Halo_DM/data_generation_scripts')
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../GTO_Halo_DM/data_generation_scripts')))
     from cr3bp_earth_mission_simulator_boundary_diffusion_warmstart import CR3BPEarthMissionWarmstartSimulatorBoundary
     from support_scripts.support import get_GTO_in_CR3BP_units
     GTO_HALO_DM_AVAILABLE = True
@@ -47,9 +47,20 @@ try:
     print("✓ Physical validation enabled - CR3BP simulator available")
 except ImportError as e:
     print(f"Warning: GTO_Halo_DM modules not available: {e}")
-    print("Physical validation will be disabled. Install GTO_Halo_DM dependencies for full functionality.")
-    CR3BPEarthMissionWarmstartSimulatorBoundary = None
-    GTO_HALO_DM_AVAILABLE = False
+    print(f"sys.path was: {sys.path}")
+    # Try adding the absolute path to GTO_Halo_DM and re-import
+    try:
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../GTO_Halo_DM')))
+        from data_generation_scripts.cr3bp_earth_mission_simulator_boundary_diffusion_warmstart import CR3BPEarthMissionWarmstartSimulatorBoundary
+        from data_generation_scripts.support_scripts.support import get_GTO_in_CR3BP_units
+        GTO_HALO_DM_AVAILABLE = True
+        print("✓ GTO_Halo_DM modules loaded successfully (second attempt)")
+        print("✓ Physical validation enabled - CR3BP simulator available")
+    except ImportError as e2:
+        print(f"Failed second import attempt: {e2}")
+        print(f"sys.path is now: {sys.path}")
+        CR3BPEarthMissionWarmstartSimulatorBoundary = None
+        GTO_HALO_DM_AVAILABLE = False
 
 
 @dataclass
@@ -76,7 +87,7 @@ class GTOHaloBenchmarkConfig:
     save_plots: bool = True
     
     # Device config
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
 
 class GTOHaloBenchmarker:
@@ -242,13 +253,14 @@ class GTOHaloBenchmarker:
         
         # --- FLATTEN TO (N, 67) ---
         # Model outputs (N, 1, 9, 9) = (N, 81) total values
-        # Original data is 67-dimensional, padded with 14 zeros to make 81
-        # So we need to flatten and take only the first 67 values
+        # Original data is 67-dimensional, padded with 14 zeros to make 81 for the model input
+        # After model prediction, output is flattened and only the first 67 values are used (rest are padding)
+        # This is intentional and matches the data pipeline
         samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
-        samples = samples[:, :67]  # Remove padding, keep only first 67 values
-        
+        samples = samples[:, :67]  # Keep only the first 67 values
         print(f"Model output shape: {samples.shape}")
         print(f"Flattened shape: {samples.shape}")
+        # No need for further padding; model output is always truncated to 67 for downstream use
         
         # Extract components from 67-vector
         # Assuming format: [class_label, time_vars, thrust_vars, mass_vars, other_vars]
@@ -259,12 +271,12 @@ class GTOHaloBenchmarker:
         
         print(f"Model output shape: {all_samples.shape}")
         print(f"Flattened shape: {samples.shape}")
-        print(f"Expected shape: (N, 67), but got (N, 64)")
+        print(f"Expected shape: (N, 67), but got (N, {samples.shape[1]})")
         
         # For now, pad with zeros to match 67 dimensions
         # This is a temporary fix - ideally the model should output 67 values
-        padded_samples = np.zeros((all_samples_flat.shape[0], 67))
-        padded_samples[:, :64] = all_samples_flat
+        padded_samples = np.zeros((samples.shape[0], 67))
+        padded_samples[:, :samples.shape[1]] = samples
         print(f"Padded shape: {padded_samples.shape}")
         
         return padded_samples, sampling_times
@@ -337,6 +349,9 @@ class GTOHaloBenchmarker:
     
     def compute_physical_validation_metrics(self, samples: np.ndarray) -> Dict[str, Any]:
         """Compute physical validation metrics using CR3BP simulator."""
+        print(f"DEBUG: enable_physical_validation = {self.config.enable_physical_validation}")
+        print(f"DEBUG: GTO_HALO_DM_AVAILABLE = {GTO_HALO_DM_AVAILABLE}")
+        
         if not self.config.enable_physical_validation or not GTO_HALO_DM_AVAILABLE:
             print("⚠️  CRITICAL: Physical validation disabled - GTO_Halo_DM modules not available")
             print("⚠️  This means NO feasibility checking, NO optimality analysis, NO trajectory validation")
@@ -406,14 +421,21 @@ class GTOHaloBenchmarker:
             
             num_test_samples = min(10, len(samples))  # Test with up to 10 samples
             
+            # Denormalize halo energies from [0,1] to physical range [0.008, 0.095]
+            min_halo_energy = 0.008
+            max_halo_energy = 0.095
+            
             for i in range(num_test_samples):
                 initial_guess = samples[i, 1:]  # Exclude class label
-                halo_energy = samples[i, 0]  # Class label as halo energy
+                normalized_halo_energy = samples[i, 0]  # Class label as normalized halo energy
                 
-                print(f"Testing sample {i+1}/{num_test_samples} with halo energy {halo_energy:.3f}")
+                # Denormalize halo energy
+                halo_energy = normalized_halo_energy * (max_halo_energy - min_halo_energy) + min_halo_energy
+                
+                print(f"Testing sample {i+1}/{num_test_samples} with normalized halo energy {normalized_halo_energy:.3f} -> physical halo energy {halo_energy:.6f}")
                 
                 # Run simulation
-                result_data = simulator.simulate(earth_initial_guess=initial_guess)
+                result_data = simulator.simulate(earth_initial_guess=initial_guess, halo_energy=halo_energy)
                 result_data_list.append(result_data)
                 initial_guesses_list.append(initial_guess)
             
@@ -422,6 +444,10 @@ class GTOHaloBenchmarker:
             
         except Exception as e:
             print(f"Warning: CR3BP simulation failed: {e}")
+            print(f"Exception type: {type(e).__name__}")
+            print(f"Exception details: {str(e)}")
+            import traceback
+            print(f"Traceback: {traceback.format_exc()}")
             physical_metrics = {'simulation_error': str(e)}
         
         # Clean up temporary file
@@ -505,10 +531,11 @@ class GTOHaloBenchmarker:
         
         # --- FLATTEN TO (N, 67) ---
         # Model outputs (N, 1, 9, 9) = (N, 81) total values
-        # Original data is 67-dimensional, padded with 14 zeros to make 81
-        # So we need to flatten and take only the first 67 values
+        # Original data is 67-dimensional, padded with 14 zeros to make 81 for the model input
+        # After model prediction, output is flattened and only the first 67 values are used (rest are padding)
+        # This is intentional and matches the data pipeline
         samples = samples.reshape(samples.shape[0], -1)  # (N, 81)
-        samples = samples[:, :67]  # Remove padding, keep only first 67 values
+        samples = samples[:, :67]  # Keep only the first 67 values
         
         print(f"Model output shape: {samples.shape}")
         print(f"Flattened shape: {samples.shape}")

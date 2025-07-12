@@ -1,18 +1,18 @@
 {
   "standard_metrics": {
-    "mse": 0.11300323543357185,
-    "mae": 0.2857108375620354,
-    "mean_error": 0.2857108375620354,
-    "std_error": 0.17712298759102982,
-    "kl_divergence": 2.0368110012866985,
-    "wasserstein_distance": 0.1958281112082058
+    "mse": 0.13283485810803314,
+    "mae": 0.323459358263528,
+    "mean_error": 0.323459358263528,
+    "std_error": 0.16795505845249145,
+    "kl_divergence": 2.875380762362573,
+    "wasserstein_distance": 0.24353183519289118
   },
   "sampling_efficiency": {
-    "total_sampling_time": 42.72667098045349,
-    "average_sampling_time_per_sample": 21.363335490226746,
-    "sampling_time_std": 1.9053045511245728,
-    "samples_per_second": 0.046809169872255106,
-    "min_sampling_time": 19.458030939102173,
-    "max_sampling_time": 23.26864004135132
+    "total_sampling_time": 59.46032691001892,
+    "average_sampling_time_per_sample": 29.73016345500946,
+    "sampling_time_std": 0.24252855777740479,
+    "samples_per_second": 0.03363587292459041,
+    "min_sampling_time": 29.487634897232056,
+    "max_sampling_time": 29.972692012786865
   }
 }

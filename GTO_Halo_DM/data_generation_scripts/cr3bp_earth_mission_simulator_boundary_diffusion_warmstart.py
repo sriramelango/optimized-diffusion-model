@@ -84,9 +84,13 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
 
         self.print_statistics(result_data=result_data_list, earth_initial_guess_list=initial_guesses_list)
 
-    def simulate(self, earth_initial_guess):
+    def simulate(self, earth_initial_guess, halo_energy=None):
 
         pydylan.set_logging_severity(pydylan.enum.error)
+
+        # Use provided halo_energy if available, otherwise use self.halo_energy
+        if halo_energy is not None:
+            self.halo_energy = halo_energy
 
         # Set up environment and thruster #############################################################################
         earth = pydylan.Body("Earth")
@@ -142,8 +146,15 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
 
         # the start states are the final of gto_spiral
         earth_mission_start = pydylan.FixedBoundaryCondition(gto_spiral.get_final_states())
+        
+        # Validate manifold length bounds
+        min_length = min(self.min_manifold_length, self.max_manifold_length)
+        max_length = max(self.min_manifold_length, self.max_manifold_length)
+        
         # left integrate from the some point of the halo manifold, use the arc as the end boundary condition
-        earth_mission_end = pydylan.LibrationOrbitBoundaryCondition(halo, pydylan.enum.PerturbationDirection.StableLeft, np.asarray([halo.orbit_energy, 0 * halo.orbit_period, self.min_manifold_length]), np.asarray([halo.orbit_energy, 1 * halo.orbit_period, self.max_manifold_length]))
+        earth_mission_end = pydylan.LibrationOrbitBoundaryCondition(halo, pydylan.enum.PerturbationDirection.StableLeft, 
+                                                                   np.asarray([halo.orbit_energy, 0 * halo.orbit_period, min_length]), 
+                                                                   np.asarray([halo.orbit_energy, 1 * halo.orbit_period, max_length]))
 
         # Major optimization for earth mission #################################################################
         earth_mission = pydylan.Mission(cr3bp, earth_mission_start, earth_mission_end, pydylan.enum.snopt)  # specify the mode of the mission,
