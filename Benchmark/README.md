@@ -159,3 +159,20 @@ python run_benchmark.py \
 - Physical validation requires the pydylan package for CR3BP simulations
 - Results are saved in both JSON and human-readable formats
 - The framework includes comprehensive error handling and logging 
+
+## Example: Working GTO Halo Benchmark Command (Test Mode)
+
+The following command successfully ran the GTO Halo benchmark with 2 samples and batch size 2, using the 214700 checkpoint folder:
+
+```bash
+python run_benchmark.py \
+  --benchmark_type gto_halo_only \
+  --model_path "Training Runs/2025.07.11_214700" \
+  --data_path "GTO_Halo_DM/data/training_data_boundary_100000.pkl" \
+  --num_samples 2 \
+  --batch_size 2 \
+  --test_mode \
+  --verbose \
+  --enable_physical_validation \
+  --output_dir Benchmark/benchmark_results/gto_halo_214700
+``` 

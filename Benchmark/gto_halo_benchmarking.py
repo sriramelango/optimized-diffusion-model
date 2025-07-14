@@ -390,6 +390,7 @@ class GTOHaloBenchmarker:
         }
         
         # Save samples temporarily for CR3BP simulator
+        os.makedirs(self.config.output_dir, exist_ok=True)
         temp_sample_path = os.path.join(self.config.output_dir, 'temp_samples.pkl')
         with open(temp_sample_path, 'wb') as f:
             pickle.dump(samples, f)
