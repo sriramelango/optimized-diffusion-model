@@ -1,0 +1,39 @@
+{
+  "gto_halo_metrics": {
+    "class_label_mean": 0.4906466241972521,
+    "class_label_std": 0.2828658886213886,
+    "class_label_min": 0.004398750141263008,
+    "class_label_max": 0.9886081218719482,
+    "time_vars_mean": 0.4705084699081878,
+    "time_vars_std": 0.29710396192430216,
+    "time_vars_min": 0.0013111906591802835,
+    "time_vars_max": 0.997650682926178,
+    "thrust_vars_mean": 0.2418383464148695,
+    "thrust_vars_std": 0.16418573456861418,
+    "thrust_vars_min": 0.00031030637910589576,
+    "thrust_vars_max": 0.9996035695075989,
+    "mass_vars_mean": 0.4940817224079122,
+    "mass_vars_std": 0.2903956466562801,
+    "mass_vars_min": 0.0046735526993870735,
+    "mass_vars_max": 0.9925063848495483,
+    "boundary_violations_total": "0",
+    "boundary_violation_rate": 0.0,
+    "thrust_boundary_violations": "0",
+    "thrust_boundary_violation_rate": 0.0,
+    "has_nan": "False",
+    "has_inf": "False",
+    "has_negative": "False",
+    "has_above_one": "False"
+  },
+  "physical_validation": {
+    "simulation_error": "[Errno 2] No such file or directory: 'Benchmark/benchmark_results/gto_halo_214700_100/gto_halo/cr3bp_results/earth_mission_alpha_0.04720732322335243_seed_0_DM.pdf'"
+  },
+  "sampling_efficiency": {
+    "total_sampling_time": 35.608160972595215,
+    "average_sampling_time_per_sample": 35.608160972595215,
+    "sampling_time_std": 0.0,
+    "samples_per_second": 0.028083449767867003,
+    "min_sampling_time": 35.608160972595215,
+    "max_sampling_time": 35.608160972595215
+  }
+}

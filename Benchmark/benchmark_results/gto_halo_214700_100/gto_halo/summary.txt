@@ -1,0 +1,42 @@
+============================================================
+GTO HALO BENCHMARK RESULTS
+============================================================
+
+GTO HALO METRICS:
+  class_label_mean: 0.490647
+  class_label_std: 0.282866
+  class_label_min: 0.004399
+  class_label_max: 0.988608
+  time_vars_mean: 0.470508
+  time_vars_std: 0.297104
+  time_vars_min: 0.001311
+  time_vars_max: 0.997651
+  thrust_vars_mean: 0.241838
+  thrust_vars_std: 0.164186
+  thrust_vars_min: 0.000310
+  thrust_vars_max: 0.999604
+  mass_vars_mean: 0.494082
+  mass_vars_std: 0.290396
+  mass_vars_min: 0.004674
+  mass_vars_max: 0.992506
+  boundary_violations_total: 0
+  boundary_violation_rate: 0.000000
+  thrust_boundary_violations: 0
+  thrust_boundary_violation_rate: 0.000000
+  has_nan: False
+  has_inf: False
+  has_negative: False
+  has_above_one: False
+
+PHYSICAL VALIDATION METRICS:
+  simulation_error: [Errno 2] No such file or directory: 'Benchmark/benchmark_results/gto_halo_214700_100/gto_halo/cr3bp_results/earth_mission_alpha_0.04720732322335243_seed_0_DM.pdf'
+
+SAMPLING EFFICIENCY:
+  total_sampling_time: 35.608161
+  average_sampling_time_per_sample: 35.608161
+  sampling_time_std: 0.000000
+  samples_per_second: 0.028083
+  min_sampling_time: 35.608161
+  max_sampling_time: 35.608161
+
+============================================================

@@ -416,22 +416,22 @@ class GTOHaloBenchmarker:
         
         # Run physical validation
         try:
-            # Run simulation for a subset of samples
+            # Run simulation for all samples (was limited to 10 before)
             result_data_list = []
             initial_guesses_list = []
-            
-            num_test_samples = min(10, len(samples))  # Test with up to 10 samples
-            
+
+            num_test_samples = len(samples)  # Test all generated samples
+
             # Denormalize halo energies from [0,1] to physical range [0.008, 0.095]
             min_halo_energy = 0.008
             max_halo_energy = 0.095
-            
+
             for i in range(num_test_samples):
                 initial_guess = samples[i, 1:]  # Exclude class label
                 normalized_halo_energy = samples[i, 0]  # Class label as normalized halo energy
                 
                 # Denormalize halo energy
-                halo_energy = normalized_halo_energy * (max_halo_energy - min_halo_energy) + min_halo_energy
+                halo_energy = min_halo_energy + (max_halo_energy - min_halo_energy) * normalized_halo_energy
                 
                 print(f"Testing sample {i+1}/{num_test_samples} with normalized halo energy {normalized_halo_energy:.3f} -> physical halo energy {halo_energy:.6f}")
                 

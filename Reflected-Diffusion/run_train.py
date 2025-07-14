@@ -2,6 +2,7 @@ import datetime
 import gc
 import os
 import os.path
+import argparse
 
 import hydra
 import numpy as np
@@ -43,17 +44,21 @@ def cleanup():
 def run_multiprocess(rank, world_size, cfg, work_dir, port):
     try:
         setup(rank, world_size, port)
-        _run(rank, world_size, work_dir, cfg)
+        _run(rank, world_size, work_dir, cfg, cfg.checkpoint_path)
     finally:
         cleanup()
 
 
-def _run(rank, world_size, work_dir, cfg):
+def _run(rank, world_size, work_dir, cfg, checkpoint_path=None):
 
     # Create directories for experimental logs
     sample_dir = os.path.join(work_dir, "samples")
     checkpoint_dir = os.path.join(work_dir, "checkpoints")
     checkpoint_meta_dir = os.path.join(work_dir, "checkpoints-meta", "checkpoint.pth")
+    if checkpoint_path is not None:
+        restore_path = checkpoint_path
+    else:
+        restore_path = checkpoint_meta_dir
     if rank == 0:
         utils.makedirs(sample_dir)
         utils.makedirs(checkpoint_dir)
@@ -87,7 +92,7 @@ def _run(rank, world_size, work_dir, cfg):
     state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0, scaler=scaler)
     state['config'] = cfg
 
-    state = utils.restore_checkpoint(checkpoint_meta_dir, state, device)
+    state = utils.restore_checkpoint(restore_path, state, device)
     initial_step = int(state['step'])
 
     # Build data iterators
@@ -186,7 +191,7 @@ def _run(rank, world_size, work_dir, cfg):
                 dist.barrier()
 
 
-def _run_single(cfg, work_dir):
+def _run_single(cfg, work_dir, checkpoint_path=None):
     import utils
     import torch
     import numpy as np
@@ -218,7 +223,11 @@ def _run_single(cfg, work_dir):
     mprint(f"Scaler: {scaler}.")
     state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0, scaler=scaler)
     state['config'] = cfg
-    state = utils.restore_checkpoint(checkpoint_meta_dir, state, device)
+    if checkpoint_path is not None:
+        restore_path = checkpoint_path
+    else:
+        restore_path = checkpoint_meta_dir
+    state = utils.restore_checkpoint(restore_path, state, device)
     initial_step = int(state['step'])
     # Build data iterators
     train_ds, eval_ds = datasets.get_dataset(cfg)
@@ -299,7 +308,7 @@ def main(cfg):
     
     # If ngpus == 1, skip distributed
     if cfg.ngpus == 1:
-        _run_single(cfg, work_dir)
+        _run_single(cfg, work_dir, checkpoint_path=cfg.checkpoint_path)
     else:
         try:
             mp.set_start_method("forkserver")

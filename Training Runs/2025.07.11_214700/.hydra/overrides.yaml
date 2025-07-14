@@ -1,2 +1,1 @@
-- data=gto_halo
-- model=ncsnpp
+- checkpoint_path=Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth

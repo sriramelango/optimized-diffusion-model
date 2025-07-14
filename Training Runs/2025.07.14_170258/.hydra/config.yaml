@@ -36,7 +36,6 @@ optim:
   eps: 1.0e-08
   warmup: 5000
   grad_clip: 1.0
-checkpoint_path: Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth
 model:
   name: ncsnpp
   channels: 1

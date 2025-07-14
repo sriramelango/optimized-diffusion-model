@@ -193,22 +193,17 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
         feasibility = earth_mission.is_best_solution_feasible()
 
         problem_results = earth_mission.get_all_feasible_solutions()
-        #print('snppt evaluation shape', problem_results[0].snopt_control_evaluations.shape)
-
-        # Get snopt control evaluations if solution is feasible
-        #if earth_mission.is_best_solution_feasible():
-        #    print("The solution is feasible, getting snopt control evaluation data")
-        #    snopt_control_evaluations = problem_results[0].snopt_control_evaluations
-        #else:
-        #    print("From this initalization, the solution is infeasible")
-        #    snopt_control_evaluations = None
-
-        # TODO: to save space, only save data that are used: result.control, feasibility, snopt_control_inform,
-        if earth_mission.is_best_solution_feasible():
+        # Handle case where no feasible solution is found (problem_results is empty)
+        if problem_results and earth_mission.is_best_solution_feasible():
+            # Custom inform logic: 1=optimal (no infeasibilities), 3=infeasible (some infeasibilities)
+            inform = 1 if getattr(problem_results[0].snopt_result, 'number_of_infeasibilities', 1) == 0 else 3
             result_data = {"results.control": results.control,
                            "feasibility": feasibility,
-                           "snopt_control_evaluations": problem_results[0].snopt_control_evaluations,
-                           "snopt_inform": problem_results[0].snopt_inform,
+                           # Changed from snopt_control_evaluations (which does not exist) to snopt_result.control
+                           # This stores the SNOPT control trajectory for the solution
+                           "snopt_control_evaluations": problem_results[0].snopt_result.control,
+                           # Custom inform logic: 1=optimal, 3=infeasible (mimics SNOPT inform code)
+                           "snopt_inform": inform,
                            "thrust": self.thrust,
                            "solving_time": solving_time,
                            "cost_alpha": self.halo_energy}
@@ -217,10 +212,11 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
             manifold_arc_DM = halo.generate_manifold_arc(results_DM.control[-2],results_DM.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
             self.plot_DM(gto_spiral.get_states(),manifold_arc.mani_states,results,manifold_arc_DM.mani_states,results_DM)
         else:
+            # No feasible solution found, set inform to 3 (infeasible)
             result_data = {"results.control": None,
-                           "feasibility": feasibility,
+                           "feasibility": False,
                            "snopt_control_evaluations": None,
-                           "snopt_inform": None,
+                           "snopt_inform": 3,
                            "thrust": None,
                            "solving_time": solving_time,
                            "cost_alpha": self.halo_energy}
@@ -313,6 +309,8 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
         ax.plot(results_DM.states[gap_index+1:, 0], results_DM.states[gap_index+1:, 1], color='Orange', label = 'Initial Guess')
         plt.legend()
         #ax.plot(results_DM.states[:, 0], results_DM.states[:, 1], color='Orange')
+        # Ensure the result_folder directory exists before saving
+        os.makedirs(self.result_folder, exist_ok=True)
         fig.savefig(f"{self.result_folder}/earth_mission_alpha_{self.halo_energy}_seed_{self.seed}_DM.pdf", format='pdf', dpi=300)
 
 if __name__ == "__main__":

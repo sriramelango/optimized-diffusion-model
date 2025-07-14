@@ -54,7 +54,8 @@ def restore_checkpoint(ckpt_dir, state, device, ddp=True):
   else:
     loaded_state = torch.load(ckpt_dir, map_location=device)
     state['optimizer'].load_state_dict(loaded_state['optimizer'])
-    if ddp:
+    # Fix: Only use .module if it exists
+    if hasattr(state['model'], 'module'):
         state['model'].module.load_state_dict(loaded_state['model'], strict=False)
     else:
         state['model'].load_state_dict(loaded_state['model'], strict=False)
