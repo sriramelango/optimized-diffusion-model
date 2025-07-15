@@ -1,7 +1,7 @@
 ngpus: 1
 dataroot: datasets
 training:
-  batch_size: 8192
+  batch_size: 16384
   n_iters: 40000
   snapshot_freq: 1000
   log_freq: 1
@@ -12,7 +12,7 @@ training:
   reduce_mean: false
   drop_label: 0.2
 eval:
-  batch_size: 8192
+  batch_size: 16384
 sde:
   name: vesde
   sigma_min: 0.01
@@ -30,13 +30,13 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.0016
+  lr: 0.00016
   beta1: 0.9
   beta2: 0.999
   eps: 1.0e-08
   warmup: 5000
-  grad_clip: 1.0
-checkpoint_path: Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth
+  grad_clip: 0.5
+checkpoint_path: Training Runs/2025.07.14_173150/checkpoints/checkpoint_4.pth
 model:
   name: ncsnpp
   channels: 1
@@ -71,7 +71,7 @@ model:
   - 3
   - 3
   - 1
-  dropout: 0.1
+  dropout: 0.2
   scale_by_sigma: false
 data:
   dataset: GTOHaloImage

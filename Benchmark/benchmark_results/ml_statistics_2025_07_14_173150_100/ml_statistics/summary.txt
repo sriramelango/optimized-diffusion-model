@@ -1,0 +1,21 @@
+============================================================
+ML STATISTICS BENCHMARK RESULTS
+============================================================
+
+STANDARD METRICS:
+  mse: 0.114820
+  mae: 0.313321
+  mean_error: 0.313321
+  std_error: 0.129033
+  kl_divergence: 3.428565
+  wasserstein_distance: 0.236291
+
+SAMPLING EFFICIENCY:
+  total_sampling_time: 34.310796
+  average_sampling_time_per_sample: 34.310796
+  sampling_time_std: 0.000000
+  samples_per_second: 0.029145
+  min_sampling_time: 34.310796
+  max_sampling_time: 34.310796
+
+============================================================

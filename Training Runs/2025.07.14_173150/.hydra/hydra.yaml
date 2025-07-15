@@ -1,6 +1,6 @@
 hydra:
   run:
-    dir: Training Runs/2025.07.11_214700
+    dir: Training Runs/2025.07.14_173150
   sweep:
     dir: Training Runs/${now:%Y.%m.%d_%H%M%S}
     subdir: ${hydra.job.num}
@@ -135,14 +135,14 @@ hydra:
   output_subdir: .hydra
   overrides:
     hydra:
-    - hydra.run.dir=Training Runs/2025.07.11_214700
+    - hydra.run.dir=Training Runs/2025.07.14_173150
     - hydra.mode=RUN
     task:
-    - checkpoint_path=Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth
+    - checkpoint_path=Training Runs/2025.07.14_173150/checkpoints/checkpoint_4.pth
   job:
     name: run_train
     chdir: null
-    override_dirname: checkpoint_path=Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth
+    override_dirname: checkpoint_path=Training Runs/2025.07.14_173150/checkpoints/checkpoint_4.pth
     id: ???
     num: ???
     config_name: train
@@ -156,21 +156,25 @@ hydra:
   runtime:
     version: 1.3.2
     version_base: '1.3'
-    cwd: /home/se7159/optimized-diffusion-model
+    cwd: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized
+      Diffusion Model
     config_sources:
     - path: hydra.conf
       schema: pkg
       provider: hydra
-    - path: /home/se7159/optimized-diffusion-model/Reflected-Diffusion/configs
+    - path: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized
+        Diffusion Model/Reflected-Diffusion/configs
       schema: file
       provider: main
-    - path: /home/se7159/optimized-diffusion-model/Reflected-Diffusion/configs
+    - path: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized
+        Diffusion Model/Reflected-Diffusion/configs
       schema: file
       provider: command-line
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /home/se7159/optimized-diffusion-model/Training Runs/2025.07.11_214700
+    output_dir: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized
+      Diffusion Model/Training Runs/2025.07.14_173150
     choices:
       data: gto_halo
       model: ncsnpp
