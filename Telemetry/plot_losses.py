@@ -51,49 +51,69 @@ if __name__ == "__main__":
         print("No training loss data found in the log file.")
         exit(1)
 
+    # --- Filter range ---
+    # Set the range you want to plot here:
+    min_step = 2500
+    max_step = 4000
+    print(f"Plotting steps from {min_step} to {max_step}.")
+    # Filter training data
+    filtered_train = [(s, l) for s, l in zip(train_steps, train_losses) if min_step <= s <= max_step]
+    if filtered_train:
+        f_train_steps, f_train_losses = zip(*filtered_train)
+    else:
+        f_train_steps, f_train_losses = [], []
+    # Filter evaluation data
+    filtered_eval = [(s, l) for s, l in zip(eval_steps, eval_losses) if min_step <= s <= max_step]
+    if filtered_eval:
+        f_eval_steps, f_eval_losses = zip(*filtered_eval)
+    else:
+        f_eval_steps, f_eval_losses = [], []
+
     plt.figure(figsize=(12, 8))
-    plt.plot(train_steps, train_losses, 'b-', linewidth=2, label='Training Loss', alpha=0.8)
-    plt.scatter(train_steps, train_losses, color='blue', s=30, alpha=0.6)
-    if eval_steps:
-        plt.plot(eval_steps, eval_losses, 'r-', linewidth=2, label='Evaluation Loss', alpha=0.8)
-        plt.scatter(eval_steps, eval_losses, color='red', s=30, alpha=0.6)
+    plt.plot(f_train_steps, f_train_losses, 'b-', linewidth=2, label='Training Loss', alpha=0.8)
+    plt.scatter(f_train_steps, f_train_losses, color='blue', s=30, alpha=0.6)
+    if f_eval_steps:
+        plt.plot(f_eval_steps, f_eval_losses, 'r-', linewidth=2, label='Evaluation Loss', alpha=0.8)
+        plt.scatter(f_eval_steps, f_eval_losses, color='red', s=30, alpha=0.6)
 
     plt.xlabel('Training Step', fontsize=14)
     plt.ylabel('Loss', fontsize=14)
-    plt.title('Training and Evaluation Loss Progress\nGTO Halo Diffusion Model', fontsize=16, fontweight='bold')
+    plt.title(f'Training and Evaluation Loss Progress\nGTO Halo Diffusion Model\n(Steps {min_step}-{max_step})', fontsize=16, fontweight='bold')
     plt.grid(True, alpha=0.3)
     plt.legend(fontsize=12)
 
-    if train_losses:
-        min_train = min(train_losses)
-        max_train = max(train_losses)
-        current_train = train_losses[-1]
+    if f_train_losses:
+        min_train = min(f_train_losses)
+        max_train = max(f_train_losses)
+        current_train = f_train_losses[-1]
         plt.text(0.02, 0.98, f'Training Loss Range: {min_train:.2f} - {max_train:.2f}\nCurrent: {current_train:.2f}', 
                  transform=plt.gca().transAxes, verticalalignment='top', 
                  bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
 
-    if eval_losses:
-        min_eval = min(eval_losses)
-        max_eval = max(eval_losses)
-        current_eval = eval_losses[-1]
+    if f_eval_losses:
+        min_eval = min(f_eval_losses)
+        max_eval = max(f_eval_losses)
+        current_eval = f_eval_losses[-1]
         plt.text(0.02, 0.90, f'Eval Loss Range: {min_eval:.2f} - {max_eval:.2f}\nCurrent: {current_eval:.2f}', 
                  transform=plt.gca().transAxes, verticalalignment='top',
                  bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.8))
 
-    total_steps = 1300001
-    current_step = max(train_steps) if train_steps else 0
-    progress = (current_step / total_steps) * 100
-    plt.text(0.02, 0.82, f'Progress: {current_step:,} / {total_steps:,} steps ({progress:.2f}%)', 
-             transform=plt.gca().transAxes, verticalalignment='top',
-             bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))
+    if f_train_steps:
+        total_steps = 1300001
+        current_step = max(f_train_steps)
+        progress = (current_step / total_steps) * 100
+        plt.text(0.02, 0.82, f'Progress: {current_step:,} / {total_steps:,} steps ({progress:.2f}%)', 
+                 transform=plt.gca().transAxes, verticalalignment='top',
+                 bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))
 
     plt.tight_layout()
     plt.savefig('training_loss_plot.png', dpi=300, bbox_inches='tight')
     # plt.show()  # Disabled for SSH/headless environments
 
     print(f"Plot saved as 'training_loss_plot.png'")
-    print(f"Current step: {current_step}")
-    print(f"Progress: {progress:.2f}%")
-    print(f"Training loss range: {min(train_losses):.2f} - {max(train_losses):.2f}")
-    if eval_losses:
-        print(f"Evaluation loss range: {min(eval_losses):.2f} - {max(eval_losses):.2f}") 
+    if f_train_steps:
+        print(f"Current step: {current_step}")
+        print(f"Progress: {progress:.2f}%")
+        print(f"Training loss range: {min(f_train_losses):.2f} - {max(f_train_losses):.2f}")
+    if f_eval_losses:
+        print(f"Evaluation loss range: {min(f_eval_losses):.2f} - {max(f_eval_losses):.2f}") 
