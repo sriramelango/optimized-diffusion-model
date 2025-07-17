@@ -8,7 +8,7 @@ ngpus: 1
 dataroot: datasets
 
 training:
-  batch_size: 8192
+  batch_size: 4096
   n_iters: 40000
   snapshot_freq: 1000
   log_freq: 1
@@ -41,12 +41,12 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.0016
+  lr: 0.0005
   beta1: 0.9
   beta2: 0.999
   eps: 1e-8
-  warmup: 5000
-  grad_clip: 1.
+  warmup: 10000
+  grad_clip: 0.5
 
 hydra:
   run:
