@@ -26,8 +26,7 @@ import copy
 from tqdm.auto import tqdm
 import pdb
 
-#from denoising_diffusion_pytorch.version import __version__
-from version import __version__
+__version__ = '0.0.0'  # Placeholder version
 
 # constants
 
