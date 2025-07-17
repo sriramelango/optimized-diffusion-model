@@ -1,0 +1,18 @@
+{
+  "standard_metrics": {
+    "mse": 0.11481981687134778,
+    "mae": 0.31332128474250104,
+    "mean_error": 0.31332128474250104,
+    "std_error": 0.12903328794794164,
+    "kl_divergence": 3.428565184814801,
+    "wasserstein_distance": 0.23629075943489838
+  },
+  "sampling_efficiency": {
+    "total_sampling_time": 34.31079602241516,
+    "average_sampling_time_per_sample": 34.31079602241516,
+    "sampling_time_std": 0.0,
+    "samples_per_second": 0.029145345370206577,
+    "min_sampling_time": 34.31079602241516,
+    "max_sampling_time": 34.31079602241516
+  }
+}

@@ -1,0 +1,147 @@
+2025-07-15 10:52:49,254 - Training run started at: 2025.07.15_105249
+2025-07-15 10:52:49,254 - Run directory: Training Runs/2025.07.15_105249
+2025-07-15 10:52:49,304 - NCSNpp(
+  (act): SiLU()
+  (time_embed): GaussianFourierProjection()
+  (time_mlp): Sequential(
+    (0): Linear(in_features=128, out_features=256, bias=True)
+    (1): SiLU()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (label_emb): Linear(in_features=1, out_features=256, bias=True)
+  (input_conv): Conv2d(1, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (down_blocks): ModuleList(
+    (0-1): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+    (2): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (3-5): 3 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+  )
+  (down_attn): ModuleList(
+    (0-1): 2 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+    (2-5): 4 x None
+  )
+  (downsample): ModuleList(
+    (0): Downsample(
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (1): Downsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (2): None
+  )
+  (mid_block1): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (mid_block2): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (up_blocks): ModuleList(
+    (0-5): 6 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 256, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (6): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 192, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (7-8): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+  )
+  (up_attn): ModuleList(
+    (0-5): 6 x None
+    (6-8): 3 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+  )
+  (upsample): ModuleList(
+    (0-1): 2 x Upsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (2): None
+  )
+  (out_norm): GroupNorm(16, 64, eps=1e-06, affine=True)
+  (out_act): SiLU()
+  (out_conv): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-07-15 10:52:49,305 - EMA: <models.ema.ExponentialMovingAverage object at 0x16e3d1290>
+2025-07-15 10:52:49,305 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.00016
+    maximize: False
+    weight_decay: 0
+)
+2025-07-15 10:52:49,305 - Scaler: None.
+2025-07-15 10:52:49,365 - Starting training loop at step 2001.

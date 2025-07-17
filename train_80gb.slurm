@@ -24,7 +24,7 @@ conda activate diffusion-env
 nvidia-smi
 
 # Run the training script
-python Reflected-Diffusion/run_train.py --config-dir=Reflected-Diffusion/configs --config-name=train hydra.run.dir="Training Runs/2025.07.11_214700" checkpoint_path="Training Runs/2025.07.11_214700/checkpoints/checkpoint_2.pth"
+python Reflected-Diffusion/run_train.py --config-dir=Reflected-Diffusion/configs --config-name=train hydra.run.dir="Training Runs/2025.07.14_173150" checkpoint_path="Training Runs/2025.07.14_173150/checkpoints/checkpoint_4.pth"
 
 # After training, plot the loss curve
 python plot_losses.py
