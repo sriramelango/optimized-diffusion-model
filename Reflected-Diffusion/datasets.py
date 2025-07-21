@@ -97,6 +97,51 @@ class GTOHaloImageDataset(Dataset):
         img = padded.reshape(1, 9, 9)  # 9×9 = 81 values
         return torch.tensor(img, dtype=torch.float32), torch.tensor(classifier, dtype=torch.float32)
 
+class GTOHaloImageContextDataset(Dataset):
+    def __init__(self, pkl_path):
+        with open(pkl_path, 'rb') as f:
+            data = pickle.load(f)
+        self.data = data.astype(np.float32)
+        self.labels = self.data[:, 0]
+        self.mean = 0.4652
+        self.std = 0.1811
+        # Sort by label for fast neighbor search
+        sorted_indices = np.argsort(self.labels)
+        self.sorted_labels = self.labels[sorted_indices]
+        self.sorted_data = self.data[sorted_indices]
+    def __len__(self):
+        return self.data.shape[0]
+    def __getitem__(self, idx):
+        import bisect
+        label = self.labels[idx]
+        vec = self.data[idx]
+        # Find nearest below and above
+        pos = bisect.bisect_left(self.sorted_labels, label)
+        # Nearest below
+        if pos > 0:
+            below_vec = self.sorted_data[pos - 1]
+        else:
+            below_vec = vec
+        # Nearest above
+        if pos < len(self.sorted_labels) - 1:
+            if self.sorted_labels[pos] == label and pos + 1 < len(self.sorted_labels):
+                above_vec = self.sorted_data[pos + 1]
+            else:
+                above_vec = self.sorted_data[pos]
+        else:
+            above_vec = vec
+        # Pad to 81 values (9x9)
+        def pad_and_norm(v):
+            padded = np.pad(v, (0, 81 - len(v)), 'constant')
+            padded = (padded - self.mean) / self.std
+            return padded.reshape(9, 9)
+        below_img = pad_and_norm(below_vec)
+        current_img = pad_and_norm(vec)
+        above_img = pad_and_norm(above_vec)
+        stacked = np.stack([below_img, current_img, above_img], axis=0) # [3, 9, 9]
+        class_label = np.array([label], dtype=np.float32)
+        return torch.tensor(stacked, dtype=torch.float32), torch.tensor(class_label, dtype=torch.float32)
+
 def get_dataset(config, evaluation=False, distributed=True):
     
     dataroot = config.dataroot
@@ -144,6 +189,10 @@ def get_dataset(config, evaluation=False, distributed=True):
     elif config.data.dataset == "GTOHaloImage":
         train_set = GTOHaloImageDataset(config.data.pkl_path)
         test_set = GTOHaloImageDataset(config.data.pkl_path)
+        workers = 0
+    elif config.data.dataset == "GTOHaloImageContext":
+        train_set = GTOHaloImageContextDataset(config.data.pkl_path)
+        test_set = GTOHaloImageContextDataset(config.data.pkl_path)
         workers = 0
     else:
         raise ValueError(f"{config.data.dataset} is not valid")

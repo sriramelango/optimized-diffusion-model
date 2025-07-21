@@ -1,0 +1,275 @@
+2025-07-21 16:57:35,791 - Training run started at: 2025.07.21_165735
+2025-07-21 16:57:35,792 - Run directory: Training Runs/2025.07.21_165735
+2025-07-21 16:57:35,851 - NCSNpp(
+  (act): SiLU()
+  (time_embed): GaussianFourierProjection()
+  (time_mlp): Sequential(
+    (0): Linear(in_features=128, out_features=256, bias=True)
+    (1): SiLU()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (label_emb): Linear(in_features=1, out_features=256, bias=True)
+  (input_conv): Conv2d(1, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (down_blocks): ModuleList(
+    (0-1): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+    (2): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (3-5): 3 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+  )
+  (down_attn): ModuleList(
+    (0-1): 2 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+    (2-5): 4 x None
+  )
+  (downsample): ModuleList(
+    (0): Downsample(
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (1): Downsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (2): None
+  )
+  (mid_block1): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (mid_block2): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (up_blocks): ModuleList(
+    (0-5): 6 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 256, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (6): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 192, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (7-8): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+  )
+  (up_attn): ModuleList(
+    (0-5): 6 x None
+    (6-8): 3 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+  )
+  (upsample): ModuleList(
+    (0-1): 2 x Upsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (2): None
+  )
+  (out_norm): GroupNorm(16, 64, eps=1e-06, affine=True)
+  (out_act): SiLU()
+  (out_conv): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-07-21 16:57:35,852 - EMA: <models.ema.ExponentialMovingAverage object at 0x16d60cb10>
+2025-07-21 16:57:35,852 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.001
+    maximize: False
+    weight_decay: 0
+)
+2025-07-21 16:57:35,852 - Scaler: None.
+2025-07-21 16:57:35,852 - No checkpoint found at Training Runs/2025.07.21_165735/checkpoints-meta/checkpoint.pth. Returned the same state as input
+2025-07-21 16:57:35,866 - Starting training loop at step 0.
+2025-07-21 16:57:35,965 - step: 0, training_loss: 5.95090e+00
+2025-07-21 16:57:35,993 - step: 0, evaluation_loss: 3.02476e+01
+2025-07-21 16:57:36,085 - step: 1, training_loss: 7.47797e-09
+2025-07-21 16:57:36,179 - step: 2, training_loss: 3.23952e-07
+2025-07-21 16:57:36,275 - step: 3, training_loss: 2.59834e+01
+2025-07-21 16:57:36,374 - step: 4, training_loss: 9.95730e-07
+2025-07-21 16:57:36,478 - step: 5, training_loss: 1.61626e+01
+2025-07-21 16:57:36,583 - step: 6, training_loss: 5.72089e-06
+2025-07-21 16:57:36,689 - step: 7, training_loss: 2.85694e+01
+2025-07-21 16:57:36,796 - step: 8, training_loss: 1.75254e+01
+2025-07-21 16:57:36,907 - step: 9, training_loss: 3.76588e-05
+2025-07-21 16:57:37,038 - step: 10, training_loss: 4.36007e+01
+2025-07-21 16:57:37,163 - step: 11, training_loss: 4.85515e-05
+2025-07-21 16:57:37,281 - step: 12, training_loss: 6.75412e-03
+2025-07-21 16:57:37,401 - step: 13, training_loss: 3.93803e+01
+2025-07-21 16:57:37,527 - step: 14, training_loss: 3.51983e+01
+2025-07-21 16:57:37,653 - step: 15, training_loss: 1.20465e-01
+2025-07-21 16:57:37,781 - step: 16, training_loss: 4.43952e+01
+2025-07-21 16:57:37,913 - step: 17, training_loss: 3.33344e+01
+2025-07-21 16:57:38,048 - step: 18, training_loss: 4.81312e-05
+2025-07-21 16:57:38,197 - step: 19, training_loss: 1.74182e+00
+2025-07-21 16:57:38,348 - step: 20, training_loss: 2.90682e+00
+2025-07-21 16:57:38,503 - step: 21, training_loss: 2.62685e+01
+2025-07-21 16:57:38,657 - step: 22, training_loss: 2.95215e-04
+2025-07-21 16:57:38,816 - step: 23, training_loss: 1.96462e+01
+2025-07-21 16:57:38,989 - step: 24, training_loss: 3.68697e+01
+2025-07-21 16:57:39,157 - step: 25, training_loss: 4.88395e+01
+2025-07-21 16:57:39,324 - step: 26, training_loss: 3.47077e+01
+2025-07-21 16:57:39,496 - step: 27, training_loss: 4.14243e-04
+2025-07-21 16:57:39,671 - step: 28, training_loss: 1.32636e-03
+2025-07-21 16:57:39,850 - step: 29, training_loss: 1.29159e-03
+2025-07-21 16:57:40,034 - step: 30, training_loss: 2.00091e+01
+2025-07-21 16:57:40,222 - step: 31, training_loss: 4.36735e+01
+2025-07-21 16:57:40,415 - step: 32, training_loss: 3.98196e+01
+2025-07-21 16:57:40,612 - step: 33, training_loss: 9.43153e-05
+2025-07-21 16:57:40,807 - step: 34, training_loss: 2.52597e+01
+2025-07-21 16:57:41,008 - step: 35, training_loss: 2.84829e+01
+2025-07-21 16:57:41,202 - step: 36, training_loss: 3.97342e+01
+2025-07-21 16:57:41,399 - step: 37, training_loss: 3.01275e-01
+2025-07-21 16:57:41,599 - step: 38, training_loss: 3.74299e+01
+2025-07-21 16:57:41,811 - step: 39, training_loss: 1.13529e+01
+2025-07-21 16:57:42,025 - step: 40, training_loss: 1.22225e-03
+2025-07-21 16:57:42,240 - step: 41, training_loss: 3.90125e+01
+2025-07-21 16:57:42,465 - step: 42, training_loss: 2.73726e+01
+2025-07-21 16:57:42,703 - step: 43, training_loss: 4.47312e+01
+2025-07-21 16:57:42,918 - step: 44, training_loss: 4.18105e+01
+2025-07-21 16:57:43,132 - step: 45, training_loss: 8.50681e+00
+2025-07-21 16:57:43,352 - step: 46, training_loss: 5.06957e-01
+2025-07-21 16:57:43,574 - step: 47, training_loss: 3.27336e+01
+2025-07-21 16:57:43,800 - step: 48, training_loss: 3.72241e-03
+2025-07-21 16:57:44,032 - step: 49, training_loss: 2.21240e-03
+2025-07-21 16:57:44,272 - step: 50, training_loss: 2.65495e+01
+2025-07-21 16:57:44,510 - step: 51, training_loss: 2.77606e+01
+2025-07-21 16:57:44,755 - step: 52, training_loss: 3.51630e+01
+2025-07-21 16:57:44,993 - step: 53, training_loss: 2.39780e-03
+2025-07-21 16:57:45,240 - step: 54, training_loss: 2.35604e-02
+2025-07-21 16:57:45,485 - step: 55, training_loss: 6.56361e-03
+2025-07-21 16:57:45,738 - step: 56, training_loss: 2.79698e+01
+2025-07-21 16:57:45,992 - step: 57, training_loss: 4.55645e+01
+2025-07-21 16:57:46,248 - step: 58, training_loss: 4.12249e+00
+2025-07-21 16:57:46,505 - step: 59, training_loss: 3.85108e+01
+2025-07-21 16:57:46,767 - step: 60, training_loss: 3.32966e+01
+2025-07-21 16:57:47,029 - step: 61, training_loss: 8.14804e-02
+2025-07-21 16:57:47,308 - step: 62, training_loss: 2.47725e+00
+2025-07-21 16:57:47,595 - step: 63, training_loss: 3.56035e+01
+2025-07-21 16:57:47,878 - step: 64, training_loss: 3.79216e-03
+2025-07-21 16:57:48,158 - step: 65, training_loss: 1.88765e+01
+2025-07-21 16:57:48,444 - step: 66, training_loss: 4.50226e+01
+2025-07-21 16:57:48,733 - step: 67, training_loss: 1.71594e-02
+2025-07-21 16:57:49,022 - step: 68, training_loss: 4.65042e+01
+2025-07-21 16:57:49,322 - step: 69, training_loss: 2.32194e+01
+2025-07-21 16:57:49,623 - step: 70, training_loss: 3.84973e+01
+2025-07-21 16:57:49,922 - step: 71, training_loss: 4.78760e-02
+2025-07-21 16:57:50,220 - step: 72, training_loss: 2.77204e+01
+2025-07-21 16:57:50,519 - step: 73, training_loss: 2.23933e+01
+2025-07-21 16:57:50,826 - step: 74, training_loss: 2.07816e+01
+2025-07-21 16:57:51,138 - step: 75, training_loss: 3.21515e-02
+2025-07-21 16:57:51,449 - step: 76, training_loss: 3.74189e+01
+2025-07-21 16:57:51,763 - step: 77, training_loss: 3.24454e+01
+2025-07-21 16:57:52,082 - step: 78, training_loss: 4.01196e+01
+2025-07-21 16:57:52,409 - step: 79, training_loss: 2.12823e-02
+2025-07-21 16:57:52,739 - step: 80, training_loss: 8.58959e-02
+2025-07-21 16:57:53,071 - step: 81, training_loss: 3.66655e+01
+2025-07-21 16:57:53,405 - step: 82, training_loss: 4.72888e+01
+2025-07-21 16:57:53,745 - step: 83, training_loss: 5.35337e-02
+2025-07-21 16:57:54,085 - step: 84, training_loss: 2.06649e-02
+2025-07-21 16:57:54,448 - step: 85, training_loss: 3.34645e+01
+2025-07-21 16:57:54,791 - step: 86, training_loss: 1.63724e+00
+2025-07-21 16:57:55,154 - step: 87, training_loss: 4.08196e+01
+2025-07-21 16:57:55,566 - step: 88, training_loss: 1.71637e-01
+2025-07-21 16:57:55,924 - step: 89, training_loss: 2.27544e+01
+2025-07-21 16:57:56,289 - step: 90, training_loss: 3.81076e+01
+2025-07-21 16:57:56,653 - step: 91, training_loss: 3.23380e-02
+2025-07-21 16:57:57,024 - step: 92, training_loss: 3.07489e+01
+2025-07-21 16:57:57,590 - step: 93, training_loss: 9.38820e+00
+2025-07-21 16:57:57,968 - step: 94, training_loss: 4.31394e+01
+2025-07-21 16:57:58,330 - step: 95, training_loss: 1.85452e+01
+2025-07-21 16:57:58,693 - step: 96, training_loss: 3.07328e+01
+2025-07-21 16:57:59,061 - step: 97, training_loss: 2.75939e+01
+2025-07-21 16:57:59,430 - step: 98, training_loss: 1.37767e-01
+2025-07-21 16:57:59,819 - step: 99, training_loss: 4.48598e+01
+2025-07-21 16:58:00,201 - step: 100, training_loss: 1.07913e-01
+2025-07-21 16:58:00,582 - step: 101, training_loss: 2.63493e-02
+2025-07-21 16:58:00,966 - step: 102, training_loss: 2.09148e+01
+2025-07-21 16:58:01,350 - step: 103, training_loss: 2.16080e-02
+2025-07-21 16:58:01,743 - step: 104, training_loss: 4.06350e+01
+2025-07-21 16:58:02,131 - step: 105, training_loss: 3.40310e+01
+2025-07-21 16:58:02,524 - step: 106, training_loss: 2.41672e+01
+2025-07-21 16:58:02,921 - step: 107, training_loss: 2.73496e-02
+2025-07-21 16:58:03,317 - step: 108, training_loss: 3.63462e+01
+2025-07-21 16:58:03,726 - step: 109, training_loss: 1.60709e+01
+2025-07-21 16:58:04,139 - step: 110, training_loss: 3.63972e+01
+2025-07-21 16:58:04,550 - step: 111, training_loss: 2.99948e+00
+2025-07-21 16:58:04,963 - step: 112, training_loss: 3.16820e-02
+2025-07-21 16:58:05,376 - step: 113, training_loss: 4.61984e+01
+2025-07-21 16:58:05,792 - step: 114, training_loss: 4.95183e+01
+2025-07-21 16:58:06,221 - step: 115, training_loss: 3.98006e+01
+2025-07-21 16:58:06,641 - step: 116, training_loss: 2.56992e+01
+2025-07-21 16:58:07,063 - step: 117, training_loss: 3.59778e+01
+2025-07-21 16:58:07,494 - step: 118, training_loss: 4.14250e+01
+2025-07-21 16:58:07,933 - step: 119, training_loss: 3.53284e+01
+2025-07-21 16:58:08,391 - step: 120, training_loss: 1.93086e-01
+2025-07-21 16:58:08,829 - step: 121, training_loss: 1.97211e-02
+2025-07-21 16:58:09,296 - step: 122, training_loss: 1.77042e+00
+2025-07-21 16:58:09,771 - step: 123, training_loss: 6.27151e-01
+2025-07-21 16:58:10,228 - step: 124, training_loss: 3.04173e+00
+2025-07-21 16:58:10,681 - step: 125, training_loss: 2.86883e+01

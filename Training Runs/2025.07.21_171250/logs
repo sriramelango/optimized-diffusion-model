@@ -1,0 +1,431 @@
+2025-07-21 17:12:50,961 - Training run started at: 2025.07.21_171250
+2025-07-21 17:12:50,961 - Run directory: Training Runs/2025.07.21_171250
+2025-07-21 17:12:51,024 - NCSNpp(
+  (act): SiLU()
+  (time_embed): GaussianFourierProjection()
+  (time_mlp): Sequential(
+    (0): Linear(in_features=128, out_features=256, bias=True)
+    (1): SiLU()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (label_emb): Linear(in_features=1, out_features=256, bias=True)
+  (input_conv): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (down_blocks): ModuleList(
+    (0-1): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+    (2): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (3-5): 3 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+  )
+  (down_attn): ModuleList(
+    (0-1): 2 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+    (2-5): 4 x None
+  )
+  (downsample): ModuleList(
+    (0): Downsample(
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (1): Downsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (2): None
+  )
+  (mid_block1): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (mid_block2): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (up_blocks): ModuleList(
+    (0-5): 6 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 256, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (6): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 192, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (7-8): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+  )
+  (up_attn): ModuleList(
+    (0-5): 6 x None
+    (6-8): 3 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+  )
+  (upsample): ModuleList(
+    (0-1): 2 x Upsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (2): None
+  )
+  (out_norm): GroupNorm(16, 64, eps=1e-06, affine=True)
+  (out_act): SiLU()
+  (out_conv): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-07-21 17:12:51,024 - EMA: <models.ema.ExponentialMovingAverage object at 0x16f5e1490>
+2025-07-21 17:12:51,025 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0002
+    maximize: False
+    weight_decay: 0
+)
+2025-07-21 17:12:51,025 - Scaler: None.
+2025-07-21 17:12:51,025 - No checkpoint found at Training Runs/2025.07.21_171250/checkpoints-meta/checkpoint.pth. Returned the same state as input
+2025-07-21 17:12:51,068 - Starting training loop at step 0.
+2025-07-21 17:12:51,192 - step: 0, training_loss: 9.72022e+01
+2025-07-21 17:13:11,609 - step: 0, evaluation_loss: 6.21322e+01
+2025-07-21 17:13:11,719 - step: 1, training_loss: 5.67574e+01
+2025-07-21 17:13:11,827 - step: 2, training_loss: 3.40231e+01
+2025-07-21 17:13:11,936 - step: 3, training_loss: 7.29978e+01
+2025-07-21 17:13:12,049 - step: 4, training_loss: 7.01014e+01
+2025-07-21 17:13:12,163 - step: 5, training_loss: 5.67119e+01
+2025-07-21 17:13:12,281 - step: 6, training_loss: 6.72657e+01
+2025-07-21 17:13:12,403 - step: 7, training_loss: 6.68054e+01
+2025-07-21 17:13:12,524 - step: 8, training_loss: 4.71010e+01
+2025-07-21 17:13:12,656 - step: 9, training_loss: 7.80192e+01
+2025-07-21 17:13:12,791 - step: 10, training_loss: 4.52877e+01
+2025-07-21 17:13:12,929 - step: 11, training_loss: 5.37068e+01
+2025-07-21 17:13:13,072 - step: 12, training_loss: 6.58112e+01
+2025-07-21 17:13:13,215 - step: 13, training_loss: 5.29663e+01
+2025-07-21 17:13:13,359 - step: 14, training_loss: 6.14652e+01
+2025-07-21 17:13:13,503 - step: 15, training_loss: 4.86886e+01
+2025-07-21 17:13:13,651 - step: 16, training_loss: 6.22712e+01
+2025-07-21 17:13:13,800 - step: 17, training_loss: 5.22236e+01
+2025-07-21 17:13:13,952 - step: 18, training_loss: 1.15431e+02
+2025-07-21 17:13:14,106 - step: 19, training_loss: 3.29195e+01
+2025-07-21 17:13:14,264 - step: 20, training_loss: 9.80867e+01
+2025-07-21 17:13:14,426 - step: 21, training_loss: 7.31659e+01
+2025-07-21 17:13:14,592 - step: 22, training_loss: 6.77061e+01
+2025-07-21 17:13:14,765 - step: 23, training_loss: 8.25262e+01
+2025-07-21 17:13:14,940 - step: 24, training_loss: 6.52777e+01
+2025-07-21 17:13:15,121 - step: 25, training_loss: 8.38463e+01
+2025-07-21 17:13:15,300 - step: 26, training_loss: 6.69585e+01
+2025-07-21 17:13:15,486 - step: 27, training_loss: 5.69616e+01
+2025-07-21 17:13:15,674 - step: 28, training_loss: 4.99970e+01
+2025-07-21 17:13:15,866 - step: 29, training_loss: 7.80951e+01
+2025-07-21 17:13:16,061 - step: 30, training_loss: 4.99921e+01
+2025-07-21 17:13:16,254 - step: 31, training_loss: 7.64707e+01
+2025-07-21 17:13:16,459 - step: 32, training_loss: 7.29980e+01
+2025-07-21 17:13:16,661 - step: 33, training_loss: 5.18461e+01
+2025-07-21 17:13:16,867 - step: 34, training_loss: 8.25999e+01
+2025-07-21 17:13:17,080 - step: 35, training_loss: 5.90443e+01
+2025-07-21 17:13:17,290 - step: 36, training_loss: 4.64133e+01
+2025-07-21 17:13:17,502 - step: 37, training_loss: 4.68604e+01
+2025-07-21 17:13:17,717 - step: 38, training_loss: 4.82532e+01
+2025-07-21 17:13:17,934 - step: 39, training_loss: 3.93236e+01
+2025-07-21 17:13:18,155 - step: 40, training_loss: 4.97238e+01
+2025-07-21 17:13:18,378 - step: 41, training_loss: 1.00940e+02
+2025-07-21 17:13:18,605 - step: 42, training_loss: 6.69095e+01
+2025-07-21 17:13:18,838 - step: 43, training_loss: 4.96946e+01
+2025-07-21 17:13:19,070 - step: 44, training_loss: 7.31917e+01
+2025-07-21 17:13:19,308 - step: 45, training_loss: 5.43782e+01
+2025-07-21 17:13:19,549 - step: 46, training_loss: 6.04521e+01
+2025-07-21 17:13:19,790 - step: 47, training_loss: 5.72800e+01
+2025-07-21 17:13:20,035 - step: 48, training_loss: 7.48265e+01
+2025-07-21 17:13:20,285 - step: 49, training_loss: 1.00346e+02
+2025-07-21 17:13:20,532 - step: 50, training_loss: 5.39779e+01
+2025-07-21 17:13:20,785 - step: 51, training_loss: 9.21380e+01
+2025-07-21 17:13:21,039 - step: 52, training_loss: 3.91855e+01
+2025-07-21 17:13:21,297 - step: 53, training_loss: 4.19451e+01
+2025-07-21 17:13:21,559 - step: 54, training_loss: 5.84543e+01
+2025-07-21 17:13:21,825 - step: 55, training_loss: 8.91332e+01
+2025-07-21 17:13:22,146 - step: 56, training_loss: 5.39664e+01
+2025-07-21 17:13:22,428 - step: 57, training_loss: 3.07773e+01
+2025-07-21 17:13:22,705 - step: 58, training_loss: 5.68593e+01
+2025-07-21 17:13:22,984 - step: 59, training_loss: 8.69775e+01
+2025-07-21 17:13:23,263 - step: 60, training_loss: 7.54089e+01
+2025-07-21 17:13:23,547 - step: 61, training_loss: 4.98370e+01
+2025-07-21 17:13:23,839 - step: 62, training_loss: 4.45363e+01
+2025-07-21 17:13:24,131 - step: 63, training_loss: 5.85701e+01
+2025-07-21 17:13:24,427 - step: 64, training_loss: 6.61451e+01
+2025-07-21 17:13:24,722 - step: 65, training_loss: 5.24667e+01
+2025-07-21 17:13:25,021 - step: 66, training_loss: 5.75785e+01
+2025-07-21 17:13:25,321 - step: 67, training_loss: 4.49938e+01
+2025-07-21 17:13:25,635 - step: 68, training_loss: 4.68912e+01
+2025-07-21 17:13:25,956 - step: 69, training_loss: 3.54274e+01
+2025-07-21 17:13:26,278 - step: 70, training_loss: 5.54698e+01
+2025-07-21 17:13:26,604 - step: 71, training_loss: 6.90438e+01
+2025-07-21 17:13:26,933 - step: 72, training_loss: 6.32318e+01
+2025-07-21 17:13:27,266 - step: 73, training_loss: 3.66480e+01
+2025-07-21 17:13:27,602 - step: 74, training_loss: 6.43376e+01
+2025-07-21 17:13:27,938 - step: 75, training_loss: 2.77955e+01
+2025-07-21 17:13:28,281 - step: 76, training_loss: 7.61658e+01
+2025-07-21 17:13:28,626 - step: 77, training_loss: 5.20540e+01
+2025-07-21 17:13:28,977 - step: 78, training_loss: 9.85820e+01
+2025-07-21 17:13:29,330 - step: 79, training_loss: 6.48321e+01
+2025-07-21 17:13:29,678 - step: 80, training_loss: 7.74083e+01
+2025-07-21 17:13:30,059 - step: 81, training_loss: 5.80710e+01
+2025-07-21 17:13:30,416 - step: 82, training_loss: 5.32045e+01
+2025-07-21 17:13:31,012 - step: 83, training_loss: 7.46855e+01
+2025-07-21 17:13:31,386 - step: 84, training_loss: 6.11941e+01
+2025-07-21 17:13:31,785 - step: 85, training_loss: 9.94016e+01
+2025-07-21 17:13:32,154 - step: 86, training_loss: 5.97993e+01
+2025-07-21 17:13:32,517 - step: 87, training_loss: 6.23155e+01
+2025-07-21 17:13:32,917 - step: 88, training_loss: 6.54442e+01
+2025-07-21 17:13:33,295 - step: 89, training_loss: 9.91766e+01
+2025-07-21 17:13:33,659 - step: 90, training_loss: 7.55940e+01
+2025-07-21 17:13:34,019 - step: 91, training_loss: 8.00571e+01
+2025-07-21 17:13:34,388 - step: 92, training_loss: 8.97695e+01
+2025-07-21 17:13:34,756 - step: 93, training_loss: 8.38055e+01
+2025-07-21 17:13:35,126 - step: 94, training_loss: 4.71858e+01
+2025-07-21 17:13:35,499 - step: 95, training_loss: 6.85535e+01
+2025-07-21 17:13:35,885 - step: 96, training_loss: 9.34388e+01
+2025-07-21 17:13:36,266 - step: 97, training_loss: 4.54537e+01
+2025-07-21 17:13:36,649 - step: 98, training_loss: 5.04125e+01
+2025-07-21 17:13:37,034 - step: 99, training_loss: 5.27921e+01
+2025-07-21 17:13:37,422 - step: 100, training_loss: 5.68690e+01
+2025-07-21 17:13:37,816 - step: 101, training_loss: 9.68488e+01
+2025-07-21 17:13:38,211 - step: 102, training_loss: 6.35817e+01
+2025-07-21 17:13:38,604 - step: 103, training_loss: 6.83843e+01
+2025-07-21 17:13:39,007 - step: 104, training_loss: 6.69141e+01
+2025-07-21 17:13:39,407 - step: 105, training_loss: 7.58399e+01
+2025-07-21 17:13:39,811 - step: 106, training_loss: 5.28275e+01
+2025-07-21 17:13:40,230 - step: 107, training_loss: 4.89556e+01
+2025-07-21 17:13:40,641 - step: 108, training_loss: 8.50577e+01
+2025-07-21 17:13:41,064 - step: 109, training_loss: 8.67678e+01
+2025-07-21 17:13:41,488 - step: 110, training_loss: 8.66744e+01
+2025-07-21 17:13:41,908 - step: 111, training_loss: 6.21309e+01
+2025-07-21 17:13:42,333 - step: 112, training_loss: 8.44774e+01
+2025-07-21 17:13:42,760 - step: 113, training_loss: 7.44715e+01
+2025-07-21 17:13:43,186 - step: 114, training_loss: 8.07481e+01
+2025-07-21 17:13:43,615 - step: 115, training_loss: 5.97206e+01
+2025-07-21 17:13:44,046 - step: 116, training_loss: 5.38217e+01
+2025-07-21 17:13:44,489 - step: 117, training_loss: 9.18778e+01
+2025-07-21 17:13:44,927 - step: 118, training_loss: 4.55989e+01
+2025-07-21 17:13:45,371 - step: 119, training_loss: 5.51523e+01
+2025-07-21 17:13:45,814 - step: 120, training_loss: 6.10567e+01
+2025-07-21 17:13:46,262 - step: 121, training_loss: 5.90762e+01
+2025-07-21 17:13:46,713 - step: 122, training_loss: 5.75905e+01
+2025-07-21 17:13:47,166 - step: 123, training_loss: 5.38061e+01
+2025-07-21 17:13:47,621 - step: 124, training_loss: 7.72251e+01
+2025-07-21 17:13:48,084 - step: 125, training_loss: 6.90431e+01
+2025-07-21 17:13:48,547 - step: 126, training_loss: 4.65549e+01
+2025-07-21 17:13:49,012 - step: 127, training_loss: 5.18598e+01
+2025-07-21 17:13:49,478 - step: 128, training_loss: 4.54100e+01
+2025-07-21 17:13:49,947 - step: 129, training_loss: 5.30976e+01
+2025-07-21 17:13:50,421 - step: 130, training_loss: 4.26356e+01
+2025-07-21 17:13:50,903 - step: 131, training_loss: 8.44249e+01
+2025-07-21 17:13:51,383 - step: 132, training_loss: 1.03403e+02
+2025-07-21 17:13:51,866 - step: 133, training_loss: 5.64817e+01
+2025-07-21 17:13:52,351 - step: 134, training_loss: 6.79116e+01
+2025-07-21 17:13:52,842 - step: 135, training_loss: 5.41267e+01
+2025-07-21 17:13:53,340 - step: 136, training_loss: 9.91831e+01
+2025-07-21 17:13:53,842 - step: 137, training_loss: 3.64173e+01
+2025-07-21 17:13:54,343 - step: 138, training_loss: 8.60307e+01
+2025-07-21 17:13:54,850 - step: 139, training_loss: 6.43179e+01
+2025-07-21 17:13:55,357 - step: 140, training_loss: 3.02871e+01
+2025-07-21 17:13:55,866 - step: 141, training_loss: 6.26312e+01
+2025-07-21 17:13:56,372 - step: 142, training_loss: 9.77643e+01
+2025-07-21 17:13:56,891 - step: 143, training_loss: 7.99648e+01
+2025-07-21 17:13:57,408 - step: 144, training_loss: 6.18084e+01
+2025-07-21 17:13:57,933 - step: 145, training_loss: 7.60075e+01
+2025-07-21 17:13:58,455 - step: 146, training_loss: 1.05173e+02
+2025-07-21 17:13:58,986 - step: 147, training_loss: 5.51051e+01
+2025-07-21 17:13:59,522 - step: 148, training_loss: 7.42767e+01
+2025-07-21 17:14:00,054 - step: 149, training_loss: 6.89407e+01
+2025-07-21 17:14:00,598 - step: 150, training_loss: 8.98537e+01
+2025-07-21 17:14:01,138 - step: 151, training_loss: 2.23843e+00
+2025-07-21 17:14:01,681 - step: 152, training_loss: 6.99030e+01
+2025-07-21 17:14:02,229 - step: 153, training_loss: 5.36455e+01
+2025-07-21 17:14:02,778 - step: 154, training_loss: 3.68912e+01
+2025-07-21 17:14:03,330 - step: 155, training_loss: 4.90773e+01
+2025-07-21 17:14:03,884 - step: 156, training_loss: 4.94333e+01
+2025-07-21 17:14:04,440 - step: 157, training_loss: 8.72972e+01
+2025-07-21 17:14:05,002 - step: 158, training_loss: 7.81162e+01
+2025-07-21 17:14:05,570 - step: 159, training_loss: 7.26002e+01
+2025-07-21 17:14:06,136 - step: 160, training_loss: 7.87438e+01
+2025-07-21 17:14:06,707 - step: 161, training_loss: 7.83042e+01
+2025-07-21 17:14:07,281 - step: 162, training_loss: 6.99575e+01
+2025-07-21 17:14:07,863 - step: 163, training_loss: 9.72764e+01
+2025-07-21 17:14:08,438 - step: 164, training_loss: 5.96423e+01
+2025-07-21 17:14:09,017 - step: 165, training_loss: 3.96534e+01
+2025-07-21 17:14:09,596 - step: 166, training_loss: 6.33745e+01
+2025-07-21 17:14:10,185 - step: 167, training_loss: 9.41325e+01
+2025-07-21 17:14:10,777 - step: 168, training_loss: 6.76299e+01
+2025-07-21 17:14:11,370 - step: 169, training_loss: 5.70635e+01
+2025-07-21 17:14:11,977 - step: 170, training_loss: 4.24399e+01
+2025-07-21 17:14:12,573 - step: 171, training_loss: 5.63318e+01
+2025-07-21 17:14:13,175 - step: 172, training_loss: 7.07315e+01
+2025-07-21 17:14:13,778 - step: 173, training_loss: 9.03013e+01
+2025-07-21 17:14:14,391 - step: 174, training_loss: 5.94138e+01
+2025-07-21 17:14:14,998 - step: 175, training_loss: 6.22235e+01
+2025-07-21 17:14:15,607 - step: 176, training_loss: 5.83691e+01
+2025-07-21 17:14:16,227 - step: 177, training_loss: 3.62141e+01
+2025-07-21 17:14:16,848 - step: 178, training_loss: 7.80933e+01
+2025-07-21 17:14:17,469 - step: 179, training_loss: 3.53108e+01
+2025-07-21 17:14:18,096 - step: 180, training_loss: 7.14030e+01
+2025-07-21 17:14:18,723 - step: 181, training_loss: 2.19941e+01
+2025-07-21 17:14:19,354 - step: 182, training_loss: 7.91668e+01
+2025-07-21 17:14:19,984 - step: 183, training_loss: 4.86549e+01
+2025-07-21 17:14:20,617 - step: 184, training_loss: 2.19557e+01
+2025-07-21 17:14:21,252 - step: 185, training_loss: 7.45765e+01
+2025-07-21 17:14:21,896 - step: 186, training_loss: 3.31152e+01
+2025-07-21 17:14:22,544 - step: 187, training_loss: 9.04976e+01
+2025-07-21 17:14:23,187 - step: 188, training_loss: 5.40114e+01
+2025-07-21 17:14:23,833 - step: 189, training_loss: 7.91959e+01
+2025-07-21 17:14:24,481 - step: 190, training_loss: 8.95578e+01
+2025-07-21 17:14:25,144 - step: 191, training_loss: 8.15877e+01
+2025-07-21 17:14:25,798 - step: 192, training_loss: 6.95701e+01
+2025-07-21 17:14:26,458 - step: 193, training_loss: 4.83402e+01
+2025-07-21 17:14:27,125 - step: 194, training_loss: 4.82704e+01
+2025-07-21 17:14:27,796 - step: 195, training_loss: 9.59673e+01
+2025-07-21 17:14:28,470 - step: 196, training_loss: 3.77728e+01
+2025-07-21 17:14:29,144 - step: 197, training_loss: 2.55521e+01
+2025-07-21 17:14:29,818 - step: 198, training_loss: 5.56968e+01
+2025-07-21 17:14:30,496 - step: 199, training_loss: 4.46156e+01
+2025-07-21 17:14:31,183 - step: 200, training_loss: 5.05684e+01
+2025-07-21 17:14:31,871 - step: 201, training_loss: 6.88804e+01
+2025-07-21 17:14:32,558 - step: 202, training_loss: 5.94517e+01
+2025-07-21 17:14:33,249 - step: 203, training_loss: 7.19639e+01
+2025-07-21 17:14:33,940 - step: 204, training_loss: 4.78194e+01
+2025-07-21 17:14:34,630 - step: 205, training_loss: 8.82428e+01
+2025-07-21 17:14:35,326 - step: 206, training_loss: 9.53824e+01
+2025-07-21 17:14:36,022 - step: 207, training_loss: 7.48212e+01
+2025-07-21 17:14:36,725 - step: 208, training_loss: 6.58553e+01
+2025-07-21 17:14:37,436 - step: 209, training_loss: 2.16655e+01
+2025-07-21 17:14:38,148 - step: 210, training_loss: 4.19910e+01
+2025-07-21 17:14:38,860 - step: 211, training_loss: 8.57311e+01
+2025-07-21 17:14:39,581 - step: 212, training_loss: 4.75984e+01
+2025-07-21 17:14:40,295 - step: 213, training_loss: 6.11323e+01
+2025-07-21 17:14:41,011 - step: 214, training_loss: 7.38385e+01
+2025-07-21 17:14:41,769 - step: 215, training_loss: 2.67821e+01
+2025-07-21 17:14:42,499 - step: 216, training_loss: 4.30855e+01
+2025-07-21 17:14:43,231 - step: 217, training_loss: 5.38081e+01
+2025-07-21 17:14:43,963 - step: 218, training_loss: 5.71809e+01
+2025-07-21 17:14:44,693 - step: 219, training_loss: 6.45790e+01
+2025-07-21 17:14:45,429 - step: 220, training_loss: 6.93961e+01
+2025-07-21 17:14:46,176 - step: 221, training_loss: 8.53788e+01
+2025-07-21 17:14:46,918 - step: 222, training_loss: 3.42402e+01
+2025-07-21 17:14:47,667 - step: 223, training_loss: 7.41103e+01
+2025-07-21 17:14:48,422 - step: 224, training_loss: 7.09217e+01
+2025-07-21 17:14:49,176 - step: 225, training_loss: 8.34201e+01
+2025-07-21 17:14:49,929 - step: 226, training_loss: 4.78012e+01
+2025-07-21 17:14:50,689 - step: 227, training_loss: 6.21998e+01
+2025-07-21 17:14:51,449 - step: 228, training_loss: 5.26931e+01
+2025-07-21 17:14:52,212 - step: 229, training_loss: 2.85831e+01
+2025-07-21 17:14:52,983 - step: 230, training_loss: 7.46978e+01
+2025-07-21 17:14:53,755 - step: 231, training_loss: 7.67078e+01
+2025-07-21 17:14:54,529 - step: 232, training_loss: 2.32564e+01
+2025-07-21 17:14:55,298 - step: 233, training_loss: 4.13069e+01
+2025-07-21 17:14:56,071 - step: 234, training_loss: 8.63681e+01
+2025-07-21 17:14:56,867 - step: 235, training_loss: 5.96378e+01
+2025-07-21 17:14:57,649 - step: 236, training_loss: 9.36360e+01
+2025-07-21 17:14:58,433 - step: 237, training_loss: 5.70869e+01
+2025-07-21 17:14:59,224 - step: 238, training_loss: 5.56115e+01
+2025-07-21 17:15:00,016 - step: 239, training_loss: 5.27474e+01
+2025-07-21 17:15:00,827 - step: 240, training_loss: 5.93369e+01
+2025-07-21 17:15:01,627 - step: 241, training_loss: 6.15657e+01
+2025-07-21 17:15:02,424 - step: 242, training_loss: 5.29120e+01
+2025-07-21 17:15:03,240 - step: 243, training_loss: 6.65794e+01
+2025-07-21 17:15:04,044 - step: 244, training_loss: 2.38072e+01
+2025-07-21 17:15:04,850 - step: 245, training_loss: 7.14262e+01
+2025-07-21 17:15:05,663 - step: 246, training_loss: 5.83234e+01
+2025-07-21 17:15:06,477 - step: 247, training_loss: 5.61507e+01
+2025-07-21 17:15:07,300 - step: 248, training_loss: 6.26033e+01
+2025-07-21 17:15:08,120 - step: 249, training_loss: 7.87073e+01
+2025-07-21 17:15:08,945 - step: 250, training_loss: 4.38871e+01
+2025-07-21 17:15:09,770 - step: 251, training_loss: 2.81034e+01
+2025-07-21 17:15:10,592 - step: 252, training_loss: 5.21789e+01
+2025-07-21 17:15:11,423 - step: 253, training_loss: 6.11203e+01
+2025-07-21 17:15:12,264 - step: 254, training_loss: 9.12006e+01
+2025-07-21 17:15:13,102 - step: 255, training_loss: 6.86776e+01
+2025-07-21 17:15:13,947 - step: 256, training_loss: 7.71755e+01
+2025-07-21 17:15:14,793 - step: 257, training_loss: 9.52030e+01
+2025-07-21 17:15:15,631 - step: 258, training_loss: 8.50104e+01
+2025-07-21 17:15:16,479 - step: 259, training_loss: 7.18291e+01
+2025-07-21 17:15:17,336 - step: 260, training_loss: 5.34373e+01
+2025-07-21 17:15:18,197 - step: 261, training_loss: 3.49691e+01
+2025-07-21 17:15:19,055 - step: 262, training_loss: 5.14190e+01
+2025-07-21 17:15:19,917 - step: 263, training_loss: 3.11588e+01
+2025-07-21 17:15:20,789 - step: 264, training_loss: 5.50663e+01
+2025-07-21 17:15:21,652 - step: 265, training_loss: 6.50488e+01
+2025-07-21 17:15:22,518 - step: 266, training_loss: 4.14211e+01
+2025-07-21 17:15:23,390 - step: 267, training_loss: 3.65318e+01
+2025-07-21 17:15:24,274 - step: 268, training_loss: 6.57646e+01
+2025-07-21 17:15:25,154 - step: 269, training_loss: 7.79034e+01
+2025-07-21 17:15:26,043 - step: 270, training_loss: 7.95469e+01
+2025-07-21 17:15:26,928 - step: 271, training_loss: 6.25326e+01
+2025-07-21 17:15:27,816 - step: 272, training_loss: 5.26448e+01
+2025-07-21 17:15:28,712 - step: 273, training_loss: 4.95663e+01
+2025-07-21 17:15:29,603 - step: 274, training_loss: 6.44434e+01
+2025-07-21 17:15:30,494 - step: 275, training_loss: 3.57643e+01
+2025-07-21 17:15:31,410 - step: 276, training_loss: 6.62578e+01
+2025-07-21 17:15:32,358 - step: 277, training_loss: 7.20168e+01
+2025-07-21 17:15:33,292 - step: 278, training_loss: 5.35305e+01
+2025-07-21 17:15:34,222 - step: 279, training_loss: 3.54034e+01
+2025-07-21 17:15:35,168 - step: 280, training_loss: 5.39925e+01
+2025-07-21 17:15:36,091 - step: 281, training_loss: 7.32489e+01

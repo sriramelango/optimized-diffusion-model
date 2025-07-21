@@ -1,5 +1,5 @@
 name: ncsnpp
-channels: 1
+channels: 3
 image_size: 9
 image_width: 9
 num_classes: 1
