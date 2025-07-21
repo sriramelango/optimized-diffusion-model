@@ -1,7 +1,7 @@
 ngpus: 1
 dataroot: datasets
 training:
-  batch_size: 16384
+  batch_size: 4096
   n_iters: 40000
   snapshot_freq: 1000
   log_freq: 1
@@ -30,11 +30,11 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.00016
+  lr: 0.0005
   beta1: 0.9
   beta2: 0.999
   eps: 1.0e-08
-  warmup: 5000
+  warmup: 10000
   grad_clip: 0.5
 checkpoint_path: Training Runs/2025.07.14_173150/checkpoints/checkpoint_4.pth
 model:
