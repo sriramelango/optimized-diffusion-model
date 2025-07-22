@@ -1,0 +1,50 @@
+============================================================
+GTO HALO BENCHMARK RESULTS
+============================================================
+
+GTO HALO METRICS:
+  class_label_mean: 0.558114
+  class_label_std: 0.055767
+  class_label_min: 0.466029
+  class_label_max: 0.641814
+  time_vars_mean: 0.543050
+  time_vars_std: 0.048959
+  time_vars_min: 0.465285
+  time_vars_max: 0.645386
+  thrust_vars_mean: 0.508490
+  thrust_vars_std: 0.029696
+  thrust_vars_min: 0.465475
+  thrust_vars_max: 0.644584
+  mass_vars_mean: 0.550472
+  mass_vars_std: 0.048054
+  mass_vars_min: 0.466868
+  mass_vars_max: 0.646252
+  boundary_violations_total: 0
+  boundary_violation_rate: 0.000000
+  thrust_boundary_violations: 0
+  thrust_boundary_violation_rate: 0.000000
+  has_nan: False
+  has_inf: False
+  has_negative: False
+  has_above_one: False
+
+PHYSICAL VALIDATION METRICS:
+  feasible_ratio: 0.540000
+  avg_final_mass_feasible: 342.407887
+  local_optimal_ratio: 0.540000
+  avg_final_mass_optimal: 342.407887
+  avg_solving_time: 19.438148
+  snopt_inform_distribution: {1: 27, 3: 23}
+  total_tested: 50
+  feasible_count: 27
+  local_optimal_count: 27
+
+SAMPLING EFFICIENCY:
+  total_sampling_time: 148.537201
+  average_sampling_time_per_sample: 29.707440
+  sampling_time_std: 0.630202
+  samples_per_second: 0.033662
+  min_sampling_time: 28.977207
+  max_sampling_time: 30.537980
+
+============================================================
