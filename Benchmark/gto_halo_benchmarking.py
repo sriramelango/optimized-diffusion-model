@@ -23,6 +23,7 @@ import pandas as pd
 from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
+import bisect
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -207,78 +208,86 @@ class GTOHaloBenchmarker:
         )
         
     def generate_samples(self) -> Tuple[np.ndarray, List[float]]:
-        """Generate samples and measure sampling time."""
-        print(f"Generating {self.config.num_samples} samples...")
-        
+        """Generate samples and measure sampling time (context-aware version)."""
+        print(f"Generating {self.config.num_samples} samples (context-aware)...")
+        # Load the full dataset for context lookup
+        with open(self.config.data_path, 'rb') as f:
+            data = pickle.load(f)
+        data = data.astype(np.float32)
+        labels = data[:, 0]
+        mean = 0.4652
+        std = 0.1811
+        # Sort for fast neighbor search
+        sorted_indices = np.argsort(labels)
+        sorted_labels = labels[sorted_indices]
+        sorted_data = data[sorted_indices]
+        def pad_and_norm(v):
+            padded = np.pad(v, (0, 81 - len(v)), 'constant')
+            padded = (padded - mean) / std
+            return padded.reshape(9, 9)
         samples = []
         sampling_times = []
-        
         num_batches = (self.config.num_samples + self.config.batch_size - 1) // self.config.batch_size
-        
         for i in range(num_batches):
             batch_size = min(self.config.batch_size, self.config.num_samples - i * self.config.batch_size)
-            
-            # For GTO Halo data, use uniform sampling of class labels in [0, 1]
+            # Uniformly sample class labels in [0, 1]
             class_labels = torch.rand(batch_size, 1, device=self.device)
-            
+            context_inputs = []
+            for label in class_labels.cpu().numpy().flatten():
+                # Find nearest below and above
+                pos = bisect.bisect_left(sorted_labels, label)
+                if pos > 0:
+                    below_vec = sorted_data[pos - 1]
+                else:
+                    below_vec = sorted_data[0]
+                if pos < len(sorted_labels) - 1:
+                    above_vec = sorted_data[pos]
+                else:
+                    above_vec = sorted_data[-1]
+                # Placeholder for middle (zeros)
+                middle_vec = np.zeros_like(below_vec)
+                below_img = pad_and_norm(below_vec)
+                middle_img = pad_and_norm(middle_vec)
+                above_img = pad_and_norm(above_vec)
+                stacked = np.stack([below_img, middle_img, above_img], axis=0) # [3, 9, 9]
+                context_inputs.append(stacked)
+            context_inputs = torch.tensor(np.stack(context_inputs), dtype=torch.float32, device=self.device)
+            class_labels_tensor = torch.tensor(class_labels, dtype=torch.float32, device=self.device)
             # Generate samples
             start_time = time.time()
-            
             self.ema.store(self.score_model.parameters())
             self.ema.copy_to(self.score_model.parameters())
-            
-            sample, n_steps = self.sampling_fn(
-                self.score_model,
-                weight=self.config.guidance_weight,
-                class_labels=class_labels
-            )
-            
+            # Patch: use z=x_init if x_init is not accepted
+            try:
+                sample, n_steps = self.sampling_fn(
+                    self.score_model,
+                    weight=self.config.guidance_weight,
+                    class_labels=class_labels_tensor,
+                    x_init=context_inputs
+                )
+            except TypeError:
+                sample, n_steps = self.sampling_fn(
+                    self.score_model,
+                    weight=self.config.guidance_weight,
+                    class_labels=class_labels_tensor,
+                    z=context_inputs
+                )
             self.ema.restore(self.score_model.parameters())
-            
             end_time = time.time()
             sampling_time = end_time - start_time
-            
-            # Convert to numpy and clip to [0, 1]
-            sample_np = sample.cpu().numpy()
+            # Only use the middle channel output
+            sample_np = sample[:, 1, :, :].cpu().numpy()  # [batch, 9, 9]
             sample_np = np.clip(sample_np, 0, 1)
-            
             samples.append(sample_np)
             sampling_times.append(sampling_time)
-            
             print(f"Batch {i+1}/{num_batches}: Generated {batch_size} samples in {sampling_time:.2f}s")
-        
-        # Concatenate all samples
         all_samples = np.concatenate(samples, axis=0)
         all_samples = all_samples[:self.config.num_samples]  # Ensure exact number
-        
-        # --- FLATTEN TO (N, 67) ---
-        # Model outputs (N, 1, 9, 9) = (N, 81) total values
-        # Original data is 67-dimensional, padded with 14 zeros to make 81 for the model input
-        # After model prediction, output is flattened and only the first 67 values are used (rest are padding)
-        # This is intentional and matches the data pipeline
-        samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
-        samples = samples[:, :67]  # Keep only the first 67 values
-        print(f"Model output shape: {samples.shape}")
-        print(f"Flattened shape: {samples.shape}")
-        # No need for further padding; model output is always truncated to 67 for downstream use
-        
-        # Extract components from 67-vector
-        # Assuming format: [class_label, time_vars, thrust_vars, mass_vars, other_vars]
-        class_labels = samples[:, 0]  # First value is class label
-        time_vars = samples[:, 1:4]   # Time variables
-        thrust_vars = samples[:, 4:64]  # Thrust variables (60 values)
-        mass_vars = samples[:, 64:67]  # Mass variables (3 values)
-        
-        print(f"Model output shape: {all_samples.shape}")
-        print(f"Flattened shape: {samples.shape}")
-        print(f"Expected shape: (N, 67), but got (N, {samples.shape[1]})")
-        
-        # For now, pad with zeros to match 67 dimensions
-        # This is a temporary fix - ideally the model should output 67 values
-        padded_samples = np.zeros((samples.shape[0], 67))
-        padded_samples[:, :samples.shape[1]] = samples
-        print(f"Padded shape: {padded_samples.shape}")
-        
+        # Flatten to (N, 81), then truncate/pad to 67 as before
+        samples_flat = all_samples.reshape(all_samples.shape[0], -1)
+        samples_flat = samples_flat[:, :67]
+        padded_samples = np.zeros((samples_flat.shape[0], 67))
+        padded_samples[:, :samples_flat.shape[1]] = samples_flat
         return padded_samples, sampling_times
     
     def compute_gto_halo_metrics(self, samples: np.ndarray) -> Dict[str, Any]:

@@ -3,22 +3,22 @@ GTO HALO BENCHMARK RESULTS
 ============================================================
 
 GTO HALO METRICS:
-  class_label_mean: 0.585773
-  class_label_std: 0.272638
-  class_label_min: 0.221046
-  class_label_max: 0.960931
-  time_vars_mean: 0.489924
-  time_vars_std: 0.278751
-  time_vars_min: 0.129515
-  time_vars_max: 0.936768
-  thrust_vars_mean: 0.242522
-  thrust_vars_std: 0.157037
-  thrust_vars_min: 0.018189
-  thrust_vars_max: 0.993199
-  mass_vars_mean: 0.514333
-  mass_vars_std: 0.273956
-  mass_vars_min: 0.122639
-  mass_vars_max: 0.990336
+  class_label_mean: 0.590309
+  class_label_std: 0.261457
+  class_label_min: 0.221319
+  class_label_max: 0.974272
+  time_vars_mean: 0.503301
+  time_vars_std: 0.283932
+  time_vars_min: 0.048823
+  time_vars_max: 0.985334
+  thrust_vars_mean: 0.218578
+  thrust_vars_std: 0.133992
+  thrust_vars_min: 0.000007
+  thrust_vars_max: 0.988848
+  mass_vars_mean: 0.446890
+  mass_vars_std: 0.260304
+  mass_vars_min: 0.053875
+  mass_vars_max: 0.901106
   boundary_violations_total: 0
   boundary_violation_rate: 0.000000
   thrust_boundary_violations: 0
@@ -30,21 +30,21 @@ GTO HALO METRICS:
 
 PHYSICAL VALIDATION METRICS:
   feasible_ratio: 0.500000
-  avg_final_mass_feasible: 357.702178
+  avg_final_mass_feasible: 356.196442
   local_optimal_ratio: 0.500000
-  avg_final_mass_optimal: 357.702178
-  avg_solving_time: 14.097183
+  avg_final_mass_optimal: 356.196442
+  avg_solving_time: 15.190965
   snopt_inform_distribution: {3: 5, 1: 5}
   total_tested: 10
   feasible_count: 5
   local_optimal_count: 5
 
 SAMPLING EFFICIENCY:
-  total_sampling_time: 33.021297
-  average_sampling_time_per_sample: 33.021297
+  total_sampling_time: 31.234398
+  average_sampling_time_per_sample: 31.234398
   sampling_time_std: 0.000000
-  samples_per_second: 0.030283
-  min_sampling_time: 33.021297
-  max_sampling_time: 33.021297
+  samples_per_second: 0.032016
+  min_sampling_time: 31.234398
+  max_sampling_time: 31.234398
 
 ============================================================
