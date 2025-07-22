@@ -1,21 +1,21 @@
 {
   "gto_halo_metrics": {
-    "class_label_mean": 0.5903085082769394,
-    "class_label_std": 0.26145673655927754,
-    "class_label_min": 0.22131860256195068,
-    "class_label_max": 0.9742723107337952,
-    "time_vars_mean": 0.50330124484996,
-    "time_vars_std": 0.28393201803686624,
-    "time_vars_min": 0.04882289096713066,
-    "time_vars_max": 0.9853338003158569,
-    "thrust_vars_mean": 0.21857816528684149,
-    "thrust_vars_std": 0.13399201168755348,
-    "thrust_vars_min": 6.556510925292969e-06,
-    "thrust_vars_max": 0.9888483881950378,
-    "mass_vars_mean": 0.44688973352313044,
-    "mass_vars_std": 0.260304272724456,
-    "mass_vars_min": 0.053874529898166656,
-    "mass_vars_max": 0.9011059999465942,
+    "class_label_mean": 0.5707522004842758,
+    "class_label_std": 0.051890466233686205,
+    "class_label_min": 0.49422088265419006,
+    "class_label_max": 0.6449946165084839,
+    "time_vars_mean": 0.5534877916177113,
+    "time_vars_std": 0.04504513619337773,
+    "time_vars_min": 0.4735603630542755,
+    "time_vars_max": 0.6358206272125244,
+    "thrust_vars_mean": 0.5057174165050189,
+    "thrust_vars_std": 0.02372828818188308,
+    "thrust_vars_min": 0.46706312894821167,
+    "thrust_vars_max": 0.636736273765564,
+    "mass_vars_mean": 0.5513362358013789,
+    "mass_vars_std": 0.045310575083823704,
+    "mass_vars_min": 0.4700520932674408,
+    "mass_vars_max": 0.6455121040344238,
     "boundary_violations_total": "0",
     "boundary_violation_rate": 0.0,
     "thrust_boundary_violations": "0",
@@ -26,25 +26,25 @@
     "has_above_one": "False"
   },
   "physical_validation": {
-    "feasible_ratio": 0.5,
-    "avg_final_mass_feasible": 356.1964415381847,
-    "local_optimal_ratio": 0.5,
-    "avg_final_mass_optimal": 356.1964415381847,
-    "avg_solving_time": 15.190964674949646,
+    "feasible_ratio": 0.7,
+    "avg_final_mass_feasible": 306.8245277861121,
+    "local_optimal_ratio": 0.6,
+    "avg_final_mass_optimal": 326.3278601215876,
+    "avg_solving_time": 20.632658314704894,
     "snopt_inform_distribution": {
-      "3": 5,
-      "1": 5
+      "3": 4,
+      "1": 6
     },
     "total_tested": 10,
-    "feasible_count": 5,
-    "local_optimal_count": 5
+    "feasible_count": 7,
+    "local_optimal_count": 6
   },
   "sampling_efficiency": {
-    "total_sampling_time": 31.234398126602173,
-    "average_sampling_time_per_sample": 31.234398126602173,
+    "total_sampling_time": 30.549365043640137,
+    "average_sampling_time_per_sample": 30.549365043640137,
     "sampling_time_std": 0.0,
-    "samples_per_second": 0.032015984298679516,
-    "min_sampling_time": 31.234398126602173,
-    "max_sampling_time": 31.234398126602173
+    "samples_per_second": 0.03273390456958722,
+    "min_sampling_time": 30.549365043640137,
+    "max_sampling_time": 30.549365043640137
   }
 }

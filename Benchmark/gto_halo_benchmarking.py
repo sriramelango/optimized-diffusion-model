@@ -278,6 +278,8 @@ class GTOHaloBenchmarker:
             # Only use the middle channel output
             sample_np = sample[:, 1, :, :].cpu().numpy()  # [batch, 9, 9]
             sample_np = np.clip(sample_np, 0, 1)
+            # Unnormalize before flattening
+            sample_np = sample_np * std + mean
             samples.append(sample_np)
             sampling_times.append(sampling_time)
             print(f"Batch {i+1}/{num_batches}: Generated {batch_size} samples in {sampling_time:.2f}s")
