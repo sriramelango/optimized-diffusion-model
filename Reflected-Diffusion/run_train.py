@@ -254,6 +254,9 @@ def _run_single(cfg, work_dir, checkpoint_path=None):
         if step == initial_step:
             print('TRAINING: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
         loss = train_step_fn(state, batch_imgs, class_labels=batch_class)
+        if step == initial_step:
+            # Save checkpoint after first iteration
+            utils.save_checkpoint(checkpoint_meta_dir + '_first_iter.pth', state)
         if step % cfg.training.log_freq == 0:
             mprint("step: %d, training_loss: %.5e" % (step, loss.item()))
         if step != 0 and step % cfg.training.snapshot_freq_for_preemption == 0:

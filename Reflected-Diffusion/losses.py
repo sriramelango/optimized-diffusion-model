@@ -83,12 +83,17 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
         score = score_fn(perturbed_data, t, class_labels=class_labels)
         score_hk = cube.score_hk(perturbed_data, mean, std)
 
+        # Only compute loss on the main (middle) channel
+        # Assume input shape [B, 3, H, W], use channel 1
+        score_main = score[:, 1, :, :].unsqueeze(1)
+        score_hk_main = score_hk[:, 1, :, :].unsqueeze(1)
+        std_main = std.unsqueeze(1).unsqueeze(2).unsqueeze(3)  # [B,1,1,1]
         if not likelihood_weighting:
-            losses = (std ** 2)[:, None, None, None] * (score - score_hk).pow(2)
+            losses = (std_main ** 2) * (score_main - score_hk_main).pow(2)
         else:
             g2 = sde.sde(torch.zeros_like(batch), t)[1] ** 2
-            losses = g2[:, None, None, None] * (score - score_hk).pow(2)
-
+            g2_main = g2.unsqueeze(1).unsqueeze(2).unsqueeze(3)
+            losses = g2_main * (score_main - score_hk_main).pow(2)
         losses = reduce_op(losses.reshape(losses.shape[0], -1), dim=-1)
         loss = torch.mean(losses)
         # NaN check for loss
@@ -102,6 +107,7 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
         for param in model.parameters():
             if param.requires_grad:
                 param.register_hook(nan_hook)
+        # Remove debug prints for clean training
         return loss
 
     return loss_fn

@@ -1,0 +1,180 @@
+2025-07-23 13:20:19,754 - Training run started at: 2025.07.23_132019
+2025-07-23 13:20:19,754 - Run directory: Training Runs/2025.07.23_132019
+2025-07-23 13:20:19,816 - NCSNpp(
+  (act): SiLU()
+  (time_embed): GaussianFourierProjection()
+  (time_mlp): Sequential(
+    (0): Linear(in_features=128, out_features=256, bias=True)
+    (1): SiLU()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (label_emb): Linear(in_features=1, out_features=256, bias=True)
+  (input_conv): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (down_blocks): ModuleList(
+    (0-1): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+    (2): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (3-5): 3 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (act): SiLU()
+    )
+  )
+  (down_attn): ModuleList(
+    (0-1): 2 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+    (2-5): 4 x None
+  )
+  (downsample): ModuleList(
+    (0): Downsample(
+      (Conv_0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (1): Downsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
+    )
+    (2): None
+  )
+  (mid_block1): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (mid_block2): ResnetBlockDDPMpp(
+    (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+    (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+    (Dropout_0): Dropout(p=0.2, inplace=False)
+    (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (act): SiLU()
+  )
+  (up_blocks): ModuleList(
+    (0-5): 6 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 256, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=128, bias=True)
+      (GroupNorm_1): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (6): ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 192, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+    (7-8): 2 x ResnetBlockDDPMpp(
+      (GroupNorm_0): GroupNorm(32, 128, eps=1e-06, affine=True)
+      (Conv_0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (Dense_0): Linear(in_features=256, out_features=64, bias=True)
+      (GroupNorm_1): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (Dropout_0): Dropout(p=0.2, inplace=False)
+      (Conv_1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (NIN_0): NIN()
+      (act): SiLU()
+    )
+  )
+  (up_attn): ModuleList(
+    (0-5): 6 x None
+    (6-8): 3 x AttnBlockpp(
+      (GroupNorm_0): GroupNorm(16, 64, eps=1e-06, affine=True)
+      (NIN_0): NIN()
+      (NIN_1): NIN()
+      (NIN_2): NIN()
+      (NIN_3): NIN()
+    )
+  )
+  (upsample): ModuleList(
+    (0-1): 2 x Upsample(
+      (Conv_0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (2): None
+  )
+  (out_norm): GroupNorm(16, 64, eps=1e-06, affine=True)
+  (out_act): SiLU()
+  (out_conv): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-07-23 13:20:19,817 - EMA: <models.ema.ExponentialMovingAverage object at 0x310b92e90>
+2025-07-23 13:20:19,817 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.001
+    maximize: False
+    weight_decay: 0
+)
+2025-07-23 13:20:19,817 - Scaler: None.
+2025-07-23 13:20:19,818 - No checkpoint found at Training Runs/2025.07.23_132019/checkpoints-meta/checkpoint.pth. Returned the same state as input
+2025-07-23 13:20:19,859 - Starting training loop at step 0.
+2025-07-23 13:20:34,380 - step: 0, training_loss: 2.11502e+01
+2025-07-23 13:20:55,435 - step: 0, evaluation_loss: 2.07696e+01
+2025-07-23 13:21:09,695 - step: 1, training_loss: 2.08401e+01
+2025-07-23 13:21:23,969 - step: 2, training_loss: 2.02822e+01
+2025-07-23 13:21:37,942 - step: 3, training_loss: 2.11296e+01
+2025-07-23 13:21:51,905 - step: 4, training_loss: 2.05174e+01
+2025-07-23 13:22:05,857 - step: 5, training_loss: 2.08185e+01
+2025-07-23 13:22:19,940 - step: 6, training_loss: 2.07867e+01
+2025-07-23 13:22:33,904 - step: 7, training_loss: 2.03632e+01
+2025-07-23 13:22:47,901 - step: 8, training_loss: 2.05630e+01
+2025-07-23 13:23:01,900 - step: 9, training_loss: 2.10122e+01
+2025-07-23 13:23:16,012 - step: 10, training_loss: 2.08247e+01
+2025-07-23 13:23:30,154 - step: 11, training_loss: 2.03799e+01
+2025-07-23 13:23:44,314 - step: 12, training_loss: 2.04500e+01
+2025-07-23 13:23:58,389 - step: 13, training_loss: 2.14723e+01
+2025-07-23 13:24:12,543 - step: 14, training_loss: 2.01747e+01
+2025-07-23 13:24:26,545 - step: 15, training_loss: 2.08329e+01
+2025-07-23 13:24:40,712 - step: 16, training_loss: 2.04823e+01
+2025-07-23 13:24:54,810 - step: 17, training_loss: 2.06735e+01
+2025-07-23 13:25:09,029 - step: 18, training_loss: 2.13063e+01
+2025-07-23 13:25:23,371 - step: 19, training_loss: 2.03016e+01
+2025-07-23 13:25:37,522 - step: 20, training_loss: 2.12645e+01
+2025-07-23 13:25:51,327 - step: 21, training_loss: 2.02989e+01
+2025-07-23 13:26:05,401 - step: 22, training_loss: 2.04530e+01
+2025-07-23 13:26:19,357 - step: 23, training_loss: 2.09527e+01
+2025-07-23 13:26:33,544 - step: 24, training_loss: 2.09044e+01
+2025-07-23 13:26:47,755 - step: 25, training_loss: 2.00493e+01
+2025-07-23 13:27:01,774 - step: 26, training_loss: 2.10702e+01
+2025-07-23 13:27:15,791 - step: 27, training_loss: 1.99947e+01
+2025-07-23 13:27:29,763 - step: 28, training_loss: 2.11886e+01
+2025-07-23 13:27:43,825 - step: 29, training_loss: 2.11554e+01
+2025-07-23 13:27:57,969 - step: 30, training_loss: 2.01418e+01
