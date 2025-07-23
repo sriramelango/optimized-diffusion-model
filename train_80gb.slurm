@@ -24,7 +24,7 @@ conda activate diffusion-env
 nvidia-smi
 
 # Run the training script
-python Reflected-Diffusion/run_train.py
+python Reflected-Diffusion/run_train.py checkpoint_path="Training Runs/2025.07.21_190310/checkpoints/checkpoint_9.pth"
 
 # After training, plot the loss curve
 python plot_losses.py
