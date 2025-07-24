@@ -121,10 +121,13 @@ def _run(rank, world_size, work_dir, cfg, checkpoint_path=None):
 
     # Build samping functions
     if cfg.training.snapshot_sampling:
-        sampling_shape = (cfg.training.batch_size // cfg.ngpus, 
-                          cfg.data.num_channels,
-                          cfg.data.image_size, 
-                          cfg.data.image_size)
+        # Determine sampling shape for 1D or 2D data
+        if hasattr(cfg.data, 'seq_length'):
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.seq_length)
+        elif hasattr(cfg.data, 'image_size'):
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.image_size, cfg.data.image_size)
+        else:
+            raise ValueError('Neither seq_length nor image_size found in cfg.data; cannot determine sampling shape.')
         sampling_fn = sampling.get_sampling_fn(
             cfg, sde, sampling_shape, sampling_eps, device)
 
@@ -141,6 +144,12 @@ def _run(rank, world_size, work_dir, cfg, checkpoint_path=None):
         batch_class = batch[1].to(device) if cfg.data.classes else None
         if step == initial_step:
             print('TRAINING: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
+        # Before model call, print batch shape for debugging
+        print(f"[DEBUG] batch_imgs shape before model: {batch_imgs.shape}")
+        # If 1D data, ensure shape is [batch, channels, seq_length]
+        if batch_imgs.ndim == 4 and batch_imgs.shape[2] == 1:
+            # Squeeze the singleton height dimension for 1D
+            batch_imgs = batch_imgs.squeeze(2)
         loss = train_step_fn(state, batch_imgs, class_labels=batch_class)
 
         if step % cfg.training.log_freq == 0:
@@ -241,7 +250,13 @@ def _run_single(cfg, work_dir, checkpoint_path=None):
     train_step_fn = losses.get_step_fn(sde, train=True, optimize_fn=optimize_fn, reduce_mean=reduce_mean, likelihood_weighting=likelihood_weighting)
     eval_step_fn = losses.get_step_fn(sde, train=False, optimize_fn=optimize_fn, reduce_mean=reduce_mean, likelihood_weighting=likelihood_weighting)
     if cfg.training.snapshot_sampling:
-        sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.image_size, cfg.data.image_size)
+        # Determine sampling shape for 1D or 2D data
+        if hasattr(cfg.data, 'seq_length'):
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.seq_length)
+        elif hasattr(cfg.data, 'image_size'):
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.image_size, cfg.data.image_size)
+        else:
+            raise ValueError('Neither seq_length nor image_size found in cfg.data; cannot determine sampling shape.')
         sampling_fn = sampling.get_sampling_fn(cfg, sde, sampling_shape, sampling_eps, device)
     num_train_steps = cfg.training.n_iters
     mprint(f"Starting training loop at step {initial_step}.")
@@ -253,6 +268,12 @@ def _run_single(cfg, work_dir, checkpoint_path=None):
         batch_class = batch[1].to(device) if hasattr(cfg.data, 'classes') and cfg.data.classes else None
         if step == initial_step:
             print('TRAINING: First batch class labels:', batch_class[:10].cpu().numpy() if batch_class is not None else None)
+        # Before model call, print batch shape for debugging
+        print(f"[DEBUG] batch_imgs shape before model: {batch_imgs.shape}")
+        # If 1D data, ensure shape is [batch, channels, seq_length]
+        if batch_imgs.ndim == 4 and batch_imgs.shape[2] == 1:
+            # Squeeze the singleton height dimension for 1D
+            batch_imgs = batch_imgs.squeeze(2)
         loss = train_step_fn(state, batch_imgs, class_labels=batch_class)
         if step % cfg.training.log_freq == 0:
             mprint("step: %d, training_loss: %.5e" % (step, loss.item()))

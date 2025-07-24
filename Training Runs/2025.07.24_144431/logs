@@ -1,0 +1,396 @@
+2025-07-24 14:44:31,934 - Training run started at: 2025.07.24_144431
+2025-07-24 14:44:31,934 - Run directory: Training Runs/2025.07.24_144431
+2025-07-24 14:44:31,974 - WrappedUnet1D(
+  (init_conv): Conv1d(1, 64, kernel_size=(7,), stride=(1,), padding=(3,))
+  (time_mlp): Sequential(
+    (0): Linear(in_features=1, out_features=256, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=256, out_features=256, bias=True)
+  )
+  (classes_mlp): Sequential(
+    (0): Linear(in_features=1, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=64, bias=True)
+  )
+  (downs): ModuleList(
+    (0): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=128, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 64, kernel_size=(4,), stride=(2,), padding=(1,))
+    )
+    (1): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=128, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 128, kernel_size=(4,), stride=(2,), padding=(1,))
+    )
+    (2): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=256, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Identity()
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(128, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(128, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+    )
+  )
+  (ups): ModuleList(
+    (0): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=512, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(384, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Conv1d(384, 256, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(256, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Sequential(
+        (0): Upsample(size=33, mode='nearest')
+        (1): Conv1d(256, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+      )
+    )
+    (1): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=256, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(192, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(128, 128, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 128, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Conv1d(192, 128, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(128, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Sequential(
+        (0): Upsample(size=67, mode='nearest')
+        (1): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      )
+    )
+    (2): ModuleList(
+      (0-1): 2 x ResnetBlock(
+        (mlp): Sequential(
+          (0): SiLU()
+          (1): Linear(in_features=320, out_features=128, bias=True)
+        )
+        (block1): Block(
+          (proj): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (block2): Block(
+          (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+          (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+        (res_conv): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+      )
+      (2): Residual(
+        (fn): PreNorm(
+          (fn): LinearAttention(
+            (to_qkv): Conv1d(64, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (to_out): Sequential(
+              (0): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+              (1): RMSNorm()
+            )
+          )
+          (norm): RMSNorm()
+        )
+      )
+      (3): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+    )
+  )
+  (mid_block1): ResnetBlock(
+    (mlp): Sequential(
+      (0): SiLU()
+      (1): Linear(in_features=320, out_features=512, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (block2): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (res_conv): Identity()
+  )
+  (mid_attn): Residual(
+    (fn): PreNorm(
+      (fn): Attention(
+        (to_qkv): Conv1d(256, 384, kernel_size=(1,), stride=(1,), bias=False)
+        (to_out): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+      )
+      (norm): RMSNorm()
+    )
+  )
+  (mid_block2): ResnetBlock(
+    (mlp): Sequential(
+      (0): SiLU()
+      (1): Linear(in_features=320, out_features=512, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (block2): Block(
+      (proj): Conv1d(256, 256, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 256, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (res_conv): Identity()
+  )
+  (final_res_block): ResnetBlock(
+    (mlp): Sequential(
+      (0): SiLU()
+      (1): Linear(in_features=320, out_features=128, bias=True)
+    )
+    (block1): Block(
+      (proj): Conv1d(128, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (block2): Block(
+      (proj): Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(1,))
+      (norm): GroupNorm(4, 64, eps=1e-05, affine=True)
+      (act): SiLU()
+    )
+    (res_conv): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+  )
+  (final_conv): Conv1d(64, 1, kernel_size=(1,), stride=(1,))
+)
+2025-07-24 14:44:31,975 - EMA: <models.ema.ExponentialMovingAverage object at 0x309ae9fd0>
+2025-07-24 14:44:31,975 - Optimizer: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.001
+    maximize: False
+    weight_decay: 0
+)
+2025-07-24 14:44:31,975 - Scaler: None.
+2025-07-24 14:44:31,975 - No checkpoint found at Training Runs/2025.07.24_144431/checkpoints-meta/checkpoint.pth. Returned the same state as input
+2025-07-24 14:44:31,993 - Starting training loop at step 0.
+2025-07-24 14:44:33,261 - step: 0, training_loss: nan
+2025-07-24 14:46:02,384 - step: 0, evaluation_loss: 2.54323e+01
+2025-07-24 14:46:03,612 - step: 1, training_loss: nan
+2025-07-24 14:46:04,870 - step: 2, training_loss: nan
+2025-07-24 14:46:06,120 - step: 3, training_loss: nan
+2025-07-24 14:46:07,367 - step: 4, training_loss: nan
+2025-07-24 14:46:08,622 - step: 5, training_loss: nan
+2025-07-24 14:46:09,882 - step: 6, training_loss: nan
+2025-07-24 14:46:11,145 - step: 7, training_loss: nan
+2025-07-24 14:46:12,418 - step: 8, training_loss: nan
+2025-07-24 14:46:13,646 - step: 9, training_loss: nan
+2025-07-24 14:46:14,874 - step: 10, training_loss: nan
+2025-07-24 14:46:16,092 - step: 11, training_loss: nan
+2025-07-24 14:46:17,346 - step: 12, training_loss: nan
+2025-07-24 14:46:18,591 - step: 13, training_loss: nan
+2025-07-24 14:46:19,828 - step: 14, training_loss: nan
+2025-07-24 14:46:21,092 - step: 15, training_loss: nan
+2025-07-24 14:46:22,336 - step: 16, training_loss: nan
+2025-07-24 14:46:23,600 - step: 17, training_loss: nan
+2025-07-24 14:46:24,850 - step: 18, training_loss: nan
+2025-07-24 14:46:26,078 - step: 19, training_loss: nan
+2025-07-24 14:46:27,302 - step: 20, training_loss: nan
+2025-07-24 14:46:28,529 - step: 21, training_loss: nan
+2025-07-24 14:46:29,756 - step: 22, training_loss: nan
+2025-07-24 14:46:30,979 - step: 23, training_loss: nan
+2025-07-24 14:46:32,213 - step: 24, training_loss: nan
+2025-07-24 14:46:33,471 - step: 25, training_loss: nan
+2025-07-24 14:46:34,695 - step: 26, training_loss: nan
+2025-07-24 14:46:35,941 - step: 27, training_loss: nan
+2025-07-24 14:46:37,204 - step: 28, training_loss: nan
+2025-07-24 14:46:38,464 - step: 29, training_loss: nan
+2025-07-24 14:46:39,699 - step: 30, training_loss: nan
+2025-07-24 14:46:40,917 - step: 31, training_loss: nan
+2025-07-24 14:46:42,151 - step: 32, training_loss: nan
+2025-07-24 14:46:43,397 - step: 33, training_loss: nan
+2025-07-24 14:46:44,627 - step: 34, training_loss: nan
+2025-07-24 14:46:45,873 - step: 35, training_loss: nan
+2025-07-24 14:46:47,113 - step: 36, training_loss: nan
+2025-07-24 14:46:48,348 - step: 37, training_loss: nan
+2025-07-24 14:46:49,600 - step: 38, training_loss: nan
+2025-07-24 14:46:50,835 - step: 39, training_loss: nan
+2025-07-24 14:46:52,119 - step: 40, training_loss: nan
+2025-07-24 14:46:53,379 - step: 41, training_loss: nan
+2025-07-24 14:46:54,640 - step: 42, training_loss: nan
+2025-07-24 14:46:55,890 - step: 43, training_loss: nan
+2025-07-24 14:46:57,122 - step: 44, training_loss: nan
+2025-07-24 14:46:58,368 - step: 45, training_loss: nan
+2025-07-24 14:46:59,609 - step: 46, training_loss: nan
+2025-07-24 14:47:00,848 - step: 47, training_loss: nan
+2025-07-24 14:47:02,095 - step: 48, training_loss: nan
+2025-07-24 14:47:03,322 - step: 49, training_loss: nan
+2025-07-24 14:47:04,553 - step: 50, training_loss: nan
+2025-07-24 14:47:05,788 - step: 51, training_loss: nan
+2025-07-24 14:47:07,014 - step: 52, training_loss: nan
+2025-07-24 14:47:08,264 - step: 53, training_loss: nan
+2025-07-24 14:47:09,502 - step: 54, training_loss: nan
+2025-07-24 14:47:10,745 - step: 55, training_loss: nan
+2025-07-24 14:47:11,986 - step: 56, training_loss: nan
+2025-07-24 14:47:13,230 - step: 57, training_loss: nan
+2025-07-24 14:47:14,451 - step: 58, training_loss: nan
+2025-07-24 14:47:15,696 - step: 59, training_loss: nan
+2025-07-24 14:47:16,932 - step: 60, training_loss: nan
+2025-07-24 14:47:18,183 - step: 61, training_loss: nan
+2025-07-24 14:47:19,432 - step: 62, training_loss: nan
+2025-07-24 14:47:20,668 - step: 63, training_loss: nan
+2025-07-24 14:47:21,899 - step: 64, training_loss: nan
+2025-07-24 14:47:23,130 - step: 65, training_loss: nan
+2025-07-24 14:47:24,350 - step: 66, training_loss: nan
+2025-07-24 14:47:25,549 - step: 67, training_loss: nan
+2025-07-24 14:47:26,758 - step: 68, training_loss: nan
+2025-07-24 14:47:27,976 - step: 69, training_loss: nan
+2025-07-24 14:47:29,210 - step: 70, training_loss: nan
+2025-07-24 14:47:30,434 - step: 71, training_loss: nan
+2025-07-24 14:47:31,650 - step: 72, training_loss: nan
+2025-07-24 14:47:32,869 - step: 73, training_loss: nan
+2025-07-24 14:47:34,077 - step: 74, training_loss: nan
+2025-07-24 14:47:35,293 - step: 75, training_loss: nan
+2025-07-24 14:47:36,534 - step: 76, training_loss: nan
+2025-07-24 14:47:37,778 - step: 77, training_loss: nan
+2025-07-24 14:47:39,008 - step: 78, training_loss: nan
+2025-07-24 14:47:40,242 - step: 79, training_loss: nan
+2025-07-24 14:47:41,487 - step: 80, training_loss: nan
+2025-07-24 14:47:42,740 - step: 81, training_loss: nan
+2025-07-24 14:47:43,969 - step: 82, training_loss: nan
+2025-07-24 14:47:45,214 - step: 83, training_loss: nan
+2025-07-24 14:47:46,444 - step: 84, training_loss: nan
+2025-07-24 14:47:47,684 - step: 85, training_loss: nan
+2025-07-24 14:47:48,914 - step: 86, training_loss: nan
+2025-07-24 14:47:50,140 - step: 87, training_loss: nan
+2025-07-24 14:47:51,407 - step: 88, training_loss: nan
+2025-07-24 14:47:52,627 - step: 89, training_loss: nan
+2025-07-24 14:47:53,881 - step: 90, training_loss: nan
+2025-07-24 14:47:55,108 - step: 91, training_loss: nan
+2025-07-24 14:47:56,333 - step: 92, training_loss: nan
+2025-07-24 14:47:57,555 - step: 93, training_loss: nan
+2025-07-24 14:47:58,773 - step: 94, training_loss: nan
+2025-07-24 14:47:59,991 - step: 95, training_loss: nan
+2025-07-24 14:48:01,232 - step: 96, training_loss: nan
+2025-07-24 14:48:02,492 - step: 97, training_loss: nan
+2025-07-24 14:48:03,748 - step: 98, training_loss: nan
+2025-07-24 14:48:04,970 - step: 99, training_loss: nan

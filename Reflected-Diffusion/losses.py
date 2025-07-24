@@ -79,15 +79,28 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
         t = torch.rand(batch.shape[0], device=batch.device) * (sde.T - eps) + eps
         z = torch.randn_like(batch)
         mean, std = sde.marginal_prob(batch, t)
-        perturbed_data = cube.reflect(mean + std[:, None, None, None] * z)
+        # Handle 1D ([B, C, L]) and 2D ([B, C, H, W])
+        if batch.ndim == 4:
+            std_expanded = std[:, None, None, None]
+        elif batch.ndim == 3:
+            std_expanded = std[:, None, None]
+        else:
+            raise RuntimeError(f"Unsupported batch ndim: {batch.ndim}")
+        perturbed_data = mean + std_expanded * z
         score = score_fn(perturbed_data, t, class_labels=class_labels)
         score_hk = cube.score_hk(perturbed_data, mean, std)
 
         if not likelihood_weighting:
-            losses = (std ** 2)[:, None, None, None] * (score - score_hk).pow(2)
+            losses = (std_expanded ** 2) * (score - score_hk).pow(2)
         else:
             g2 = sde.sde(torch.zeros_like(batch), t)[1] ** 2
-            losses = g2[:, None, None, None] * (score - score_hk).pow(2)
+            if batch.ndim == 4:
+                g2_expanded = g2[:, None, None, None]
+            elif batch.ndim == 3:
+                g2_expanded = g2[:, None, None]
+            else:
+                raise RuntimeError(f"Unsupported batch ndim: {batch.ndim}")
+            losses = g2_expanded * (score - score_hk).pow(2)
 
         losses = reduce_op(losses.reshape(losses.shape[0], -1), dim=-1)
         loss = torch.mean(losses)

@@ -97,6 +97,26 @@ class GTOHaloImageDataset(Dataset):
         img = padded.reshape(1, 9, 9)  # 9×9 = 81 values
         return torch.tensor(img, dtype=torch.float32), torch.tensor(classifier, dtype=torch.float32)
 
+class GTOHalo1DDataset(Dataset):
+    """
+    Dataset for GTO Halo 1D input. Returns [1, 67] normalized vector and [1] class label.
+    """
+    def __init__(self, pkl_path):
+        with open(pkl_path, 'rb') as f:
+            data = pickle.load(f)
+        self.data = data.astype(np.float32)
+        self.mean = 0.49994  # Updated mean
+        self.std = 0.13372   # Updated std
+    def __len__(self):
+        return self.data.shape[0]
+    def __getitem__(self, idx):
+        vec = self.data[idx]
+        classifier = np.array([vec[0]], dtype=np.float32)  # first value as label
+        padded = np.pad(vec, (0, 67 - len(vec)), 'constant')
+        padded = (padded - self.mean) / self.std
+        # Return as [1, 67] for Conv1d input
+        return torch.tensor(padded, dtype=torch.float32).unsqueeze(0), torch.tensor(classifier, dtype=torch.float32)
+
 def get_dataset(config, evaluation=False, distributed=True):
     
     dataroot = config.dataroot
@@ -144,6 +164,10 @@ def get_dataset(config, evaluation=False, distributed=True):
     elif config.data.dataset == "GTOHaloImage":
         train_set = GTOHaloImageDataset(config.data.pkl_path)
         test_set = GTOHaloImageDataset(config.data.pkl_path)
+        workers = 0
+    elif config.data.dataset in ["GTOHalo1D", "GTOHaloImage"]:
+        train_set = GTOHalo1DDataset(config.data.pkl_path)
+        test_set = GTOHalo1DDataset(config.data.pkl_path)
         workers = 0
     else:
         raise ValueError(f"{config.data.dataset} is not valid")

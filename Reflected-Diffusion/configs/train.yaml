@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - model: ncsnpp
+  - model: unet1d
   - data: gto_halo
   - override hydra/launcher: submitit_slurm
 
