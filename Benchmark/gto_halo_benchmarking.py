@@ -277,7 +277,6 @@ class GTOHaloBenchmarker:
             sampling_time = end_time - start_time
             # Only use the middle channel output
             sample_np = sample[:, 1, :, :].cpu().numpy()  # [batch, 9, 9]
-            sample_np = np.clip(sample_np, 0, 1)
             # Unnormalize before flattening
             sample_np = sample_np * std + mean
             samples.append(sample_np)

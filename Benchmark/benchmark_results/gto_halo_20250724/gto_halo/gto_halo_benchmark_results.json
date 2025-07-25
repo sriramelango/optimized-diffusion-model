@@ -1,0 +1,50 @@
+{
+  "gto_halo_metrics": {
+    "class_label_mean": 0.5329232782125473,
+    "class_label_std": 0.057892029179844214,
+    "class_label_min": 0.46523919701576233,
+    "class_label_max": 0.6427429914474487,
+    "time_vars_mean": 0.52843763033549,
+    "time_vars_std": 0.044833119578841014,
+    "time_vars_min": 0.4679385721683502,
+    "time_vars_max": 0.6385519504547119,
+    "thrust_vars_mean": 0.5209881048897902,
+    "thrust_vars_std": 0.045120772256551075,
+    "thrust_vars_min": 0.4652614891529083,
+    "thrust_vars_max": 0.6458759903907776,
+    "mass_vars_mean": 0.5427697529395421,
+    "mass_vars_std": 0.04695088387673312,
+    "mass_vars_min": 0.46543365716934204,
+    "mass_vars_max": 0.6313031911849976,
+    "boundary_violations_total": "0",
+    "boundary_violation_rate": 0.0,
+    "thrust_boundary_violations": "0",
+    "thrust_boundary_violation_rate": 0.0,
+    "has_nan": "False",
+    "has_inf": "False",
+    "has_negative": "False",
+    "has_above_one": "False"
+  },
+  "physical_validation": {
+    "feasible_ratio": 0.6,
+    "avg_final_mass_feasible": 360.3022744526955,
+    "local_optimal_ratio": 0.6,
+    "avg_final_mass_optimal": 360.3022744526955,
+    "avg_solving_time": 18.74134283065796,
+    "snopt_inform_distribution": {
+      "1": 6,
+      "3": 4
+    },
+    "total_tested": 10,
+    "feasible_count": 6,
+    "local_optimal_count": 6
+  },
+  "sampling_efficiency": {
+    "total_sampling_time": 31.42091989517212,
+    "average_sampling_time_per_sample": 31.42091989517212,
+    "sampling_time_std": 0.0,
+    "samples_per_second": 0.0318259300916792,
+    "min_sampling_time": 31.42091989517212,
+    "max_sampling_time": 31.42091989517212
+  }
+}

@@ -3,22 +3,22 @@ GTO HALO BENCHMARK RESULTS
 ============================================================
 
 GTO HALO METRICS:
-  class_label_mean: 0.165177
-  class_label_std: 0.016962
-  class_label_min: 0.148215
-  class_label_max: 0.182139
-  time_vars_mean: 0.406823
-  time_vars_std: 0.215738
-  time_vars_min: 0.007355
-  time_vars_max: 0.658960
-  thrust_vars_mean: 0.231595
-  thrust_vars_std: 0.195647
-  thrust_vars_min: 0.003945
-  thrust_vars_max: 0.987518
-  mass_vars_mean: 0.574069
-  mass_vars_std: 0.210123
-  mass_vars_min: 0.384485
-  mass_vars_max: 0.876238
+  class_label_mean: 0.548881
+  class_label_std: 0.049793
+  class_label_min: 0.468323
+  class_label_max: 0.632813
+  time_vars_mean: 0.553612
+  time_vars_std: 0.048825
+  time_vars_min: 0.478406
+  time_vars_max: 0.628757
+  thrust_vars_mean: 0.555214
+  thrust_vars_std: 0.053032
+  thrust_vars_min: 0.465220
+  thrust_vars_max: 0.646249
+  mass_vars_mean: 0.550947
+  mass_vars_std: 0.061092
+  mass_vars_min: 0.467510
+  mass_vars_max: 0.646033
   boundary_violations_total: 0
   boundary_violation_rate: 0.000000
   thrust_boundary_violations: 0
@@ -29,22 +29,16 @@ GTO HALO METRICS:
   has_above_one: False
 
 PHYSICAL VALIDATION METRICS:
-  feasible_ratio: 0.000000
-  avg_final_mass_feasible: 0
-  local_optimal_ratio: 0.000000
-  avg_final_mass_optimal: 0
-  avg_solving_time: 7.156174
-  snopt_inform_distribution: {}
-  total_tested: 2
-  feasible_count: 0
-  local_optimal_count: 0
+  physical_validation_disabled: True
+  reason: GTO_Halo_DM modules not available
+  missing_metrics: ['feasible_solution_ratio', 'local_optimal_solution_ratio', 'average_final_mass_feasible', 'average_final_mass_optimal', 'snopt_inform_distribution', 'solving_time_analysis']
 
 SAMPLING EFFICIENCY:
-  total_sampling_time: 29.658627
-  average_sampling_time_per_sample: 29.658627
+  total_sampling_time: 29.586236
+  average_sampling_time_per_sample: 29.586236
   sampling_time_std: 0.000000
-  samples_per_second: 0.033717
-  min_sampling_time: 29.658627
-  max_sampling_time: 29.658627
+  samples_per_second: 0.033800
+  min_sampling_time: 29.586236
+  max_sampling_time: 29.586236
 
 ============================================================

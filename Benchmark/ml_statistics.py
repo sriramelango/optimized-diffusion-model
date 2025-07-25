@@ -222,7 +222,6 @@ class MLStatisticsBenchmarker:
             
             # Convert to numpy and clip to [0, 1]
             sample_np = sample.cpu().numpy()
-            sample_np = np.clip(sample_np, 0, 1)
             
             samples.append(sample_np)
             sampling_times.append(sampling_time)
