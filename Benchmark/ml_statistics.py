@@ -220,9 +220,8 @@ class MLStatisticsBenchmarker:
             end_time = time.time()
             sampling_time = end_time - start_time
             
-            # Convert to numpy and clip to [0, 1]
+            # Convert to numpy (no clipping for reflected diffusion model)
             sample_np = sample.cpu().numpy()
-            sample_np = np.clip(sample_np, 0, 1)
             
             samples.append(sample_np)
             sampling_times.append(sampling_time)

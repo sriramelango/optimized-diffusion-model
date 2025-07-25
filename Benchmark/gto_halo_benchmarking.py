@@ -238,11 +238,8 @@ class GTOHaloBenchmarker:
             end_time = time.time()
             sampling_time = end_time - start_time
             
-            # Convert to numpy and clip to [0, 1]
+            # Convert to numpy (no clipping for reflected diffusion model)
             sample_np = sample.cpu().numpy()
-            sample_np = np.clip(sample_np, 0, 1)
-            # Unnormalize before flattening
-            sample_np = sample_np * 0.1811 + 0.4652
             samples.append(sample_np)
             sampling_times.append(sampling_time)
             
@@ -251,36 +248,101 @@ class GTOHaloBenchmarker:
         # Concatenate all samples
         all_samples = np.concatenate(samples, axis=0)
         all_samples = all_samples[:self.config.num_samples]  # Ensure exact number
-        
+
         # --- FLATTEN TO (N, 67) ---
-        # Model outputs (N, 1, 9, 9) = (N, 81) total values
-        # Original data is 67-dimensional, padded with 14 zeros to make 81 for the model input
-        # After model prediction, output is flattened and only the first 67 values are used (rest are padding)
-        # This is intentional and matches the data pipeline
         samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
         samples = samples[:, :67]  # Keep only the first 67 values
+
+        # Extract class labels (normalized halo energies) and model outputs separately
+        # This matches the 1D implementation approach
+        class_labels_normalized = samples[:, 0]  # First column is normalized class labels
+        model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
+
+        # First, apply global mean/std unnormalization (as used in training) to model outputs only
+        mean = 0.4652
+        std = 0.1811
+        model_outputs = model_outputs * std + mean
+
+        # Then, apply per-variable physical unnormalization (match 1D GTO Halo DM exactly)
+        min_shooting_time = 0
+        max_shooting_time = 40
+        min_coast_time = 0
+        max_coast_time = 15
+        min_halo_energy = 0.008
+        max_halo_energy = 0.095
+        min_final_fuel_mass = 408
+        max_final_fuel_mass = 470
+        min_manifold_length = 5
+        max_manifold_length = 11
+        thrust = 1.0
+
+        # Unnormalize times
+        model_outputs[:, 0] = model_outputs[:, 0] * (max_shooting_time - min_shooting_time) + min_shooting_time
+        model_outputs[:, 1] = model_outputs[:, 1] * (max_coast_time - min_coast_time) + min_coast_time
+        model_outputs[:, 2] = model_outputs[:, 2] * (max_coast_time - min_coast_time) + min_coast_time
+        
+        # Convert cartesian control back to correct range, NO CONVERSION TO POLAR
+        model_outputs[:, 3:-3] = model_outputs[:, 3:-3] * 2 * thrust - thrust
+        
+        # Convert to spherical coordinates (exactly as in 1D script)
+        # Need to be careful with slicing - the control variables should be in groups of 3
+        control_section = model_outputs[:, 3:-3]  # Extract control section
+        
+        # Reshape to ensure we have groups of 3 (ux, uy, uz)
+        num_control_vars = control_section.shape[1]
+        num_triplets = num_control_vars // 3
+        
+        if num_control_vars % 3 != 0:
+            # Truncate to nearest multiple of 3
+            control_section = control_section[:, :num_triplets*3]
+            num_control_vars = num_triplets * 3
+        
+        # Reshape to (batch_size, num_triplets, 3) for easier processing
+        control_reshaped = control_section.reshape(-1, num_triplets, 3)
+        ux = control_reshaped[:, :, 0]  # Shape: (batch_size, num_triplets)
+        uy = control_reshaped[:, :, 1]  # Shape: (batch_size, num_triplets)  
+        uz = control_reshaped[:, :, 2]  # Shape: (batch_size, num_triplets)
+        
+        alpha, beta, r = self._convert_to_spherical(ux, uy, uz)
+        
+        # Put the spherical coordinates back
+        control_reshaped[:, :, 0] = alpha
+        control_reshaped[:, :, 1] = beta
+        control_reshaped[:, :, 2] = r
+        
+        # Reshape back and put into model_outputs
+        model_outputs[:, 3:3+num_control_vars] = control_reshaped.reshape(-1, num_control_vars)
+        
+        # Unnormalize fuel mass and manifold parameters (match 1D implementation exactly)
+        model_outputs[:, -3] = model_outputs[:, -3] * (max_final_fuel_mass - min_final_fuel_mass) + min_final_fuel_mass
+        model_outputs[:, -1] = model_outputs[:, -1] * (max_manifold_length - min_manifold_length) + min_manifold_length
+        # Note: model_outputs[:, -2] is NOT unnormalized (halo period remains normalized as in 1D implementation)
+
+        # Unnormalize halo energy (exactly as in 1D implementation)
+        halo_energies = class_labels_normalized * (max_halo_energy - min_halo_energy) + min_halo_energy
+        
+        # Combine halo energies with model outputs (exactly as in 1D implementation)
+        samples = np.column_stack((halo_energies, model_outputs))
+
         print(f"Model output shape: {samples.shape}")
         print(f"Flattened shape: {samples.shape}")
-        # No need for further padding; model output is always truncated to 67 for downstream use
-        
-        # Extract components from 67-vector
-        # Assuming format: [class_label, time_vars, thrust_vars, mass_vars, other_vars]
-        class_labels = samples[:, 0]  # First value is class label
-        time_vars = samples[:, 1:4]   # Time variables
-        thrust_vars = samples[:, 4:64]  # Thrust variables (60 values)
-        mass_vars = samples[:, 64:67]  # Mass variables (3 values)
-        
-        print(f"Model output shape: {all_samples.shape}")
-        print(f"Flattened shape: {samples.shape}")
-        print(f"Expected shape: (N, 67), but got (N, {samples.shape[1]})")
-        
-        # For now, pad with zeros to match 67 dimensions
-        # This is a temporary fix - ideally the model should output 67 values
-        padded_samples = np.zeros((samples.shape[0], 67))
-        padded_samples[:, :samples.shape[1]] = samples
-        print(f"Padded shape: {padded_samples.shape}")
-        
-        return padded_samples, sampling_times
+
+        return samples, sampling_times
+    
+    def _convert_to_spherical(self, ux, uy, uz):
+        """Convert cartesian coordinates to spherical coordinates (exactly as in 1D script)."""
+        u = np.sqrt(ux ** 2 + uy ** 2 + uz ** 2)
+        theta = np.zeros_like(u)
+        mask_non_zero = u != 0
+        theta[mask_non_zero] = np.arcsin(uz[mask_non_zero] / u[mask_non_zero])
+        alpha = np.arctan2(uy, ux)
+        alpha = np.where(alpha >= 0, alpha, 2 * np.pi + alpha)
+
+        # Make sure theta is in [0, 2*pi]
+        theta = np.where(theta >= 0, theta, 2 * np.pi + theta)
+        # Make sure u is not larger than 1
+        u[u>1] = 1
+        return alpha, theta, u
     
     def compute_gto_halo_metrics(self, samples: np.ndarray) -> Dict[str, Any]:
         """Compute GTO Halo specific metrics."""
@@ -372,21 +434,21 @@ class GTOHaloBenchmarker:
         
         print("Computing physical validation metrics using CR3BP simulator...")
         
-        # Use default CR3BP config if not provided
+        # Use default CR3BP config if not provided (match 1D implementation exactly)
         cr3bp_config = self.config.cr3bp_config or {
             'seed': 0,
             'seed_step': 10,  # Test with 10 samples
             'quiet_snopt': True,
-            'number_of_segments': 20,
-            'maximum_shooting_time': 40.0,
-            'minimum_shooting_time': 0.0,
-            'start_bdry': 6.48423370092,
-            'end_bdry': 8.0,
-            'thrust': 1.0,
-            'solver_mode': 'optimal',
-            'min_mass_to_sample': 350.0,
-            'max_mass_to_sample': 450.0,
-            'snopt_time_limit': 20.0,
+            'number_of_segments': 20,  # Match 1D implementation
+            'maximum_shooting_time': 40.0,  # Match 1D implementation
+            'minimum_shooting_time': 0.0,  # Match 1D implementation
+            'start_bdry': 6.48423370092,  # Match 1D implementation
+            'end_bdry': 8.0,  # Match 1D implementation
+            'thrust': 1.0,  # Match 1D implementation
+            'solver_mode': 0,  # Match 1D implementation (0 = optimal, "feasible" = feasible)
+            'min_mass_to_sample': 408,  # Match 1D implementation
+            'max_mass_to_sample': 470,  # Match 1D implementation
+            'snopt_time_limit': 1000.0,  # Match 1D implementation
             'result_folder': os.path.join(self.config.output_dir, 'cr3bp_results')
         }
         
@@ -423,18 +485,16 @@ class GTOHaloBenchmarker:
 
             num_test_samples = len(samples)  # Test all generated samples
 
-            # Denormalize halo energies from [0,1] to physical range [0.008, 0.095]
-            min_halo_energy = 0.008
-            max_halo_energy = 0.095
-
+            # Format data exactly as 1D implementation expects: [halo_energy, ...rest_of_data]
+            # The samples are already in the correct format from generate_samples()
+            # First column (index 0) is the halo energy, rest is the initial guess
+            
             for i in range(num_test_samples):
-                initial_guess = samples[i, 1:]  # Exclude class label
-                normalized_halo_energy = samples[i, 0]  # Class label as normalized halo energy
+                # Data format: [halo_energy, shooting_time, coast_time1, coast_time2, controls..., fuel_mass, manifold_length1, manifold_length2]
+                halo_energy = samples[i, 0]  # First column is already the physical halo energy
+                initial_guess = samples[i, 1:]  # Rest is the initial guess data
                 
-                # Denormalize halo energy
-                halo_energy = min_halo_energy + (max_halo_energy - min_halo_energy) * normalized_halo_energy
-                
-                print(f"Testing sample {i+1}/{num_test_samples} with normalized halo energy {normalized_halo_energy:.3f} -> physical halo energy {halo_energy:.6f}")
+                print(f"Testing sample {i+1}/{num_test_samples} with halo energy {halo_energy:.6f}")
                 
                 # Run simulation
                 result_data = simulator.simulate(earth_initial_guess=initial_guess, halo_energy=halo_energy)
