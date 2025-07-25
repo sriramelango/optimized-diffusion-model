@@ -1,0 +1,42 @@
+{
+  "gto_halo_metrics": {
+    "class_label_mean": 0.05001214146614075,
+    "class_label_std": 0.024796264246106148,
+    "class_label_min": 0.008042586967349052,
+    "class_label_max": 0.0949254184961319,
+    "time_vars_mean": 12.619136810302734,
+    "time_vars_std": 6.208817481994629,
+    "time_vars_min": 6.980051040649414,
+    "time_vars_max": 25.816417694091797,
+    "thrust_vars_mean": 1.989560604095459,
+    "thrust_vars_std": 2.3167779445648193,
+    "thrust_vars_min": 1.025766323436983e-05,
+    "thrust_vars_max": 6.283176898956299,
+    "mass_vars_mean": 150.37689208984375,
+    "mass_vars_std": 206.40269470214844,
+    "mass_vars_min": 0.4653107225894928,
+    "mass_vars_max": 448.05389404296875,
+    "has_nan": "False",
+    "has_inf": "False"
+  },
+  "physical_validation": {
+    "physical_validation_disabled": true,
+    "reason": "GTO_Halo_DM modules not available",
+    "missing_metrics": [
+      "feasible_solution_ratio",
+      "local_optimal_solution_ratio",
+      "average_final_mass_feasible",
+      "average_final_mass_optimal",
+      "snopt_inform_distribution",
+      "solving_time_analysis"
+    ]
+  },
+  "sampling_efficiency": {
+    "total_sampling_time": 313.994393825531,
+    "average_sampling_time_per_sample": 31.3994393825531,
+    "sampling_time_std": 0.9125760830209829,
+    "samples_per_second": 0.03184770236871311,
+    "min_sampling_time": 30.350807189941406,
+    "max_sampling_time": 33.36771774291992
+  }
+}
