@@ -1,0 +1,6 @@
+SPHERICAL CONVERSION CLIPPING STATISTICS
+==================================================
+Total elements processed: 60
+Total elements clipped (u > 1): 0
+Overall clipping rate: 0.0000%
+==================================================

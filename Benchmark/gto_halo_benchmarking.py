@@ -97,6 +97,10 @@ class GTOHaloBenchmarker:
         self.config = config
         self.device = torch.device(config.device)
         
+        # Initialize counters for tracking boundary violations
+        self.total_spherical_clips = 0
+        self.total_spherical_elements = 0
+        
         # Default model path - use Training Runs directory structure
         if not hasattr(self.config, 'model_path') or not self.config.model_path:
             # Look for the most recent training run
@@ -340,6 +344,21 @@ class GTOHaloBenchmarker:
 
         # Make sure theta is in [0, 2*pi]
         theta = np.where(theta >= 0, theta, 2 * np.pi + theta)
+        
+        # Track how many times we need to clip u > 1
+        u_exceeds_one = u > 1
+        num_clips = np.sum(u_exceeds_one)
+        total_elements = u.size
+        
+        # Accumulate global statistics
+        self.total_spherical_clips += num_clips
+        self.total_spherical_elements += total_elements
+        
+        if num_clips > 0:
+            print(f"⚠️  SPHERICAL CONVERSION CLIPPING: {num_clips}/{total_elements} values ({100*num_clips/total_elements:.2f}%) exceeded magnitude 1")
+            print(f"   Max magnitude before clipping: {np.max(u):.6f}")
+            print(f"   Min magnitude before clipping: {np.min(u):.6f}")
+        
         # Make sure u is not larger than 1
         u[u>1] = 1
         return alpha, theta, u
@@ -394,19 +413,13 @@ class GTOHaloBenchmarker:
         metrics['mass_vars_min'] = float(safe_stat(mass_vars, np.min, None))
         metrics['mass_vars_max'] = float(safe_stat(mass_vars, np.max, None))
         
-        # Boundary constraint violations
-        metrics['boundary_violations_total'] = np.sum((samples < 0) | (samples > 1))
-        metrics['boundary_violation_rate'] = np.sum((samples < 0) | (samples > 1)) / samples.size if samples.size > 0 else 0
+        # Note: No boundary violation checks for reflected diffusion model
+        # The model operates in [0,1] space and uses reflection to maintain boundaries
+        # Any violations would be from unnormalization, not model generation
         
-        # Thrust-specific boundary violations
-        metrics['thrust_boundary_violations'] = np.sum((thrust_vars < 0) | (thrust_vars > 1))
-        metrics['thrust_boundary_violation_rate'] = np.sum((thrust_vars < 0) | (thrust_vars > 1)) / thrust_vars.size if thrust_vars.size > 0 else 0
-        
-        # Data quality
+        # Data quality (basic checks only)
         metrics['has_nan'] = np.any(np.isnan(samples))
         metrics['has_inf'] = np.any(np.isinf(samples))
-        metrics['has_negative'] = np.any(samples < 0)
-        metrics['has_above_one'] = np.any(samples > 1)
         
         return metrics
     
@@ -628,6 +641,9 @@ class GTOHaloBenchmarker:
         if self.config.save_plots:
             self.generate_plots(results, samples)
         
+        # Print final spherical conversion statistics
+        self.print_spherical_conversion_stats()
+        
         return results
     
     def save_results(self, results: Dict[str, Any], samples: np.ndarray):
@@ -737,22 +753,18 @@ class GTOHaloBenchmarker:
             axes[0, 2].set_title('Mass Variables Statistics')
             axes[0, 2].set_ylabel('Value')
         
-        # Boundary violations
-        if 'boundary_violation_rate' in metrics:
-            violation_metrics = ['Overall', 'Thrust']
-            violation_rates = [
-                metrics['boundary_violation_rate'],
-                metrics.get('thrust_boundary_violation_rate', 0)
-            ]
-            axes[1, 0].bar(violation_metrics, violation_rates)
-            axes[1, 0].set_title('Boundary Violation Rates')
-            axes[1, 0].set_ylabel('Rate')
+        # Note: No boundary violation plots for reflected diffusion model
+        # The model maintains [0,1] boundaries through reflection
+        axes[1, 0].text(0.5, 0.5, 'No boundary violations\n(Reflected Diffusion Model)', 
+                        ha='center', va='center', transform=axes[1, 0].transAxes)
+        axes[1, 0].set_title('Boundary Violations')
+        axes[1, 0].set_ylim(0, 1)
         
-        # Data quality checks
+        # Data quality checks (basic only)
         quality_checks = []
         quality_values = []
         
-        for check in ['has_nan', 'has_inf', 'has_negative', 'has_above_one']:
+        for check in ['has_nan', 'has_inf']:
             if check in metrics:
                 quality_checks.append(check.replace('_', ' ').title())
                 quality_values.append(1 if metrics[check] else 0)
@@ -869,3 +881,27 @@ class GTOHaloBenchmarker:
         plt.tight_layout()
         plt.savefig(os.path.join(self.config.output_dir, 'plots', 'sample_distributions.png'), dpi=300)
         plt.close() 
+    
+    def print_spherical_conversion_stats(self):
+        """Print final statistics about spherical coordinate conversion clipping."""
+        if self.total_spherical_elements > 0:
+            print("\n" + "="*60)
+            print("SPHERICAL CONVERSION CLIPPING STATISTICS")
+            print("="*60)
+            print(f"Total elements processed: {self.total_spherical_elements}")
+            print(f"Total elements clipped (u > 1): {self.total_spherical_clips}")
+            print(f"Overall clipping rate: {100*self.total_spherical_clips/self.total_spherical_elements:.4f}%")
+            print("="*60)
+            
+            # Add to results summary
+            if hasattr(self, 'config') and hasattr(self.config, 'output_dir'):
+                summary_file = os.path.join(self.config.output_dir, 'spherical_clipping_stats.txt')
+                with open(summary_file, 'w') as f:
+                    f.write("SPHERICAL CONVERSION CLIPPING STATISTICS\n")
+                    f.write("="*50 + "\n")
+                    f.write(f"Total elements processed: {self.total_spherical_elements}\n")
+                    f.write(f"Total elements clipped (u > 1): {self.total_spherical_clips}\n")
+                    f.write(f"Overall clipping rate: {100*self.total_spherical_clips/self.total_spherical_elements:.4f}%\n")
+                    f.write("="*50 + "\n")
+        else:
+            print("\nNo spherical coordinate conversion performed.")

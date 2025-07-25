@@ -224,7 +224,7 @@ Examples:
         
         if 'gto_halo_metrics' in result:
             metrics = result['gto_halo_metrics']
-            print(f"  Boundary violation rate: {metrics.get('boundary_violation_rate', 'N/A'):.6f}")
+            # Note: No boundary violation rate for reflected diffusion model
             print(f"  Class label mean: {metrics.get('class_label_mean', 'N/A'):.6f}")
         
         if 'standard_metrics' in result:
