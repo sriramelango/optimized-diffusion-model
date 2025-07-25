@@ -1,0 +1,22 @@
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_setup.py:_flush():80] Current SDK version is 0.21.0
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_setup.py:_flush():80] Configure stats pid to 25826
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_setup.py:_flush():80] Loading settings from /Users/sriramelango/.config/wandb/settings
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_setup.py:_flush():80] Loading settings from /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/wandb/settings
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_init.py:setup_run_log_directory():703] Logging user logs to /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/wandb/run-20250725_125428-1qvv6af7/logs/debug.log
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_init.py:setup_run_log_directory():704] Logging internal logs to /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/wandb/run-20250725_125428-1qvv6af7/logs/debug-internal.log
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_init.py:init():830] calling init triggers
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_init.py:init():835] wandb.init called with sweep_config: {}
+config: {'unet_dim': 128, 'unet_dim_mults': (4, 4, 8), 'embed_class_layers_dims': (256, 512), 'timesteps': 1000, 'objective': 'pred_noise', 'batch_size': 16, 'cond_drop_prob': 0.1, 'mask_val': 0.0, 'training_data_range': '0_1', 'training_data_num': 300000, 'task_type': 'car', 'constraint_loss_type': 'one_over_t', 'constraint_gt_sample_num': 1, 'normalize_xt_by_mean_sigma': 'False', 'constraint_violation_weight': 0.001, 'training_random_seed': 0, '_wandb': {}}
+2025-07-25 12:54:28,490 INFO    MainThread:25826 [wandb_init.py:init():871] starting backend
+2025-07-25 12:54:29,351 INFO    MainThread:25826 [wandb_init.py:init():874] sending inform_init request
+2025-07-25 12:54:29,525 INFO    MainThread:25826 [wandb_init.py:init():882] backend started and connected
+2025-07-25 12:54:29,529 INFO    MainThread:25826 [wandb_init.py:init():953] updated telemetry
+2025-07-25 12:54:29,560 INFO    MainThread:25826 [wandb_init.py:init():977] communicating run to backend with 90.0 second timeout
+2025-07-25 12:54:30,046 INFO    MainThread:25826 [wandb_init.py:init():1029] starting run threads in backend
+2025-07-25 12:54:30,250 INFO    MainThread:25826 [wandb_run.py:_console_start():2458] atexit reg
+2025-07-25 12:54:30,250 INFO    MainThread:25826 [wandb_run.py:_redirect():2306] redirect: wrap_raw
+2025-07-25 12:54:30,250 INFO    MainThread:25826 [wandb_run.py:_redirect():2375] Wrapping output streams.
+2025-07-25 12:54:30,250 INFO    MainThread:25826 [wandb_run.py:_redirect():2398] Redirects installed.
+2025-07-25 12:54:30,258 INFO    MainThread:25826 [wandb_init.py:init():1075] run started, returning control to user process
+2025-07-25 12:54:31,372 INFO    MsgRouterThr:25826 [mailbox.py:close():129] [no run ID] Closing mailbox, abandoning 1 handles.

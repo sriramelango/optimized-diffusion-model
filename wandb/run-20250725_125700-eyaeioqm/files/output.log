@@ -1,0 +1,16 @@
+Shape of initted in EMA state dict: torch.Size([1])
+Shape of step in EMA state dict: torch.Size([1])
+loading from version 1.8.11
+sampling loop time step: 100%|████████████████████████████████████████████| 500/500 [00:25<00:00, 19.57it/s]
+., 10 data, takes 25.621378898620605 seconds
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 267, in <module>
+    main(timesteps,data_num,sample_num,mask_val,fixed_alpha, args.checkpoint_file)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 108, in main
+    os.makedirs(parent_path, exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 215, in makedirs
+  [Previous line repeated 4 more times]
+  File "<frozen os>", line 225, in makedirs
+OSError: [Errno 45] Operation not supported: '/home/jg3607'

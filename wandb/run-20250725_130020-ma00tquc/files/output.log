@@ -1,0 +1,6 @@
+Shape of initted in EMA state dict: torch.Size([1])
+Shape of step in EMA state dict: torch.Size([1])
+loading from version 1.8.11
+sampling loop time step: 100%|████████████████████████████████████████████| 500/500 [00:24<00:00, 20.00it/s]
+., 10 data, takes 25.049129247665405 seconds
+./results/boundary/unet_128_mults_4_4_8_embed_class_256_512_timesteps_500_batch_size_512_cond_drop_0.1_mask_val_0.0/cr3bp_diffusion_boundary_w_5.0_training_num_100000_num_10.pkl is saved!

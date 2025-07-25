@@ -1,0 +1,28 @@
+Shape of initted in EMA state dict: torch.Size([1])
+Shape of step in EMA state dict: torch.Size([1])
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 267, in <module>
+    main(timesteps,data_num,sample_num,mask_val,fixed_alpha, args.checkpoint_file)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 57, in main
+    full_solution = get_sample_from_diffusion_attention(sample_num=sample_num,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 205, in get_sample_from_diffusion_attention
+    trainer.load(milestone)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 1311, in load
+    model.load_state_dict(data['model'])
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2041, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for GaussianDiffusion1D:
+	size mismatch for betas: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for alphas_cumprod_prev: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for sqrt_alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for sqrt_one_minus_alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for log_one_minus_alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for sqrt_recip_alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for sqrt_recipm1_alphas_cumprod: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for posterior_variance: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for posterior_log_variance_clipped: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for posterior_mean_coef1: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for posterior_mean_coef2: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).
+	size mismatch for loss_weight: copying a param with shape torch.Size([500]) from checkpoint, the shape in current model is torch.Size([1000]).

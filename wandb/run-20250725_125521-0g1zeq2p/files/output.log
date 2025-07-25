@@ -1,0 +1,43 @@
+Shape of initted in EMA state dict: torch.Size([1])
+Shape of step in EMA state dict: torch.Size([1])
+loading from version 1.8.11
+sampling loop time step:   0%|                                                      | 0/500 [00:02<?, ?it/s]
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 267, in <module>
+    main(timesteps,data_num,sample_num,mask_val,fixed_alpha, args.checkpoint_file)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 57, in main
+    full_solution = get_sample_from_diffusion_attention(sample_num=sample_num,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 210, in get_sample_from_diffusion_attention
+    sample_results = diffusion.sample(
+                     ^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 857, in sample
+    return sample_fn(classes, (batch_size, channels, seq_length), cond_scale, rescaled_phi)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 811, in p_sample_loop
+    img, x_start = self.p_sample(img, t, classes, cond_scale, rescaled_phi)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 785, in p_sample
+    model_mean, _, model_log_variance, x_start = self.p_mean_variance(x=x, t=batched_times, classes=classes,
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 764, in p_mean_variance
+    preds = self.model_predictions(x, t, classes, cond_scale, rescaled_phi)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 738, in model_predictions
+    model_output = self.model.forward_with_cond_scale(x, t, classes, cond_scale=cond_scale,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 490, in forward_with_cond_scale
+    null_logits = self.forward(*args, cond_drop_prob=1., **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 526, in forward
+    torch.tensor(self.mask_val).cuda()  # TODO, when not keeping mask, using null_classes_emb to fill in
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/cuda/__init__.py", line 239, in _lazy_init
+    raise AssertionError("Torch not compiled with CUDA enabled")
+AssertionError: Torch not compiled with CUDA enabled

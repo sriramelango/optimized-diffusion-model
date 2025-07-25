@@ -1,0 +1,39 @@
+{
+  "gto_halo_metrics": {
+    "class_label_mean": 22.609365463256836,
+    "class_label_std": 1.9981303215026855,
+    "class_label_min": 18.67253875732422,
+    "class_label_max": 25.40317726135254,
+    "time_vars_mean": 5.516140460968018,
+    "time_vars_std": 3.858234167098999,
+    "time_vars_min": 0.009261131286621094,
+    "time_vars_max": 9.665623664855957,
+    "thrust_vars_mean": 0.02593385986983776,
+    "thrust_vars_std": 0.08446915447711945,
+    "thrust_vars_min": -0.0675392746925354,
+    "thrust_vars_max": 0.503099262714386,
+    "mass_vars_mean": 150.62440490722656,
+    "mass_vars_std": 207.0105438232422,
+    "mass_vars_min": 0.04849550500512123,
+    "mass_vars_max": 447.9937744140625,
+    "boundary_violations_total": "307",
+    "boundary_violation_rate": 0.4582089552238806,
+    "thrust_boundary_violations": "257",
+    "thrust_boundary_violation_rate": 0.42833333333333334,
+    "has_nan": "False",
+    "has_inf": "False",
+    "has_negative": "True",
+    "has_above_one": "True"
+  },
+  "physical_validation": {
+    "simulation_error": "Error in BoundaryCondition::BoundaryCondition() -- lower limit is greater than upper limit"
+  },
+  "sampling_efficiency": {
+    "total_sampling_time": 30.48773980140686,
+    "average_sampling_time_per_sample": 30.48773980140686,
+    "sampling_time_std": 0.0,
+    "samples_per_second": 0.032800070012203884,
+    "min_sampling_time": 30.48773980140686,
+    "max_sampling_time": 30.48773980140686
+  }
+}
