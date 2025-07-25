@@ -97,7 +97,9 @@ class GTOHaloBenchmarker:
     def __init__(self, config: GTOHaloBenchmarkConfig):
         self.config = config
         self.device = torch.device(config.device)
-        
+        # Initialize counters for tracking boundary violations
+        self.total_spherical_clips = 0
+        self.total_spherical_elements = 0
         # Default model path - use Training Runs directory structure
         if not hasattr(self.config, 'model_path') or not self.config.model_path:
             # Look for the most recent training run
@@ -234,7 +236,7 @@ class GTOHaloBenchmarker:
             class_labels = torch.rand(batch_size, 1, device=self.device)
             context_inputs = []
             for label in class_labels.cpu().numpy().flatten():
-                # Find nearest below and above
+                # Find nearest below and above (for context during generation)
                 pos = bisect.bisect_left(sorted_labels, label)
                 if pos > 0:
                     below_vec = sorted_data[pos - 1]
@@ -244,7 +246,7 @@ class GTOHaloBenchmarker:
                     above_vec = sorted_data[pos]
                 else:
                     above_vec = sorted_data[-1]
-                # Placeholder for middle (zeros)
+                # For generation, middle channel starts as zeros (to be filled by model)
                 middle_vec = np.zeros_like(below_vec)
                 below_img = pad_and_norm(below_vec)
                 middle_img = pad_and_norm(middle_vec)
@@ -284,12 +286,111 @@ class GTOHaloBenchmarker:
             print(f"Batch {i+1}/{num_batches}: Generated {batch_size} samples in {sampling_time:.2f}s")
         all_samples = np.concatenate(samples, axis=0)
         all_samples = all_samples[:self.config.num_samples]  # Ensure exact number
-        # Flatten to (N, 81), then truncate/pad to 67 as before
-        samples_flat = all_samples.reshape(all_samples.shape[0], -1)
-        samples_flat = samples_flat[:, :67]
-        padded_samples = np.zeros((samples_flat.shape[0], 67))
-        padded_samples[:, :samples_flat.shape[1]] = samples_flat
-        return padded_samples, sampling_times
+        
+        # --- FLATTEN TO (N, 67) --- (from 9x9 = 81, take first 67)
+        samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
+        samples = samples[:, :67]  # Keep only the first 67 values
+
+        # Extract class labels (normalized halo energies) and model outputs separately
+        # This matches the 1D implementation approach
+        class_labels_normalized = samples[:, 0]  # First column is normalized class labels
+        model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
+
+        # Apply per-variable physical unnormalization (match 1D GTO Halo DM exactly)
+        # NOTE: global mean/std unnormalization was already applied above
+        min_shooting_time = 0
+        max_shooting_time = 40
+        min_coast_time = 0
+        max_coast_time = 15
+        min_halo_energy = 0.008
+        max_halo_energy = 0.095
+        min_final_fuel_mass = 408
+        max_final_fuel_mass = 470
+        min_manifold_length = 5
+        max_manifold_length = 11
+        thrust = 1.0
+
+        # Unnormalize times
+        model_outputs[:, 0] = model_outputs[:, 0] * (max_shooting_time - min_shooting_time) + min_shooting_time
+        model_outputs[:, 1] = model_outputs[:, 1] * (max_coast_time - min_coast_time) + min_coast_time
+        model_outputs[:, 2] = model_outputs[:, 2] * (max_coast_time - min_coast_time) + min_coast_time
+        
+        # Convert cartesian control back to correct range, NO CONVERSION TO POLAR
+        model_outputs[:, 3:-3] = model_outputs[:, 3:-3] * 2 * thrust - thrust
+        
+        # Convert to spherical coordinates (exactly as in 1D script)
+        # Need to be careful with slicing - the control variables should be in groups of 3
+        control_section = model_outputs[:, 3:-3]  # Extract control section
+        
+        # Reshape to ensure we have groups of 3 (ux, uy, uz)
+        num_control_vars = control_section.shape[1]
+        num_triplets = num_control_vars // 3
+        
+        if num_control_vars % 3 != 0:
+            # Truncate to nearest multiple of 3
+            control_section = control_section[:, :num_triplets*3]
+            num_control_vars = num_triplets * 3
+        
+        # Reshape to (batch_size, num_triplets, 3) for easier processing
+        control_reshaped = control_section.reshape(-1, num_triplets, 3)
+        ux = control_reshaped[:, :, 0]  # Shape: (batch_size, num_triplets)
+        uy = control_reshaped[:, :, 1]  # Shape: (batch_size, num_triplets)  
+        uz = control_reshaped[:, :, 2]  # Shape: (batch_size, num_triplets)
+        
+        alpha, beta, r = self._convert_to_spherical(ux, uy, uz)
+        
+        # Put the spherical coordinates back
+        control_reshaped[:, :, 0] = alpha
+        control_reshaped[:, :, 1] = beta
+        control_reshaped[:, :, 2] = r
+        
+        # Reshape back and put into model_outputs
+        model_outputs[:, 3:3+num_control_vars] = control_reshaped.reshape(-1, num_control_vars)
+        
+        # Unnormalize fuel mass and manifold parameters (match 1D implementation exactly)
+        model_outputs[:, -3] = model_outputs[:, -3] * (max_final_fuel_mass - min_final_fuel_mass) + min_final_fuel_mass
+        model_outputs[:, -1] = model_outputs[:, -1] * (max_manifold_length - min_manifold_length) + min_manifold_length
+        # Note: model_outputs[:, -2] is NOT unnormalized (halo period remains normalized as in 1D implementation)
+
+        # Unnormalize halo energy (exactly as in 1D implementation)
+        halo_energies = class_labels_normalized * (max_halo_energy - min_halo_energy) + min_halo_energy
+        
+        # Combine halo energies with model outputs (exactly as in 1D implementation)
+        samples = np.column_stack((halo_energies, model_outputs))
+
+        print(f"Model output shape: {samples.shape}")
+        print(f"Flattened shape: {samples.shape}")
+
+        return samples, sampling_times
+    
+    def _convert_to_spherical(self, ux, uy, uz):
+        """Convert cartesian coordinates to spherical coordinates (exactly as in 1D script)."""
+        u = np.sqrt(ux ** 2 + uy ** 2 + uz ** 2)
+        theta = np.zeros_like(u)
+        mask_non_zero = u != 0
+        theta[mask_non_zero] = np.arcsin(uz[mask_non_zero] / u[mask_non_zero])
+        alpha = np.arctan2(uy, ux)
+        alpha = np.where(alpha >= 0, alpha, 2 * np.pi + alpha)
+
+        # Make sure theta is in [0, 2*pi]
+        theta = np.where(theta >= 0, theta, 2 * np.pi + theta)
+        
+        # Track how many times we need to clip u > 1
+        u_exceeds_one = u > 1
+        num_clips = np.sum(u_exceeds_one)
+        total_elements = u.size
+        
+        # Accumulate global statistics
+        self.total_spherical_clips += num_clips
+        self.total_spherical_elements += total_elements
+        
+        if num_clips > 0:
+            print(f"⚠️  SPHERICAL CONVERSION CLIPPING: {num_clips}/{total_elements} values ({100*num_clips/total_elements:.2f}%) exceeded magnitude 1")
+            print(f"   Max magnitude before clipping: {np.max(u):.6f}")
+        
+        # Make sure u is not larger than 1
+        u[u>1] = 1
+        return alpha, theta, u
     
     def compute_gto_halo_metrics(self, samples: np.ndarray) -> Dict[str, Any]:
         """Compute GTO Halo specific metrics."""
@@ -381,21 +482,21 @@ class GTOHaloBenchmarker:
         
         print("Computing physical validation metrics using CR3BP simulator...")
         
-        # Use default CR3BP config if not provided
+        # Use default CR3BP config if not provided (match 1D implementation exactly)
         cr3bp_config = self.config.cr3bp_config or {
             'seed': 0,
             'seed_step': 10,  # Test with 10 samples
             'quiet_snopt': True,
-            'number_of_segments': 20,
-            'maximum_shooting_time': 40.0,
-            'minimum_shooting_time': 0.0,
-            'start_bdry': 6.48423370092,
-            'end_bdry': 8.0,
-            'thrust': 1.0,
-            'solver_mode': 'optimal',
-            'min_mass_to_sample': 350.0,
-            'max_mass_to_sample': 450.0,
-            'snopt_time_limit': 20.0,
+            'number_of_segments': 20,  # Match 1D implementation
+            'maximum_shooting_time': 40.0,  # Match 1D implementation
+            'minimum_shooting_time': 0.0,  # Match 1D implementation
+            'start_bdry': 6.48423370092,  # Match 1D implementation
+            'end_bdry': 8.0,  # Match 1D implementation
+            'thrust': 1.0,  # Match 1D implementation
+            'solver_mode': 0,  # Match 1D implementation (0 = optimal, "feasible" = feasible)
+            'min_mass_to_sample': 408,  # Match 1D implementation
+            'max_mass_to_sample': 470,  # Match 1D implementation
+            'snopt_time_limit': 1000.0,  # Match 1D implementation
             'result_folder': os.path.join(self.config.output_dir, 'cr3bp_results')
         }
         
@@ -432,18 +533,16 @@ class GTOHaloBenchmarker:
 
             num_test_samples = len(samples)  # Test all generated samples
 
-            # Denormalize halo energies from [0,1] to physical range [0.008, 0.095]
-            min_halo_energy = 0.008
-            max_halo_energy = 0.095
-
+            # Format data exactly as 1D implementation expects: [halo_energy, ...rest_of_data]
+            # The samples are already in the correct format from generate_samples()
+            # First column (index 0) is the halo energy, rest is the initial guess
+            
             for i in range(num_test_samples):
-                initial_guess = samples[i, 1:]  # Exclude class label
-                normalized_halo_energy = samples[i, 0]  # Class label as normalized halo energy
+                # Data format: [halo_energy, shooting_time, coast_time1, coast_time2, controls..., fuel_mass, manifold_length1, manifold_length2]
+                halo_energy = samples[i, 0]  # First column is already the physical halo energy
+                initial_guess = samples[i, 1:]  # Rest is the initial guess data
                 
-                # Denormalize halo energy
-                halo_energy = min_halo_energy + (max_halo_energy - min_halo_energy) * normalized_halo_energy
-                
-                print(f"Testing sample {i+1}/{num_test_samples} with normalized halo energy {normalized_halo_energy:.3f} -> physical halo energy {halo_energy:.6f}")
+                print(f"Testing sample {i+1}/{num_test_samples} with halo energy {halo_energy:.6f}")
                 
                 # Run simulation
                 result_data = simulator.simulate(earth_initial_guess=initial_guess, halo_energy=halo_energy)
@@ -576,6 +675,9 @@ class GTOHaloBenchmarker:
         # Generate plots
         if self.config.save_plots:
             self.generate_plots(results, samples)
+        
+        # Print final spherical conversion statistics
+        self.print_spherical_conversion_stats()
         
         return results
     
@@ -818,3 +920,27 @@ class GTOHaloBenchmarker:
         plt.tight_layout()
         plt.savefig(os.path.join(self.config.output_dir, 'plots', 'sample_distributions.png'), dpi=300)
         plt.close() 
+    
+    def print_spherical_conversion_stats(self):
+        """Print final statistics about spherical coordinate conversion clipping."""
+        if self.total_spherical_elements > 0:
+            print("\n" + "="*60)
+            print("SPHERICAL CONVERSION CLIPPING STATISTICS")
+            print("="*60)
+            print(f"Total elements processed: {self.total_spherical_elements}")
+            print(f"Total elements clipped (u > 1): {self.total_spherical_clips}")
+            print(f"Overall clipping rate: {100*self.total_spherical_clips/self.total_spherical_elements:.4f}%")
+            print("="*60)
+            
+            # Add to results summary
+            if hasattr(self, 'config') and hasattr(self.config, 'output_dir'):
+                summary_file = os.path.join(self.config.output_dir, 'spherical_clipping_stats.txt')
+                with open(summary_file, 'w') as f:
+                    f.write("SPHERICAL CONVERSION CLIPPING STATISTICS\n")
+                    f.write("="*50 + "\n")
+                    f.write(f"Total elements processed: {self.total_spherical_elements}\n")
+                    f.write(f"Total elements clipped (u > 1): {self.total_spherical_clips}\n")
+                    f.write(f"Overall clipping rate: {100*self.total_spherical_clips/self.total_spherical_elements:.4f}%\n")
+                    f.write("="*50 + "\n")
+        else:
+            print("\nNo spherical coordinate conversion performed.")
