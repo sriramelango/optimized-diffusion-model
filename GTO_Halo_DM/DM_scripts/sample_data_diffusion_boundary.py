@@ -16,6 +16,10 @@ from datetime import datetime
 
 
 def main(timesteps, data_num, sample_num, mask_val, fixed_alpha, checkpoint_file=None):
+    # Initialize global tracking for spherical conversion clipping
+    global total_spherical_clips, total_spherical_elements
+    total_spherical_clips = 0
+    total_spherical_elements = 0
     
     unet_dim = 128 #20 #128
     unet_dim_mults = "4,4,8"
@@ -98,6 +102,9 @@ def main(timesteps, data_num, sample_num, mask_val, fixed_alpha, checkpoint_file
     full_solution[:,5:-3:3] = r 
     # Unnormalize fuel mass and manifold parameters, HALO PERIOD IS NOT UNNORMALIZED, NEEDS TO BE DONE IN THE ACTUAL RUN
     full_solution[:, -3] = full_solution[:, -3] * (max_final_fuel_mass - min_final_fuel_mass) + min_final_fuel_mass
+    
+    # Print final spherical conversion statistics
+    print_spherical_conversion_stats()
     full_solution[:, -1] = full_solution[:, -1] * (max_manifold_length - min_manifold_length) + min_manifold_length
     # Unnormalize halo energy
     halo_energies = alpha_data_normalized.detach().cpu().numpy() * (max_halo_energy - min_halo_energy) + min_halo_energy
@@ -229,9 +236,39 @@ def convert_to_spherical(ux, uy, uz):
 
     # Make sure theta is in [0, 2*pi]
     theta = np.where(theta >= 0, theta, 2 * np.pi + theta)
+    
+    # Track how many times we need to clip u > 1
+    u_exceeds_one = u > 1
+    num_clips = np.sum(u_exceeds_one)
+    total_elements = u.size
+    
+    # Accumulate global statistics
+    global total_spherical_clips, total_spherical_elements
+    total_spherical_clips += num_clips
+    total_spherical_elements += total_elements
+    
+    if num_clips > 0:
+        print(f"⚠️  1D SPHERICAL CONVERSION CLIPPING: {num_clips}/{total_elements} values ({100*num_clips/total_elements:.2f}%) exceeded magnitude 1")
+        print(f"   Max magnitude before clipping: {np.max(u):.6f}")
+    
     # Make sure u is not larger than 1
     u[u>1] = 1
     return alpha, theta, u
+
+def print_spherical_conversion_stats():
+    """Print final statistics about spherical coordinate conversion clipping."""
+    global total_spherical_clips, total_spherical_elements
+    
+    if total_spherical_elements > 0:
+        print("\n" + "="*60)
+        print("1D SPHERICAL CONVERSION CLIPPING STATISTICS")
+        print("="*60)
+        print(f"Total elements processed: {total_spherical_elements}")
+        print(f"Total elements clipped (u > 1): {total_spherical_clips}")
+        print(f"Overall clipping rate: {100*total_spherical_clips/total_spherical_elements:.4f}%")
+        print("="*60)
+    else:
+        print("\nNo spherical coordinate conversion performed.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Hyperparameter tuning for diffusion models")

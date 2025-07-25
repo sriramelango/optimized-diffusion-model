@@ -1,0 +1,17 @@
+Shape of initted in EMA state dict: torch.Size([1])
+Shape of step in EMA state dict: torch.Size([1])
+loading from version 1.8.11
+sampling loop time step: 100%|████████████████████████████████████████████| 500/500 [00:59<00:00,  8.39it/s]
+../.., 100 data, takes 59.65341806411743 seconds
+⚠️  1D SPHERICAL CONVERSION CLIPPING: 251/2000 values (12.55%) exceeded magnitude 1
+   Max magnitude before clipping: 1.226207
+   Min magnitude before clipping: 0.000328
+
+============================================================
+1D SPHERICAL CONVERSION CLIPPING STATISTICS
+============================================================
+Total elements processed: 2000
+Total elements clipped (u > 1): 251
+Overall clipping rate: 12.5500%
+============================================================
+./results/boundary/unet_128_mults_4_4_8_embed_class_256_512_timesteps_500_batch_size_512_cond_drop_0.1_mask_val_-1.0/cr3bp_diffusion_boundary_w_5.0_training_num_100000_num_100.pkl is saved!

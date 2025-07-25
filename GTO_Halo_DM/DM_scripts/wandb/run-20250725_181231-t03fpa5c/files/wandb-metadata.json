@@ -1,0 +1,45 @@
+{
+  "os":  "macOS-15.5-arm64-arm-64bit",
+  "python":  "CPython 3.11.13",
+  "startedAt":  "2025-07-25T22:12:31.788641Z",
+  "args":  [
+    "--sample_num",
+    "1000",
+    "--timesteps",
+    "500",
+    "--checkpoint_file",
+    "../../model-epoch-175.pt"
+  ],
+  "program":  "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py",
+  "codePath":  "GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py",
+  "codePathLocal":  "sample_data_diffusion_boundary.py",
+  "git":  {
+    "remote":  "https://github.com/sriramelango/optimized-diffusion-model.git",
+    "commit":  "1a5c4fd1cf13dbd6575d2bcecef8688cbfe81dcf"
+  },
+  "email":  "sriramelango@icloud.com",
+  "root":  "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts",
+  "host":  "dynamic-oit-ip4-wifirestricted01-10-17-252-227.princeton.edu",
+  "executable":  "/Users/sriramelango/.pyenv/versions/3.11.13/bin/python3",
+  "cpu_count":  16,
+  "cpu_count_logical":  16,
+  "disk":  {
+    "/":  {
+      "total":  "994662584320",
+      "used":  "309842137088"
+    }
+  },
+  "memory":  {
+    "total":  "51539607552"
+  },
+  "apple":  {
+    "name":  "Apple M4 Max",
+    "ecpuCores":  4,
+    "pcpuCores":  12,
+    "gpuCores":  40,
+    "memoryGb":  48,
+    "swapTotalBytes":  "1073741824",
+    "ramTotalBytes":  "51539607552"
+  },
+  "writerId":  "9ebg07jwi5ixmsgbwefk74pcujhyuzyi"
+}
