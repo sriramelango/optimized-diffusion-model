@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=4                   # cpu-cores per task (set to 4 for 4 DataLoader workers)
 #SBATCH --mem-per-cpu=4G             # memory per cpu-core (4G is default)
 #SBATCH --gres=gpu:1                 # number of gpus per node
-#SBATCH --constraint=gpu40     # use 40GB GPUs
+#SBATCH --constraint="amd&gpu40"     # use 40GB AMD GPUs
 #SBATCH --time=48:00:00              # total run time limit (HH:MM:SS)
 #SBATCH --output=logs/diffusion-40gb-%j.out  # standard output log file
 #SBATCH --error=logs/diffusion-40gb-%j.err   # standard error log file
