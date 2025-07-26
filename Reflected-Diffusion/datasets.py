@@ -163,7 +163,7 @@ def get_dataset(config, evaluation=False, distributed=True):
 
         train_set = vdsets.CIFAR10(dataroot, train=True, transform=train_transforms)
         test_set = vdsets.CIFAR10(dataroot, train=False, transform=test_transforms)
-        workers = 2
+        workers = 4
     elif config.data.dataset == "ImageNet32":
         data_transforms = transforms.Compose(
             [
@@ -185,15 +185,15 @@ def get_dataset(config, evaluation=False, distributed=True):
     elif config.data.dataset == "GTOHalo":
         train_set = GTOHaloTrajectoryDataset(config.data.pkl_path)
         test_set = GTOHaloTrajectoryDataset(config.data.pkl_path)
-        workers = 0
+        workers = 4
     elif config.data.dataset == "GTOHaloImage":
         train_set = GTOHaloImageDataset(config.data.pkl_path)
         test_set = GTOHaloImageDataset(config.data.pkl_path)
-        workers = 0
+        workers = 4
     elif config.data.dataset == "GTOHaloImageContext":
         train_set = GTOHaloImageContextDataset(config.data.pkl_path)
         test_set = GTOHaloImageContextDataset(config.data.pkl_path)
-        workers = 0
+        workers = 4
     else:
         raise ValueError(f"{config.data.dataset} is not valid")
 
