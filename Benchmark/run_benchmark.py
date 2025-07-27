@@ -219,18 +219,37 @@ Examples:
         print(f"\n{benchmark_type.upper()} BENCHMARK:")
         if 'sampling_efficiency' in result:
             efficiency = result['sampling_efficiency']
-            print(f"  Total sampling time: {efficiency.get('total_sampling_time', 'N/A'):.2f}s")
-            print(f"  Samples per second: {efficiency.get('samples_per_second', 'N/A'):.2f}")
+            total_time = efficiency.get('total_sampling_time', 'N/A')
+            if isinstance(total_time, (int, float)):
+                print(f"  Total sampling time: {total_time:.2f}s")
+            else:
+                print(f"  Total sampling time: {total_time}")
+            samples_per_sec = efficiency.get('samples_per_second', 'N/A')
+            if isinstance(samples_per_sec, (int, float)):
+                print(f"  Samples per second: {samples_per_sec:.2f}")
+            else:
+                print(f"  Samples per second: {samples_per_sec}")
         
         if 'gto_halo_metrics' in result:
             metrics = result['gto_halo_metrics']
-            print(f"  Boundary violation rate: {metrics.get('boundary_violation_rate', 'N/A'):.6f}")
-            print(f"  Class label mean: {metrics.get('class_label_mean', 'N/A'):.6f}")
+            class_mean = metrics.get('class_label_mean', 'N/A')
+            if isinstance(class_mean, (int, float)):
+                print(f"  Class label mean: {class_mean:.6f}")
+            else:
+                print(f"  Class label mean: {class_mean}")
         
         if 'standard_metrics' in result:
             metrics = result['standard_metrics']
-            print(f"  MSE: {metrics.get('mse', 'N/A'):.6f}")
-            print(f"  MAE: {metrics.get('mae', 'N/A'):.6f}")
+            mse = metrics.get('mse', 'N/A')
+            if isinstance(mse, (int, float)):
+                print(f"  MSE: {mse:.6f}")
+            else:
+                print(f"  MSE: {mse}")
+            mae = metrics.get('mae', 'N/A')
+            if isinstance(mae, (int, float)):
+                print(f"  MAE: {mae:.6f}")
+            else:
+                print(f"  MAE: {mae}")
     
     print(f"\nResults saved to: {args.output_dir}")
     print("Check the summary.txt files in each subdirectory for detailed results.")
