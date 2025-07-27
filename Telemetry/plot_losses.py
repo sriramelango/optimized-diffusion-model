@@ -53,23 +53,21 @@ if __name__ == "__main__":
 
     # --- Filter range ---
     # Set the range you want to plot here:
-    # min_step = 2500
-    # max_step = 4000
-    # print(f"Plotting steps from {min_step} to {max_step}.")
+    min_step = 0
+    max_step = 3000
+    print(f"Plotting steps from {min_step} to {max_step}.")
     # Filter training data
-    # filtered_train = [(s, l) for s, l in zip(train_steps, train_losses) if min_step <= s <= max_step]
-    # if filtered_train:
-    #     f_train_steps, f_train_losses = zip(*filtered_train)
-    # else:
-    #     f_train_steps, f_train_losses = [], []
+    filtered_train = [(s, l) for s, l in zip(train_steps, train_losses) if min_step <= s <= max_step]
+    if filtered_train:
+        f_train_steps, f_train_losses = zip(*filtered_train)
+    else:
+        f_train_steps, f_train_losses = [], []
     # Filter evaluation data
-    # filtered_eval = [(s, l) for s, l in zip(eval_steps, eval_losses) if min_step <= s <= max_step]
-    # if filtered_eval:
-    #     f_eval_steps, f_eval_losses = zip(*filtered_eval)
-    # else:
-    #     f_eval_steps, f_eval_losses = [], []
-    f_train_steps, f_train_losses = train_steps, train_losses
-    f_eval_steps, f_eval_losses = eval_steps, eval_losses
+    filtered_eval = [(s, l) for s, l in zip(eval_steps, eval_losses) if min_step <= s <= max_step]
+    if filtered_eval:
+        f_eval_steps, f_eval_losses = zip(*filtered_eval)
+    else:
+        f_eval_steps, f_eval_losses = [], []
 
     plt.figure(figsize=(12, 8))
     plt.plot(f_train_steps, f_train_losses, 'b-', linewidth=2, label='Training Loss', alpha=0.8)
