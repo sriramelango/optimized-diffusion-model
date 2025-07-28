@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 305, in <module>
+    main(timesteps,data_num,sample_num,mask_val,fixed_alpha, args.checkpoint_file)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 61, in main
+    full_solution = get_sample_from_diffusion_attention(sample_num=sample_num,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py", line 213, in get_sample_from_diffusion_attention
+    trainer.load(milestone)
+  File "/Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/classifier_free_guidance_cond_1d_improved_constrained_diffusion.py", line 1295, in load
+    data = torch.load(str(self.results_folder / f'model-{milestone}.pt'), map_location=device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/serialization.py", line 791, in load
+    with _open_file_like(f, 'rb') as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/serialization.py", line 271, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sriramelango/.pyenv/versions/3.11.13/lib/python3.11/site-packages/torch/serialization.py", line 252, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '../../model-175.pt'

@@ -1,0 +1,100 @@
+_wandb:
+    value:
+        cli_version: 0.21.0
+        e:
+            pdzzdvn1r7hmnp714jtefiq15mb01aus:
+                apple:
+                    ecpuCores: 4
+                    gpuCores: 40
+                    memoryGb: 48
+                    name: Apple M4 Max
+                    pcpuCores: 12
+                    ramTotalBytes: "51539607552"
+                args:
+                    - --timesteps
+                    - "500"
+                    - --data_num
+                    - "100000"
+                    - --sample_num
+                    - "50"
+                    - --mask_val
+                    - "0.0"
+                    - --checkpoint_file
+                    - ../../model-epoch-175.pt
+                codePath: GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py
+                codePathLocal: sample_data_diffusion_boundary.py
+                cpu_count: 16
+                cpu_count_logical: 16
+                disk:
+                    /:
+                        total: "994662584320"
+                        used: "315222515712"
+                email: sriramelango@icloud.com
+                executable: /Users/sriramelango/.pyenv/versions/3.11.13/bin/python
+                git:
+                    commit: 7dc86aa8089ec78d91c915e5a4dd31ea9419c165
+                    remote: https://github.com/sriramelango/optimized-diffusion-model.git
+                host: dynamic-oit-ip4-wifirestricted01-10-17-252-227.princeton.edu
+                memory:
+                    total: "51539607552"
+                os: macOS-15.5-arm64-arm-64bit
+                program: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts/sample_data_diffusion_boundary.py
+                python: CPython 3.11.13
+                root: /Users/sriramelango/Documents/Documents [Data]/Princeton Research/Optimized Diffusion Model/GTO_Halo_DM/DM_scripts
+                startedAt: "2025-07-28T15:35:46.336438Z"
+                writerId: pdzzdvn1r7hmnp714jtefiq15mb01aus
+        m: []
+        python_version: 3.11.13
+        t:
+            "1":
+                - 1
+                - 49
+                - 71
+            "2":
+                - 1
+                - 49
+                - 71
+            "3":
+                - 13
+                - 16
+            "4": 3.11.13
+            "5": 0.21.0
+            "12": 0.21.0
+            "13": darwin-arm64
+batch_size:
+    value: 16
+cond_drop_prob:
+    value: 0.1
+constraint_gt_sample_num:
+    value: 1
+constraint_loss_type:
+    value: one_over_t
+constraint_violation_weight:
+    value: 0.001
+embed_class_layers_dims:
+    value:
+        - 256
+        - 512
+mask_val:
+    value: 0
+normalize_xt_by_mean_sigma:
+    value: "False"
+objective:
+    value: pred_noise
+task_type:
+    value: car
+timesteps:
+    value: 500
+training_data_num:
+    value: 300000
+training_data_range:
+    value: "0_1"
+training_random_seed:
+    value: 0
+unet_dim:
+    value: 128
+unet_dim_mults:
+    value:
+        - 4
+        - 4
+        - 8

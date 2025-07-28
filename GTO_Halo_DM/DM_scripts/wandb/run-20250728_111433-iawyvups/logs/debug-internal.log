@@ -1,0 +1,12 @@
+{"time":"2025-07-28T11:14:33.635155-04:00","level":"INFO","msg":"stream: starting","core version":"0.21.0"}
+{"time":"2025-07-28T11:14:33.840415-04:00","level":"INFO","msg":"stream: created new stream","id":"iawyvups"}
+{"time":"2025-07-28T11:14:33.840455-04:00","level":"INFO","msg":"stream: started","id":"iawyvups"}
+{"time":"2025-07-28T11:14:33.84046-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:14:33.840471-04:00","level":"INFO","msg":"handler: started","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:14:33.840487-04:00","level":"INFO","msg":"sender: started","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:15:09.24397-04:00","level":"INFO","msg":"stream: closing","id":"iawyvups"}
+{"time":"2025-07-28T11:15:09.541291-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-07-28T11:15:09.702516-04:00","level":"INFO","msg":"handler: closed","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:15:09.70269-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:15:09.702738-04:00","level":"INFO","msg":"sender: closed","stream_id":"iawyvups"}
+{"time":"2025-07-28T11:15:09.703121-04:00","level":"INFO","msg":"stream: closed","id":"iawyvups"}
