@@ -10,9 +10,9 @@ dataroot: datasets
 training:
   batch_size: 4096
   n_iters: 40000
-  snapshot_freq: 1000
+  snapshot_freq: 500
   log_freq: 1
-  eval_freq: 400
+  eval_freq: 200
   snapshot_freq_for_preemption: 10000
   snapshot_sampling: True
   likelihood_weighting: False
@@ -20,19 +20,20 @@ training:
   drop_label: 0.2
 
 eval:
-  batch_size: 16384
+  batch_size: 32768
 
 sde: 
   name: vesde
-  sigma_min: 0.01
-  sigma_max: 5
-  num_scales: 1000
+  sigma_min: 0.005
+  sigma_max: 10
+  num_scales: 2000
 
 sampling:
   n_steps_each: 1
   noise_removal: True
   probability_flow: False
-  snr: 0.01
+  snr: 0.005
+  guidance_scale: 1.5
   method: pc
   predictor: euler_maruyama
   corrector: none
@@ -41,12 +42,13 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.0005
+  lr: 0.00008
+  lr_schedule: cosine
   beta1: 0.9
   beta2: 0.999
   eps: 1e-8
-  warmup: 10000
-  grad_clip: 0.5
+  warmup: 5000
+  grad_clip: 1.0
 
 hydra:
   run:
