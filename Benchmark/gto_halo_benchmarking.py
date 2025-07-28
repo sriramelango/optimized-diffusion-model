@@ -262,8 +262,8 @@ class GTOHaloBenchmarker:
         model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
 
         # First, apply global mean/std unnormalization (as used in training) to model outputs only
-        mean = 0.4652
-        std = 0.1811
+        mean = 0.413532
+        std = 0.224775
         model_outputs = model_outputs * std + mean
 
         # Then, apply per-variable physical unnormalization (match 1D GTO Halo DM exactly)

@@ -90,6 +90,115 @@ class ComprehensiveDataAnalyzer:
         print(f"📊 Normalized data shape: {self.normalized_data.shape}")
         print(f"📊 Classifier values shape: {self.normalized_classifiers.shape}")
         
+    def calculate_true_mean_std(self):
+        """Calculate the true mean and std of the dataset."""
+        print("\n" + "="*60)
+        print("🔍 TRUE MEAN AND STD CALCULATION")
+        print("="*60)
+        
+        # Calculate mean and std of the entire dataset
+        true_mean = np.mean(self.raw_data)
+        true_std = np.std(self.raw_data)
+        
+        print(f"📊 True mean of entire dataset: {true_mean:.6f}")
+        print(f"📊 True std of entire dataset: {true_std:.6f}")
+        
+        # Compare with current values used in dataset
+        current_mean = 0.4652
+        current_std = 0.1811
+        
+        print(f"\n📊 Current values used in dataset:")
+        print(f"   Mean: {current_mean:.6f}")
+        print(f"   Std:  {current_std:.6f}")
+        
+        print(f"\n📊 Difference:")
+        print(f"   Mean difference: {abs(true_mean - current_mean):.6f}")
+        print(f"   Std difference:  {abs(true_std - current_std):.6f}")
+        
+        # Calculate mean and std for different components
+        print(f"\n📊 Component-wise statistics:")
+        print(f"   Classifier values (index 0): mean={np.mean(self.classifier_values):.6f}, std={np.std(self.classifier_values):.6f}")
+        print(f"   Thrust values (indices 4-63): mean={np.mean(self.thrust_values):.6f}, std={np.std(self.thrust_values):.6f}")
+        print(f"   Other features: mean={np.mean(self.other_features):.6f}, std={np.std(self.other_features):.6f}")
+        
+        # Store results
+        self.analysis_results['true_mean'] = true_mean
+        self.analysis_results['true_std'] = true_std
+        self.analysis_results['current_mean'] = current_mean
+        self.analysis_results['current_std'] = current_std
+        
+        # Now verify using the GTOHaloImageDataset class
+        print(f"\n🔍 VERIFICATION USING GTOHaloImageDataset CLASS:")
+        try:
+            import sys
+            sys.path.append('../Reflected-Diffusion')
+            from datasets import GTOHaloImageDataset
+            
+            # Load dataset using the class
+            dataset = GTOHaloImageDataset('../Reflected-Diffusion/data/training_data_boundary_100000.pkl')
+            
+            # Get all raw data from the dataset
+            all_raw_data = []
+            all_padded_data = []
+            for i in range(len(dataset)):
+                raw_item = dataset.data[i]  # Get raw data before normalization
+                all_raw_data.append(raw_item)
+                
+                # Also get the padded data (what the model actually sees)
+                vec = raw_item
+                padded = np.pad(vec, (0, 81 - len(vec)), 'constant')
+                all_padded_data.append(padded)
+            
+            all_raw_data = np.array(all_raw_data)
+            all_padded_data = np.array(all_padded_data)
+            
+            # Calculate statistics from the raw data
+            raw_mean = np.mean(all_raw_data)
+            raw_std = np.std(all_raw_data)
+            
+            # Calculate statistics from the padded data (what model actually sees)
+            padded_mean = np.mean(all_padded_data)
+            padded_std = np.std(all_padded_data)
+            
+            print(f"📊 Raw data (before padding):")
+            print(f"   Mean: {raw_mean:.6f}")
+            print(f"   Std:  {raw_std:.6f}")
+            
+            print(f"📊 Padded data (what model sees):")
+            print(f"   Mean: {padded_mean:.6f}")
+            print(f"   Std:  {padded_std:.6f}")
+            
+            # Check if they match our calculated values
+            raw_mean_match = abs(true_mean - raw_mean) < 1e-6
+            raw_std_match = abs(true_std - raw_std) < 1e-6
+            
+            print(f"\n✅ Verification Results:")
+            print(f"   Raw data mean matches: {raw_mean_match}")
+            print(f"   Raw data std matches: {raw_std_match}")
+            
+            if raw_mean_match and raw_std_match:
+                print(f"   ✅ Raw data values are consistent!")
+            else:
+                print(f"   ❌ Raw data values don't match!")
+                
+            print(f"\n📋 Current values in GTOHaloImageDataset:")
+            print(f"   Mean: {dataset.mean:.6f}")
+            print(f"   Std:  {dataset.std:.6f}")
+            
+            # Calculate what the correct values should be for the padded data
+            correct_padded_mean = padded_mean
+            correct_padded_std = padded_std
+            
+            print(f"\n🔧 RECOMMENDED VALUES FOR GTOHaloImageDataset:")
+            print(f"   Mean: {correct_padded_mean:.6f}")
+            print(f"   Std:  {correct_padded_std:.6f}")
+                
+        except Exception as e:
+            print(f"❌ Error loading GTOHaloImage class: {e}")
+            print(f"   This might be due to import path issues")
+        
+        return true_mean, true_std
+
     def basic_statistics(self):
         """Compute and display basic statistics."""
         print("\n" + "="*60)
@@ -566,6 +675,9 @@ class ComprehensiveDataAnalyzer:
         """Run the complete analysis pipeline."""
         print("🚀 Starting Comprehensive Data Analysis")
         print("="*60)
+        
+        # First calculate true mean and std
+        self.calculate_true_mean_std()
         
         self.basic_statistics()
         self.distribution_analysis()

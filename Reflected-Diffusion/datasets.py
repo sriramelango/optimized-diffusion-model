@@ -84,8 +84,8 @@ class GTOHaloImageDataset(Dataset):
         with open(pkl_path, 'rb') as f:
             data = pickle.load(f)
         self.data = data.astype(np.float32)
-        self.mean = 0.4652
-        self.std = 0.1811
+        self.mean = 0.413532
+        self.std = 0.224775
     def __len__(self):
         return self.data.shape[0]
     def __getitem__(self, idx):
