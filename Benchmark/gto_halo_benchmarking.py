@@ -79,7 +79,6 @@ class GTOHaloBenchmarkConfig:
     
     # Physical validation config
     enable_physical_validation: bool = True
-    cr3bp_config: Optional[Dict] = None
     
     # Output config
     output_dir: str = "gto_halo_results"
@@ -447,10 +446,10 @@ class GTOHaloBenchmarker:
         
         print("Computing physical validation metrics using CR3BP simulator...")
         
-        # Use default CR3BP config if not provided (match 1D implementation exactly)
-        cr3bp_config = self.config.cr3bp_config or {
+        # CR3BP simulation parameters (hardcoded to match 1D implementation exactly)
+        cr3bp_config = {
             'seed': 0,
-            'seed_step': 10,  # Test with 10 samples
+            'seed_step': len(samples),  # Test all generated samples
             'quiet_snopt': True,
             'number_of_segments': 20,  # Match 1D implementation
             'maximum_shooting_time': 40.0,  # Match 1D implementation

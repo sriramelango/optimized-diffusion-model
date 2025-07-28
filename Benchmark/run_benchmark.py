@@ -54,13 +54,6 @@ def run_gto_halo_benchmark(args):
     print("RUNNING GTO HALO BENCHMARK")
     print("=" * 60)
     
-    # Load CR3BP config if provided
-    cr3bp_config = None
-    if args.cr3bp_config and os.path.exists(args.cr3bp_config):
-        import json
-        with open(args.cr3bp_config, 'r') as f:
-            cr3bp_config = json.load(f)
-    
     config = GTOHaloBenchmarkConfig(
         model_path=args.model_path,
         config_path=args.config_path,
@@ -70,7 +63,6 @@ def run_gto_halo_benchmark(args):
         sampling_method=args.sampling_method,
         guidance_weight=args.guidance_weight,
         enable_physical_validation=args.enable_physical_validation,
-        cr3bp_config=cr3bp_config,
         output_dir=f"{args.output_dir}/gto_halo",
         save_samples=args.save_samples,
         save_plots=args.save_plots,
@@ -107,8 +99,7 @@ Examples:
   python run_benchmark.py --benchmark_type gto_halo_only \\
       --model_path ../Reflected-Diffusion/Training\ Runs/2025.01.15_143022 \\
       --data_path data/training_data_boundary_100000.pkl \\
-      --enable_physical_validation \\
-      --cr3bp_config cr3bp_validation_config.json
+      --enable_physical_validation
 
   # Run quick test with minimal samples
   python run_benchmark.py --benchmark_type both \\
@@ -146,8 +137,6 @@ Examples:
     # Physical validation
     parser.add_argument('--enable_physical_validation', action='store_true',
                        help='Enable physical validation metrics')
-    parser.add_argument('--cr3bp_config', type=str, default='cr3bp_validation_config.json',
-                       help='Path to CR3BP validation config file')
     
     # Output
     parser.add_argument('--output_dir', type=str, default='benchmark_results',
