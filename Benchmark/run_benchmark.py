@@ -86,25 +86,25 @@ Examples:
   # Run both ML statistics and GTO Halo benchmarking
   python run_benchmark.py --benchmark_type both \\
       --model_path ../Reflected-Diffusion/Training\ Runs/2025.01.15_143022 \\
-      --data_path data/training_data_boundary_100000.pkl \\
+      --data_path data/training_data_boundary_100000_spherical.pkl \\
       --num_samples 100
 
   # Run only ML statistics
   python run_benchmark.py --benchmark_type ml_only \\
       --model_path ../Reflected-Diffusion/Training\ Runs/2025.01.15_143022 \\
-      --data_path data/training_data_boundary_100000.pkl \\
+      --data_path data/training_data_boundary_100000_spherical.pkl \\
       --num_samples 1000
 
   # Run only GTO Halo benchmarking with CR3BP validation
   python run_benchmark.py --benchmark_type gto_halo_only \\
       --model_path ../Reflected-Diffusion/Training\ Runs/2025.01.15_143022 \\
-      --data_path data/training_data_boundary_100000.pkl \\
+      --data_path data/training_data_boundary_100000_spherical.pkl \\
       --enable_physical_validation
 
   # Run quick test with minimal samples
   python run_benchmark.py --benchmark_type both \\
       --model_path ../Reflected-Diffusion/Training\ Runs/2025.01.15_143022 \\
-      --data_path data/training_data_boundary_100000.pkl \\
+      --data_path data/training_data_boundary_100000_spherical.pkl \\
       --num_samples 10 \\
       --batch_size 5 \\
       --test_mode

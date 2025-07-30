@@ -354,7 +354,7 @@ class TrajectoryOptimizationAnalyzer:
 def main():
     """Main function to run trajectory optimization analysis."""
     # Path to the training data
-    data_path = "GTO_Halo_DM/data/training_data_boundary_100000.pkl"
+    data_path = "../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl"
     
     # Check if file exists
     if not os.path.exists(data_path):

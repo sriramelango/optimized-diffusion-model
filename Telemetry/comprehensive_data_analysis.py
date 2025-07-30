@@ -135,7 +135,7 @@ class ComprehensiveDataAnalyzer:
             from datasets import GTOHaloImageDataset
             
             # Load dataset using the class
-            dataset = GTOHaloImageDataset('../Reflected-Diffusion/data/training_data_boundary_100000.pkl')
+            dataset = GTOHaloImageDataset('../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl')
             
             # Get all raw data from the dataset
             all_raw_data = []
@@ -703,7 +703,7 @@ class ComprehensiveDataAnalyzer:
 def main():
     """Main function to run the analysis."""
     # Path to the training data
-    data_path = "../GTO_Halo_DM/data/training_data_boundary_100000.pkl"
+    data_path = "../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl"
     
     # Check if file exists
     if not os.path.exists(data_path):
