@@ -1,0 +1,49 @@
+{
+  "gto_halo_metrics": {
+    "class_label_mean": 0.05849658325314522,
+    "class_label_std": 0.018450571224093437,
+    "class_label_min": 0.011456949636340141,
+    "class_label_max": 0.08403632044792175,
+    "time_vars_mean": 9.903525352478027,
+    "time_vars_std": 6.209066867828369,
+    "time_vars_min": 0.22584256529808044,
+    "time_vars_max": 26.23101234436035,
+    "thrust_vars_mean": 1.117136836051941,
+    "thrust_vars_std": 1.1010903120040894,
+    "thrust_vars_min": 0.00395581591874361,
+    "thrust_vars_max": 6.258016586303711,
+    "mass_vars_mean": 147.65061950683594,
+    "mass_vars_std": 203.45556640625,
+    "mass_vars_min": 0.042150720953941345,
+    "mass_vars_max": 467.69500732421875,
+    "has_nan": false,
+    "has_inf": false
+  },
+  "physical_validation_metrics": {
+    "feasible_ratio": 0.0,
+    "avg_final_mass_feasible": 0,
+    "local_optimal_ratio": 0.0,
+    "avg_final_mass_optimal": 0,
+    "avg_solving_time": 0,
+    "snopt_inform_distribution": {
+      "0": 16
+    },
+    "total_tested": 16,
+    "feasible_count": 0,
+    "local_optimal_count": 0
+  },
+  "sampling_efficiency_metrics": {
+    "total_sampling_time": 59.135074853897095,
+    "average_sampling_time_per_sample": 29.567537426948547,
+    "sampling_time_std": 0.533800482749939,
+    "samples_per_second": 0.27056700341600354,
+    "min_sampling_time": 29.03373694419861,
+    "max_sampling_time": 30.101337909698486
+  },
+  "num_samples": 16,
+  "multithreading_config": {
+    "max_workers": 16,
+    "chunk_size": 1,
+    "use_processes": true
+  }
+}

@@ -1,0 +1,48 @@
+============================================================
+GTO HALO BENCHMARK RESULTS (FAST MULTITHREADED)
+============================================================
+
+GTO HALO METRICS:
+  class_label_mean: 0.05673288553953171
+  class_label_std: 0.019049495458602905
+  class_label_min: 0.027156680822372437
+  class_label_max: 0.07739309221506119
+  time_vars_mean: 13.024810791015625
+  time_vars_std: 6.06945276260376
+  time_vars_min: 3.434016227722168
+  time_vars_max: 26.396209716796875
+  thrust_vars_mean: 1.025815725326538
+  thrust_vars_std: 0.8485295176506042
+  thrust_vars_min: 0.009787111543118954
+  thrust_vars_max: 5.413459777832031
+  mass_vars_mean: 147.55125427246094
+  mass_vars_std: 203.35092163085938
+  mass_vars_min: 0.15808305144309998
+  mass_vars_max: 469.1399841308594
+  has_nan: False
+  has_inf: False
+
+PHYSICAL VALIDATION METRICS:
+  feasible_ratio: 1.0
+  avg_final_mass_feasible: 0.0
+  local_optimal_ratio: 1.0
+  avg_final_mass_optimal: 0.0
+  avg_solving_time: 112.25008702278137
+  snopt_inform_distribution: {1: 4}
+  total_tested: 4
+  feasible_count: 4
+  local_optimal_count: 4
+
+SAMPLING EFFICIENCY:
+  total_sampling_time: 29.1523380279541
+  average_sampling_time_per_sample: 29.1523380279541
+  sampling_time_std: 0.0
+  samples_per_second: 0.13721026410178183
+  min_sampling_time: 29.1523380279541
+  max_sampling_time: 29.1523380279541
+
+MULTITHREADING CONFIG:
+  max_workers: 4
+  chunk_size: 1
+  pre_warm_threads: True
+
