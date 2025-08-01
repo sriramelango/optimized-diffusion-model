@@ -15,9 +15,11 @@ Thumbs.db
 # Git internal files
 .git/
 
-# Checkpoint files and large model files
+# Checkpoint files and large model files (excluding already tracked files)
+# Only exclude new .pth files, not ones already in repository
+Training Runs/2025.07.31_161304/checkpoints/*.pth
+Reflected-Diffusion/Training Runs/2025.07.31_161304/checkpoints/*.pth
 *.ckpt
-*.pth
 *.pt
 *.safetensors
 *.bin
