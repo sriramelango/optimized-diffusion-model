@@ -13,4 +13,31 @@ Thumbs.db
 # *$py.class
 
 # Git internal files
-.git/ 
+.git/
+
+# Checkpoint files and large model files
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+*.bin
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+
+# Training runs and logs (optional - uncomment if you want to exclude these)
+# Training Runs/
+# logs/
+
+# Large data files
+*.npy
+*.npz
+*.mat
+*.csv
+*.tsv
+
+# Temporary files
+*.tmp
+*.temp
+*~ 

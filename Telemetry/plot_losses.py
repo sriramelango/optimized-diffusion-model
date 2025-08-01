@@ -5,8 +5,8 @@ import os
 import glob
 
 def find_latest_log():
-    """Find the most recent log file in the Training Runs directory."""
-    log_pattern = "Training Runs/*/logs"
+    """Find the most recent error file in the logs directory."""
+    log_pattern = "logs/diffusion-*.err"
     log_files = glob.glob(log_pattern)
     if not log_files:
         return None
@@ -71,12 +71,33 @@ if __name__ == "__main__":
     f_train_steps, f_train_losses = train_steps, train_losses
     f_eval_steps, f_eval_losses = eval_steps, eval_losses
 
+    # Calculate moving averages
+    window_size = 50  # Adjust this for different smoothing
+    if len(f_train_steps) >= window_size:
+        train_ma = []
+        for i in range(window_size-1, len(f_train_losses)):
+            train_ma.append(np.mean(f_train_losses[i-window_size+1:i+1]))
+        train_ma_steps = f_train_steps[window_size-1:]
+    else:
+        train_ma = f_train_losses
+        train_ma_steps = f_train_steps
+    
+    if f_eval_steps and len(f_eval_steps) >= window_size:
+        eval_ma = []
+        for i in range(window_size-1, len(f_eval_losses)):
+            eval_ma.append(np.mean(f_eval_losses[i-window_size+1:i+1]))
+        eval_ma_steps = f_eval_steps[window_size-1:]
+    elif f_eval_steps:
+        eval_ma = f_eval_losses
+        eval_ma_steps = f_eval_steps
+    else:
+        eval_ma = []
+        eval_ma_steps = []
+
     plt.figure(figsize=(12, 8))
-    plt.plot(f_train_steps, f_train_losses, 'b-', linewidth=2, label='Training Loss', alpha=0.8)
-    plt.scatter(f_train_steps, f_train_losses, color='blue', s=30, alpha=0.6)
-    if f_eval_steps:
-        plt.plot(f_eval_steps, f_eval_losses, 'r-', linewidth=2, label='Evaluation Loss', alpha=0.8)
-        plt.scatter(f_eval_steps, f_eval_losses, color='red', s=30, alpha=0.6)
+    plt.plot(train_ma_steps, train_ma, 'b-', linewidth=3, label=f'Training Loss (MA-{window_size})', alpha=0.9)
+    if eval_ma_steps:
+        plt.plot(eval_ma_steps, eval_ma, 'r-', linewidth=3, label=f'Evaluation Loss (MA-{window_size})', alpha=0.9)
 
     plt.xlabel('Training Step', fontsize=14)
     plt.ylabel('Loss', fontsize=14)
@@ -84,19 +105,19 @@ if __name__ == "__main__":
     plt.grid(True, alpha=0.3)
     plt.legend(fontsize=12)
 
-    if f_train_losses:
-        min_train = min(f_train_losses)
-        max_train = max(f_train_losses)
-        current_train = f_train_losses[-1]
-        plt.text(0.02, 0.98, f'Training Loss Range: {min_train:.2f} - {max_train:.2f}\nCurrent: {current_train:.2f}', 
+    if train_ma:
+        min_train = min(train_ma)
+        max_train = max(train_ma)
+        current_train = train_ma[-1]
+        plt.text(0.02, 0.98, f'Training Loss MA Range: {min_train:.2f} - {max_train:.2f}\nCurrent MA: {current_train:.2f}', 
                  transform=plt.gca().transAxes, verticalalignment='top', 
                  bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
 
-    if f_eval_losses:
-        min_eval = min(f_eval_losses)
-        max_eval = max(f_eval_losses)
-        current_eval = f_eval_losses[-1]
-        plt.text(0.02, 0.90, f'Eval Loss Range: {min_eval:.2f} - {max_eval:.2f}\nCurrent: {current_eval:.2f}', 
+    if eval_ma:
+        min_eval = min(eval_ma)
+        max_eval = max(eval_ma)
+        current_eval = eval_ma[-1]
+        plt.text(0.02, 0.90, f'Eval Loss MA Range: {min_eval:.2f} - {max_eval:.2f}\nCurrent MA: {current_eval:.2f}', 
                  transform=plt.gca().transAxes, verticalalignment='top',
                  bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.8))
 
