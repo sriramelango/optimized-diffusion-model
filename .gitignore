@@ -32,8 +32,8 @@ Reflected-Diffusion/Training Runs/2025.07.31_161304/checkpoints/*.pth
 # Training Runs/
 # logs/
 
-# Large data files
-*.npy
+# Large data files (excluding sample files from training runs)
+# *.npy  # Commented out to allow sample files
 *.npz
 *.mat
 *.csv
