@@ -279,8 +279,7 @@ class GTOHaloBenchmarker:
             sampling_time = end_time - start_time
             # Only use the middle channel output
             sample_np = sample[:, 1, :, :].cpu().numpy()  # [batch, 9, 9]
-            # Unnormalize before flattening
-            sample_np = sample_np * std + mean
+            # Note: No global mean/std unnormalization - using per-variable physical unnormalization instead
             samples.append(sample_np)
             sampling_times.append(sampling_time)
             print(f"Batch {i+1}/{num_batches}: Generated {batch_size} samples in {sampling_time:.2f}s")
@@ -297,7 +296,7 @@ class GTOHaloBenchmarker:
         model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
 
         # Apply per-variable physical unnormalization (match 1D GTO Halo DM exactly)
-        # NOTE: global mean/std unnormalization was already applied above
+        # NOTE: No global mean/std unnormalization - using per-variable physical unnormalization only
         min_shooting_time = 0
         max_shooting_time = 40
         min_coast_time = 0
