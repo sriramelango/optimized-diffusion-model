@@ -217,15 +217,13 @@ class GTOHaloBenchmarker:
             data = pickle.load(f)
         data = data.astype(np.float32)
         labels = data[:, 0]
-        mean = 0.4652
-        std = 0.1811
         # Sort for fast neighbor search
         sorted_indices = np.argsort(labels)
         sorted_labels = labels[sorted_indices]
         sorted_data = data[sorted_indices]
         def pad_and_norm(v):
             padded = np.pad(v, (0, 81 - len(v)), 'constant')
-            padded = (padded - mean) / std
+            # Keep normalized values - no mean/std normalization applied
             return padded.reshape(9, 9)
         samples = []
         sampling_times = []
@@ -279,8 +277,7 @@ class GTOHaloBenchmarker:
             sampling_time = end_time - start_time
             # Only use the middle channel output
             sample_np = sample[:, 1, :, :].cpu().numpy()  # [batch, 9, 9]
-            # Unnormalize before flattening
-            sample_np = sample_np * std + mean
+            # No unnormalization - keep normalized values
             samples.append(sample_np)
             sampling_times.append(sampling_time)
             print(f"Batch {i+1}/{num_batches}: Generated {batch_size} samples in {sampling_time:.2f}s")
@@ -297,7 +294,7 @@ class GTOHaloBenchmarker:
         model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
 
         # Apply per-variable physical unnormalization (match 1D GTO Halo DM exactly)
-        # NOTE: global mean/std unnormalization was already applied above
+        # NOTE: No global mean/std unnormalization applied - keeping normalized values
         min_shooting_time = 0
         max_shooting_time = 40
         min_coast_time = 0

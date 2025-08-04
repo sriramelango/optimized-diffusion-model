@@ -56,10 +56,8 @@ def main(checkpoint_path, base_config_path, data_config_path, model_config_path,
         samples, _ = sampling_fn(score_model, class_labels=class_labels)
         samples = samples.cpu().numpy()
 
-    print("[INFO] Reversing normalization...")
-    mean = 0.4652
-    std = 0.1811
-    samples = samples * std + mean
+    print("[INFO] Keeping normalized values (no unnormalization)...")
+    # No mean/std unnormalization applied - keeping normalized values
 
     print("[INFO] Checking thrust values for each sample...")
     samples_flat = samples.reshape(num_samples, -1)
