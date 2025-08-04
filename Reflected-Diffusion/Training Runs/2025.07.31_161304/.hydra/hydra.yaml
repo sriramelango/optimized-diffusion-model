@@ -1,0 +1,84 @@
+hydra:
+  run:
+    dir: ../Training Runs/2025.07.31_161304
+  sweep:
+    dir: ../Training Runs/2025.07.31_161304
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+      See https://hydra.cc for more info.'
+    footer: 'Powered by Hydra (https://hydra.cc)
+      Use --hydra-help to view Hydra specific help'
+    template: '${hydra.help.header}
+      
+      ${hydra.help.footer}'
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+      
+      See https://hydra.cc for more info.'
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers: [console]
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers: [console, file]
+    disable_existing_loggers: false
+  output:
+    subdir: .hydra
+  overrides:
+    hydra:
+      - hydra.run.dir=../Training Runs/2025.07.31_161304
+      - hydra.mode=RUN
+  searchpath:
+    - path: hydra.conf
+      provider: hydra
+  config:
+    path: null
+    provider: main
+  runtime:
+    version: ${hydra.runtime.version}
+    cwd: ${hydra.runtime.cwd}
+    config_sources:
+      - path: hydra.conf
+        schema: pkg
+        provider: hydra
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default 
