@@ -7,6 +7,20 @@
 **/temp_samples.pkl
 **/training_data_*.pkl
 
+# Model checkpoint files
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# Training output directories
+Training Runs/
+**/Training Runs/
+**/checkpoints/
+**/logs/
+**/samples/
+**/temp_samples/
+
 # Python cache files
 __pycache__/
 *.py[cod]

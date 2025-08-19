@@ -91,6 +91,152 @@ class GTOHaloImageDataset(Dataset):
         img = padded.reshape(1, 9, 9)  # 9×9 = 81 values
         return torch.tensor(img, dtype=torch.float32), torch.tensor(classifier, dtype=torch.float32)
 
+class GTOHaloOptimalImageDataset(Dataset):
+    """
+    Optimal 5×5×3 dataset structure for GTO Halo trajectory generation.
+    
+    This dataset class transforms 67-dimensional spherical trajectory vectors into 
+    semantically meaningful 5×5×3 images for diffusion model training.
+    
+    Dataset Structure (from spherical dataset README):
+    - Input: 67D vector [halo_energy, time_vars(3), thrust_vars(60), mass_vars(3)]
+    - Output: 5×5×3 image + halo_energy class label
+    
+    Image Layout (5×5 = 25 positions):
+    [0,0] Time Variables   [0,1] Thrust_0    [0,2] Thrust_1    [0,3] Thrust_2    [0,4] Thrust_3
+    [1,0] Thrust_4         [1,1] Thrust_5    [1,2] Thrust_6    [1,3] Thrust_7    [1,4] Thrust_8  
+    [2,0] Thrust_9         [2,1] Thrust_10   [2,2] Thrust_11   [2,3] Thrust_12   [2,4] Thrust_13
+    [3,0] Thrust_14        [3,1] Thrust_15   [3,2] Thrust_16   [3,3] Thrust_17   [3,4] Thrust_18
+    [4,0] Thrust_19        [4,1] Fuel Mass   [4,2] Halo Period [4,3] Manifold Len [4,4] PADDING
+    
+    Channel Distribution:
+    - Time Variables [0,0]: Ch0=shooting_time, Ch1=initial_coast, Ch2=final_coast
+    - Thrust Segments [0,1]-[4,0]: Ch0=α_i, Ch1=β_i, Ch2=r_i (spherical coords)
+    - Mass Variables [4,1]-[4,3]: All channels get same value (redundant encoding)
+    - Padding [4,4]: All channels = 0
+    
+    Advantages:
+    - 96% efficiency (24 data + 1 padding out of 25 positions)
+    - Semantic spatial structure (thrust sequence flows naturally)
+    - Natural channel groupings (related components share channels)
+    - Square image compatible with standard CNN architectures
+    """
+    
+    def __init__(self, pkl_path):
+        """
+        Initialize the dataset.
+        
+        Args:
+            pkl_path (str): Path to the spherical dataset pickle file
+                          (training_data_boundary_100000_spherical.pkl)
+        """
+        with open(pkl_path, 'rb') as f:
+            data = pickle.load(f)
+        self.data = data.astype(np.float32)
+        
+        # Validate dataset dimensions
+        expected_dim = 67  # As per spherical dataset documentation
+        if self.data.shape[1] != expected_dim:
+            raise ValueError(f"Expected {expected_dim}D vectors, got {self.data.shape[1]}D")
+            
+        print(f"Loaded {len(self.data)} samples with {self.data.shape[1]} dimensions each")
+        print("Dataset structure: [halo_energy(1), time_vars(3), thrust_vars(60), mass_vars(3)]")
+    
+    def __len__(self):
+        """Return the number of samples in the dataset."""
+        return self.data.shape[0]
+    
+    def __getitem__(self, idx):
+        """
+        Get a single sample and convert to optimal 5×5×3 image format.
+        
+        Args:
+            idx (int): Sample index
+            
+        Returns:
+            tuple: (image_tensor, class_label_tensor)
+                - image_tensor: torch.Tensor of shape (3, 5, 5) containing the trajectory
+                - class_label_tensor: torch.Tensor of shape (1,) containing halo energy
+        """
+        vec = self.data[idx]
+        
+        # ===== EXTRACT COMPONENTS FROM 67D VECTOR =====
+        # Based on spherical dataset documentation structure
+        halo_energy = np.array([vec[0]], dtype=np.float32)  # Index [0]: Class label
+        time_vars = vec[1:4]                                # Indices [1:4]: Time variables (3 values)
+        thrust_vars = vec[4:64].reshape(20, 3)              # Indices [4:64]: Thrust variables (20 segments × 3 spherical coords)  
+        mass_vars = vec[64:67]                              # Indices [64:67]: Mass variables (3 values)
+        
+        # Validate extracted components
+        assert time_vars.shape == (3,), f"Expected 3 time variables, got {time_vars.shape}"
+        assert thrust_vars.shape == (20, 3), f"Expected 20×3 thrust variables, got {thrust_vars.shape}"
+        assert mass_vars.shape == (3,), f"Expected 3 mass variables, got {mass_vars.shape}"
+        
+        # ===== CREATE 5×5×3 IMAGE =====
+        # Initialize with zeros (padding will remain as zeros)
+        img = np.zeros((3, 5, 5), dtype=np.float32)
+        
+        # ===== POSITION [0,0]: TIME VARIABLES =====
+        # Time variables are naturally related (all temporal), so they share spatial position
+        # with natural channel distribution:
+        # - Channel 0: shooting_time (time from Earth to shooting point)
+        # - Channel 1: initial_coast (coast time before thrust sequence)  
+        # - Channel 2: final_coast (coast time after thrust sequence)
+        img[:, 0, 0] = time_vars
+        
+        # ===== POSITIONS [0,1] THROUGH [4,0]: THRUST SEGMENTS =====
+        # Thrust segments flow spatially to represent temporal progression
+        # Each position contains one thrust segment with spherical coordinates:
+        # - Channel 0: α_i (azimuthal angle)
+        # - Channel 1: β_i (polar angle)  
+        # - Channel 2: r_i (magnitude) - guaranteed ≤ 1.0 due to spherical representation
+        
+        # Define thrust positions in spatial order (left-to-right, top-to-bottom)
+        thrust_positions = [
+            # Row 0: Positions 1-4 (thrust segments 0-3)
+            (0, 1), (0, 2), (0, 3), (0, 4),
+            # Row 1: All positions (thrust segments 4-8)  
+            (1, 0), (1, 1), (1, 2), (1, 3), (1, 4),
+            # Row 2: All positions (thrust segments 9-13)
+            (2, 0), (2, 1), (2, 2), (2, 3), (2, 4),
+            # Row 3: All positions (thrust segments 14-18)
+            (3, 0), (3, 1), (3, 2), (3, 3), (3, 4),
+            # Row 4: Position 0 only (thrust segment 19)
+            (4, 0)
+        ]
+        
+        # Validate we have correct number of thrust positions
+        assert len(thrust_positions) == 20, f"Expected 20 thrust positions, got {len(thrust_positions)}"
+        
+        # Fill thrust segments into their spatial positions
+        for i, (row, col) in enumerate(thrust_positions):
+            # thrust_vars[i] = [α_i, β_i, r_i] for segment i
+            img[:, row, col] = thrust_vars[i]
+            
+        # ===== POSITIONS [4,1], [4,2], [4,3]: MASS VARIABLES =====
+        # Mass variables are semantically different, so each gets its own spatial position
+        # with redundant channel encoding (all 3 channels get the same value):
+        
+        # Position [4,1]: Fuel mass (physical spacecraft property in kg)
+        img[:, 4, 1] = mass_vars[0]  # fuel_mass replicated across all channels
+        
+        # Position [4,2]: Halo period (orbital dynamics property in time units)  
+        img[:, 4, 2] = mass_vars[1]  # halo_period replicated across all channels
+        
+        # Position [4,3]: Manifold length (trajectory geometry property, dimensionless)
+        img[:, 4, 3] = mass_vars[2]  # manifold_length replicated across all channels
+        
+        # ===== POSITION [4,4]: PADDING =====
+        # This position remains as zeros (initialized above)
+        # Could be used for future expansion of the dataset
+        
+        # ===== RETURN TENSORS =====
+        # Convert to PyTorch tensors for training
+        image_tensor = torch.tensor(img, dtype=torch.float32)
+        class_label_tensor = torch.tensor(halo_energy, dtype=torch.float32)
+        
+        return image_tensor, class_label_tensor
+
 def get_dataset(config, evaluation=False, distributed=True):
     
     dataroot = config.dataroot
@@ -138,6 +284,10 @@ def get_dataset(config, evaluation=False, distributed=True):
     elif config.data.dataset == "GTOHaloImage":
         train_set = GTOHaloImageDataset(config.data.pkl_path)
         test_set = GTOHaloImageDataset(config.data.pkl_path)
+        workers = 4
+    elif config.data.dataset == "GTOHaloOptimalImage":
+        train_set = GTOHaloOptimalImageDataset(config.data.pkl_path)
+        test_set = GTOHaloOptimalImageDataset(config.data.pkl_path)
         workers = 4
     else:
         raise ValueError(f"{config.data.dataset} is not valid")

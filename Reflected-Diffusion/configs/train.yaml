@@ -1,14 +1,14 @@
 defaults:
   - _self_
   - model: ncsnpp
-  - data: gto_halo
+  - data: gto_halo_optimal
   - override hydra/launcher: submitit_slurm
 
 ngpus: 1
 dataroot: datasets
 
 training:
-  batch_size: 448  # Optimized for 80GB GPU
+  batch_size: 1792  # Optimized for 80GB GPU (2x scaling from 40GB baseline)
   n_iters: 40000
   snapshot_freq: 500
   log_freq: 1
@@ -20,7 +20,7 @@ training:
   drop_label: 0.2
 
 eval:
-  batch_size: 448  # Optimized for 80GB GPU
+  batch_size: 1792  # Optimized for 80GB GPU (2x scaling from 40GB baseline)
 
 sde: 
   name: vesde
@@ -42,7 +42,7 @@ sampling:
 optim:
   weight_decay: 0
   optimizer: Adam
-  lr: 0.00016  # Increased from 0.00008 to compensate for batch size reduction (512->256)
+  lr: 0.000320  # Scaled by √2 for batch size increase (896->1792)
   beta1: 0.9
   beta2: 0.999
   eps: 1e-8

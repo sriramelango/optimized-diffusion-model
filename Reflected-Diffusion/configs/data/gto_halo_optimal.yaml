@@ -1,0 +1,69 @@
+# ===== GTO HALO OPTIMAL IMAGE DATASET CONFIGURATION =====
+# Configuration for the optimal 5×5×3 image structure for GTO Halo trajectory generation
+#
+# This configuration uses the new GTOHaloOptimalImageDataset which provides:
+# - Semantic spatial structure (thrust sequence flows naturally)
+# - Natural channel groupings (related components share channels)  
+# - 96% efficiency (24 data + 1 padding out of 25 positions)
+# - Square image compatible with standard CNN architectures
+#
+# Image Structure:
+# - 5×5 spatial dimensions (square for CNN compatibility)
+# - 3 channels (RGB-like structure for trajectory components)
+# - 25 total positions: 24 data + 1 padding
+#
+# Spatial Layout:
+# [0,0] Time Variables   [0,1] Thrust_0    [0,2] Thrust_1    [0,3] Thrust_2    [0,4] Thrust_3
+# [1,0] Thrust_4         [1,1] Thrust_5    [1,2] Thrust_6    [1,3] Thrust_7    [1,4] Thrust_8  
+# [2,0] Thrust_9         [2,1] Thrust_10   [2,2] Thrust_11   [2,3] Thrust_12   [2,4] Thrust_13
+# [3,0] Thrust_14        [3,1] Thrust_15   [3,2] Thrust_16   [3,3] Thrust_17   [3,4] Thrust_18
+# [4,0] Thrust_19        [4,1] Fuel Mass   [4,2] Halo Period [4,3] Manifold Len [4,4] PADDING
+#
+# Channel Distribution:
+# - Time Variables [0,0]: Ch0=shooting_time, Ch1=initial_coast, Ch2=final_coast
+# - Thrust Segments [0,1]-[4,0]: Ch0=α_i, Ch1=β_i, Ch2=r_i (spherical coordinates)
+# - Mass Variables [4,1]-[4,3]: All channels get same value (redundant encoding)
+# - Padding [4,4]: All channels = 0
+
+# Dataset class to use (must match the class name in datasets.py)
+dataset: GTOHaloOptimalImage
+
+# Path to the spherical dataset pickle file
+# This should point to the spherical coordinate version for guaranteed magnitude constraints
+pkl_path: ../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl
+
+# Image dimensions - MUST be consistent with dataset implementation
+num_channels: 3     # 3 channels for RGB-like structure
+image_size: 5       # Height: 5 pixels (square image)
+image_width: 5      # Width: 5 pixels (square image)
+
+# Class conditioning settings
+classes: true       # Enable class-conditional generation using halo energy
+
+# Multi-GPU settings (can be overridden in main config)
+ngpus: 1           # Number of GPUs to use for data loading
+
+# Additional dataset metadata for validation
+_expected_input_dim: 67    # Expected dimensionality of input vectors
+_expected_output_shape: [3, 5, 5]  # Expected shape of output images
+_semantic_structure:
+  time_variables: 
+    position: [0, 0]
+    channels: ["shooting_time", "initial_coast", "final_coast"]
+  thrust_segments:
+    positions: "[[0,1] through [4,0]]"  
+    channels: ["alpha_i", "beta_i", "r_i"]
+    count: 20
+  mass_variables:
+    fuel_mass: 
+      position: [4, 1]
+      channels: ["fuel_mass", "fuel_mass", "fuel_mass"]
+    halo_period:
+      position: [4, 2] 
+      channels: ["halo_period", "halo_period", "halo_period"]
+    manifold_length:
+      position: [4, 3]
+      channels: ["manifold_length", "manifold_length", "manifold_length"]
+  padding:
+    position: [4, 4]
+    channels: [0, 0, 0]
