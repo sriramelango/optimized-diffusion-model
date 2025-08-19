@@ -197,6 +197,12 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
         if problem_results and earth_mission.is_best_solution_feasible():
             # Custom inform logic: 1=optimal (no infeasibilities), 3=infeasible (some infeasibilities)
             inform = 1 if getattr(problem_results[0].snopt_result, 'number_of_infeasibilities', 1) == 0 else 3
+            # Generate physical trajectory data
+            manifold_arc = halo.generate_manifold_arc(results.control[-2],results.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
+            results_DM = earth_mission.evaluate_and_return_solution(earth_initial_guess,pydylan.enum.transcription_type.ForwardBackwardShooting)
+            manifold_arc_DM = halo.generate_manifold_arc(results_DM.control[-2],results_DM.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
+            gto_states = gto_spiral.get_states()
+            
             result_data = {"results.control": results.control,
                            "feasibility": feasibility,
                            # Changed from snopt_control_evaluations (which does not exist) to snopt_result.control
@@ -206,20 +212,51 @@ class CR3BPEarthMissionWarmstartSimulatorBoundary:
                            "snopt_inform": inform,
                            "thrust": self.thrust,
                            "solving_time": solving_time,
-                           "cost_alpha": self.halo_energy}
-            manifold_arc = halo.generate_manifold_arc(results.control[-2],results.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
-            results_DM = earth_mission.evaluate_and_return_solution(earth_initial_guess,pydylan.enum.transcription_type.ForwardBackwardShooting)
-            manifold_arc_DM = halo.generate_manifold_arc(results_DM.control[-2],results_DM.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
-            self.plot_DM(gto_spiral.get_states(),manifold_arc.mani_states,results,manifold_arc_DM.mani_states,results_DM)
+                           "cost_alpha": self.halo_energy,
+                           # Physical trajectory states for comprehensive dataset
+                           "results.states": results.states,  # Converged trajectory states [x,y,z,vx,vy,vz,...]
+                           "results_DM.states": results_DM.states,  # Predicted trajectory states from initial guess
+                           "manifold_arc": manifold_arc.mani_states,  # Converged manifold arc states
+                           "manifold_arc_DM": manifold_arc_DM.mani_states,  # Predicted manifold arc states
+                           "gto_states": gto_states}  # GTO spiral trajectory states
+            
+            self.plot_DM(gto_states,manifold_arc.mani_states,results,manifold_arc_DM.mani_states,results_DM)
         else:
             # No feasible solution found, set inform to 3 (infeasible)
-            result_data = {"results.control": None,
-                           "feasibility": False,
-                           "snopt_control_evaluations": None,
-                           "snopt_inform": 3,
-                           "thrust": None,
-                           "solving_time": solving_time,
-                           "cost_alpha": self.halo_energy}
+            # Try to capture predicted trajectory states even if SNOPT failed
+            try:
+                results_DM = earth_mission.evaluate_and_return_solution(earth_initial_guess,pydylan.enum.transcription_type.ForwardBackwardShooting)
+                manifold_arc_DM = halo.generate_manifold_arc(results_DM.control[-2],results_DM.control[-1],pydylan.enum.PerturbationDirection.StableLeft)
+                gto_states = gto_spiral.get_states()
+                
+                result_data = {"results.control": None,
+                               "feasibility": False,
+                               "snopt_control_evaluations": None,
+                               "snopt_inform": 3,
+                               "thrust": None,
+                               "solving_time": solving_time,
+                               "cost_alpha": self.halo_energy,
+                               # Physical trajectory states (predicted only for infeasible case)
+                               "results.states": None,  # No converged states for infeasible solutions
+                               "results_DM.states": results_DM.states,  # Predicted trajectory states from initial guess
+                               "manifold_arc": None,  # No converged manifold for infeasible solutions
+                               "manifold_arc_DM": manifold_arc_DM.mani_states,  # Predicted manifold arc states
+                               "gto_states": gto_states}  # GTO spiral trajectory states
+            except Exception as e:
+                print(f"Warning: Could not capture predicted trajectory data for infeasible solution: {e}")
+                result_data = {"results.control": None,
+                               "feasibility": False,
+                               "snopt_control_evaluations": None,
+                               "snopt_inform": 3,
+                               "thrust": None,
+                               "solving_time": solving_time,
+                               "cost_alpha": self.halo_energy,
+                               # Physical trajectory states (all None for failed case)
+                               "results.states": None,
+                               "results_DM.states": None,
+                               "manifold_arc": None,
+                               "manifold_arc_DM": None,
+                               "gto_states": None}
 
         return result_data
 

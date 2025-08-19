@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """
-Fast Multithreaded GTO Halo Benchmarking Module
+Fast Multithreaded GTO Halo Benchmarking Module with Comprehensive Dataset Creation
 
 This version reduces thread initialization delays by:
 1. Pre-initializing thread pool
 2. Pre-loading libraries in each thread
 3. Using thread-local storage for simulators
 4. Reducing file I/O overhead
+
+And creates comprehensive datasets that include:
+1. Generated samples from diffusion model
+2. Complete SNOPT simulation results and statistics
+3. Full converged trajectory data (if feasible)
+4. Physical orbital trajectory states and manifold arcs
+5. Detailed metadata and processing information
+6. Organized datasets by convergence status for easy analysis
+7. Usage guides and examples for dataset utilization
 """
 
 import os
@@ -102,21 +111,21 @@ class ThreadLocalStorage:
             # Pre-initialize simulator for this thread
             print(f"Thread {thread_id}: Pre-initializing CR3BP simulator...")
             
-            # CR3BP simulation parameters (hardcoded to match 1D implementation exactly)
+            # CR3BP simulation parameters (EXACTLY from GTO Halo DM simulator)
             cr3bp_config = {
                 'seed': thread_id,
                 'seed_step': 1,  # Process single sample
                 'quiet_snopt': True,
-                'number_of_segments': 20,  # Match 1D implementation
-                'maximum_shooting_time': 40.0,  # Match 1D implementation
-                'minimum_shooting_time': 0.0,  # Match 1D implementation
-                'start_bdry': 6.48423370092,  # Match 1D implementation
-                'end_bdry': 8.0,  # Match 1D implementation
-                'thrust': 1.0,  # Match 1D implementation
-                'solver_mode': 0,  # Match 1D implementation (0 = optimal, "feasible" = feasible)
-                'min_mass_to_sample': 408,  # Match 1D implementation
-                'max_mass_to_sample': 470,  # Match 1D implementation
-                'snopt_time_limit': 1000.0,  # Match 1D implementation
+                'number_of_segments': 20,  # Match GTO Halo DM
+                'maximum_shooting_time': 40.0,  # Match GTO Halo DM
+                'minimum_shooting_time': 0.0,  # Match GTO Halo DM
+                'start_bdry': 6.48423370092,  # Match GTO Halo DM
+                'end_bdry': 8.0,  # Match GTO Halo DM
+                'thrust': 1.0,  # Match GTO Halo DM
+                'solver_mode': "optimal",  # Match GTO Halo DM ("optimal" = optimal, "feasible" = feasible)
+                'min_mass_to_sample': 408,  # Match GTO Halo DM
+                'max_mass_to_sample': 470,  # Match GTO Halo DM
+                'snopt_time_limit': 500.0,  # Match GTO Halo DM (original benchmarking)
                 'result_folder': os.path.join(output_dir, 'cr3bp_results')
             }
             
@@ -150,40 +159,43 @@ thread_storage = ThreadLocalStorage()
 
 
 def process_single_sample_fast(args):
-    """Process a single sample with pre-initialized thread resources."""
+    """Process a single sample with pre-initialized thread resources and collect comprehensive data."""
     sample_idx, sample_data, halo_energy, output_dir, thread_id = args
     
     try:
         # Force immediate output with flush
         print(f"Thread {thread_id}: Starting sample {sample_idx} with halo energy {halo_energy:.6f}", flush=True)
         
-        # Create a fresh simulator for each sample to avoid output conflicts
-        # CR3BP simulation parameters (hardcoded to match 1D implementation exactly)
+        # Create directories for outputs
+        temp_dir = os.path.join(output_dir, 'temp_samples')
+        os.makedirs(temp_dir, exist_ok=True)
+        cr3bp_results_dir = os.path.join(output_dir, 'cr3bp_results')
+        os.makedirs(cr3bp_results_dir, exist_ok=True)
+        temp_file = os.path.join(temp_dir, f'sample_{sample_idx}.pkl')
+        
+        # CR3BP simulation parameters (EXACTLY from GTO Halo DM simulator)
         cr3bp_config = {
             'seed': sample_idx,
             'seed_step': 1,  # Process single sample
             'quiet_snopt': True,  # Suppress SNOPT output for cleaner telemetry
-            'number_of_segments': 20,  # Match 1D implementation
-            'maximum_shooting_time': 40.0,  # Match 1D implementation
-            'minimum_shooting_time': 0.0,  # Match 1D implementation
-            'start_bdry': 6.48423370092,  # Match 1D implementation
-            'end_bdry': 8.0,  # Match 1D implementation
-            'thrust': 1.0,  # Match 1D implementation
-            'solver_mode': 0,  # Match 1D implementation (0 = optimal, "feasible" = feasible)
-            'min_mass_to_sample': 408,  # Match 1D implementation
-            'max_mass_to_sample': 470,  # Match 1D implementation
-            'snopt_time_limit': 1000.0,  # Match 1D implementation
-            'result_folder': os.path.join(output_dir, 'cr3bp_results')
+            'number_of_segments': 20,  # Match GTO Halo DM
+            'maximum_shooting_time': 40.0,  # Match GTO Halo DM
+            'minimum_shooting_time': 0.0,  # Match GTO Halo DM
+            'start_bdry': 6.48423370092,  # Match GTO Halo DM
+            'end_bdry': 8.0,  # Match GTO Halo DM
+            'thrust': 1.0,  # Match GTO Halo DM
+            'solver_mode': "optimal",  # Match GTO Halo DM ("optimal" = optimal, "feasible" = feasible)
+            'min_mass_to_sample': 408,  # Match GTO Halo DM
+            'max_mass_to_sample': 470,  # Match GTO Halo DM
+            'snopt_time_limit': 500.0,  # Match GTO Halo DM (original benchmarking)
+            'result_folder': cr3bp_results_dir
         }
         
-        # Create a temporary file for this sample
-        temp_dir = os.path.join(output_dir, 'temp_samples')
-        os.makedirs(temp_dir, exist_ok=True)
-        temp_file = os.path.join(temp_dir, f'sample_{sample_idx}.pkl')
-        
-        # Save single sample
+        # Save single sample in the format expected by CR3BP simulator
+        # Format: [halo_energy, trajectory_params] where trajectory_params is 66-dimensional
+        sample_for_cr3bp = np.array([halo_energy] + list(sample_data))
         with open(temp_file, 'wb') as f:
-            pickle.dump(sample_data.reshape(1, -1), f)
+            pickle.dump(sample_for_cr3bp.reshape(1, -1), f)
         
         # Create fresh simulator for this sample
         simulator = CR3BPEarthMissionWarmstartSimulatorBoundary(
@@ -212,33 +224,184 @@ def process_single_sample_fast(args):
         if os.path.exists(temp_file):
             os.remove(temp_file)
         
-        # Analyze result
-        convergence_info = "UNKNOWN"
-        if result_data:
-            if isinstance(result_data, dict):
-                if 'feasibility' in result_data:
-                    convergence_info = "FEASIBLE" if result_data['feasibility'] else "INFEASIBLE"
-                elif 'error' in result_data:
-                    convergence_info = f"ERROR: {result_data['error']}"
-            else:
-                convergence_info = "PROCESSED"
-        
-        print(f"📊 TELEMETRY: Thread {thread_id} - Sample {sample_idx} - SNOPT COMPLETED - Result: {convergence_info}", flush=True)
-        
-        return {
+        # Create comprehensive dataset entry
+        dataset_entry = {
+            # Sample identification
             'sample_idx': sample_idx,
-            'halo_energy': halo_energy,
-            'result_data': result_data,
-            'initial_guess': sample_data
+            'thread_id': thread_id,
+            
+            # Input data
+            'generated_sample': {
+                'halo_energy': halo_energy,
+                'trajectory_params': sample_data.tolist(),  # Convert to list for JSON serialization
+                'full_sample_vector': sample_for_cr3bp.tolist()
+            },
+            
+            # SNOPT simulation parameters
+            'simulation_config': cr3bp_config,
+            
+            # SNOPT results and statistics
+            'snopt_results': {},
+            
+            # Converged trajectory data (if feasible)
+            'converged_trajectory': {},
+            
+            # Physical trajectory states (if feasible)
+            'physical_trajectories': {},
+            
+            # Analysis metadata
+            'processing_metadata': {
+                'timestamp': time.time(),
+                'convergence_status': "UNKNOWN"
+            }
         }
+        
+        # Extract and organize SNOPT results
+        if result_data and isinstance(result_data, dict):
+            print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Result data keys: {list(result_data.keys())}", flush=True)
+            
+            # Core SNOPT statistics
+            dataset_entry['snopt_results'] = {
+                'feasibility': result_data.get('feasibility', False),
+                'snopt_inform': result_data.get('snopt_inform', None),
+                'solving_time': result_data.get('solving_time', None),
+                'thrust': result_data.get('thrust', None),
+                'cost_alpha': result_data.get('cost_alpha', None),
+                'has_snopt_control_evaluations': result_data.get('snopt_control_evaluations', None) is not None
+            }
+            
+            # If feasible, extract complete trajectory data
+            if result_data.get('feasibility', False):
+                if 'results.control' in result_data and result_data['results.control'] is not None:
+                    control_vector = result_data['results.control']
+                    
+                    # Store the complete control vector
+                    dataset_entry['converged_trajectory']['control_vector'] = control_vector.tolist()
+                    
+                    # Extract key trajectory parameters
+                    dataset_entry['converged_trajectory']['trajectory_parameters'] = {
+                        'shooting_time': float(control_vector[0]),
+                        'initial_coast_time': float(control_vector[1]),
+                        'final_coast_time': float(control_vector[2]),
+                        'final_fuel_mass': float(control_vector[-3]),
+                        'halo_period': float(control_vector[-2]),
+                        'manifold_length': float(control_vector[-1])
+                    }
+                    
+                    # Extract control segments (thrust directions for each segment)
+                    control_segments = []
+                    for i in range(20):  # 20 segments
+                        segment_start = 3 + i * 3
+                        control_segments.append({
+                            'segment_id': i,
+                            'alpha': float(control_vector[segment_start]),      # ux component
+                            'beta': float(control_vector[segment_start + 1]),   # uy component  
+                            'thrust_magnitude': float(control_vector[segment_start + 2])  # uz component
+                        })
+                    
+                    dataset_entry['converged_trajectory']['control_segments'] = control_segments
+                
+                # Extract physical trajectory states if available
+                if 'results.states' in result_data and result_data['results.states'] is not None:
+                    converged_states = result_data['results.states']
+                    dataset_entry['physical_trajectories']['converged_states'] = converged_states.tolist()
+                    dataset_entry['physical_trajectories']['converged_states_shape'] = list(converged_states.shape)
+                    print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Captured converged trajectory states: {converged_states.shape}", flush=True)
+                
+                if 'results_DM.states' in result_data and result_data['results_DM.states'] is not None:
+                    predicted_states = result_data['results_DM.states']
+                    dataset_entry['physical_trajectories']['predicted_states'] = predicted_states.tolist()
+                    dataset_entry['physical_trajectories']['predicted_states_shape'] = list(predicted_states.shape)
+                    print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Captured predicted trajectory states: {predicted_states.shape}", flush=True)
+                
+                # Extract manifold arcs if available
+                if 'manifold_arc' in result_data and result_data['manifold_arc'] is not None:
+                    converged_manifold = result_data['manifold_arc']
+                    dataset_entry['physical_trajectories']['converged_manifold'] = converged_manifold.tolist()
+                    dataset_entry['physical_trajectories']['converged_manifold_shape'] = list(converged_manifold.shape)
+                
+                if 'manifold_arc_DM' in result_data and result_data['manifold_arc_DM'] is not None:
+                    predicted_manifold = result_data['manifold_arc_DM']
+                    dataset_entry['physical_trajectories']['predicted_manifold'] = predicted_manifold.tolist()
+                    dataset_entry['physical_trajectories']['predicted_manifold_shape'] = list(predicted_manifold.shape)
+                
+                # Extract GTO spiral trajectory states if available
+                if 'gto_states' in result_data and result_data['gto_states'] is not None:
+                    gto_states = result_data['gto_states']
+                    dataset_entry['physical_trajectories']['gto_states'] = gto_states.tolist()
+                    dataset_entry['physical_trajectories']['gto_states_shape'] = list(gto_states.shape)
+                    print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Captured GTO spiral states: {gto_states.shape}", flush=True)
+                
+                # Store SNOPT control evaluations if available
+                if result_data.get('snopt_control_evaluations', None) is not None:
+                    snopt_evals = result_data['snopt_control_evaluations']
+                    dataset_entry['snopt_results']['snopt_control_evaluations'] = {
+                        'shape': list(snopt_evals.shape),
+                        'data': snopt_evals.tolist(),  # Full evaluation history
+                        'num_evaluations': snopt_evals.shape[0] if len(snopt_evals.shape) > 0 else 0
+                    }
+                
+                dataset_entry['processing_metadata']['convergence_status'] = "FEASIBLE"
+                
+                # Check if solution is locally optimal
+                if result_data.get('snopt_inform', 0) == 1:
+                    dataset_entry['processing_metadata']['convergence_status'] = "LOCALLY_OPTIMAL"
+            else:
+                dataset_entry['processing_metadata']['convergence_status'] = "INFEASIBLE"
+                
+                # Even for infeasible solutions, store what we can
+                if 'error' in result_data:
+                    dataset_entry['snopt_results']['error_message'] = str(result_data['error'])
+                
+                # Try to capture predicted trajectory states even if SNOPT failed
+                if 'results_DM.states' in result_data and result_data['results_DM.states'] is not None:
+                    predicted_states = result_data['results_DM.states']
+                    dataset_entry['physical_trajectories']['predicted_states'] = predicted_states.tolist()
+                    dataset_entry['physical_trajectories']['predicted_states_shape'] = list(predicted_states.shape)
+                    print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Captured predicted trajectory states (infeasible case): {predicted_states.shape}", flush=True)
+                
+                if 'manifold_arc_DM' in result_data and result_data['manifold_arc_DM'] is not None:
+                    predicted_manifold = result_data['manifold_arc_DM']
+                    dataset_entry['physical_trajectories']['predicted_manifold'] = predicted_manifold.tolist()
+                    dataset_entry['physical_trajectories']['predicted_manifold_shape'] = list(predicted_manifold.shape)
+                
+                # Extract GTO spiral trajectory states if available (even for infeasible cases)  
+                if 'gto_states' in result_data and result_data['gto_states'] is not None:
+                    gto_states = result_data['gto_states']
+                    dataset_entry['physical_trajectories']['gto_states'] = gto_states.tolist()
+                    dataset_entry['physical_trajectories']['gto_states_shape'] = list(gto_states.shape)
+                    print(f"DEBUG: Thread {thread_id} - Sample {sample_idx} - Captured GTO spiral states (infeasible case): {gto_states.shape}", flush=True)
+        else:
+            dataset_entry['processing_metadata']['convergence_status'] = "ERROR"
+            if result_data:
+                dataset_entry['snopt_results']['raw_result'] = str(result_data)
+        
+        print(f"📊 TELEMETRY: Thread {thread_id} - Sample {sample_idx} - SNOPT COMPLETED - Result: {dataset_entry['processing_metadata']['convergence_status']}", flush=True)
+        
+        return dataset_entry
         
     except Exception as e:
         print(f"Thread {thread_id}: Error processing sample {sample_idx}: {e}", flush=True)
+        
+        # Return error entry for dataset
         return {
             'sample_idx': sample_idx,
-            'halo_energy': halo_energy,
-            'result_data': {'feasibility': False, 'error': str(e)},
-            'initial_guess': sample_data
+            'thread_id': thread_id,
+            'generated_sample': {
+                'halo_energy': halo_energy,
+                'trajectory_params': sample_data.tolist() if hasattr(sample_data, 'tolist') else list(sample_data),
+                'full_sample_vector': None
+            },
+            'simulation_config': {},
+            'snopt_results': {
+                'feasibility': False,
+                'error_message': str(e)
+            },
+            'converged_trajectory': {},
+            'processing_metadata': {
+                'timestamp': time.time(),
+                'convergence_status': "PROCESSING_ERROR"
+            }
         }
 
 
@@ -390,6 +553,7 @@ class GTOHaloBenchmarker:
         
         samples = []
         sampling_times = []
+        input_class_labels = []  # Store original input class labels
         
         num_batches = (self.config.num_samples + self.config.batch_size - 1) // self.config.batch_size
         
@@ -398,6 +562,12 @@ class GTOHaloBenchmarker:
             
             # For GTO Halo data, use uniform sampling of class labels in [0, 1]
             class_labels = torch.rand(batch_size, 1, device=self.config.device)
+            
+            # Store input class labels for later use (like original GTO Halo implementation)
+            input_class_labels.append(class_labels.cpu().numpy())
+            
+            # Print input class labels for verification
+            print(f"Batch {i+1}: Input class labels: {class_labels.cpu().numpy().flatten()}")
             
             # Generate samples
             start_time = time.time()
@@ -426,15 +596,23 @@ class GTOHaloBenchmarker:
         # Concatenate all samples
         all_samples = np.concatenate(samples, axis=0)
         all_samples = all_samples[:self.config.num_samples]  # Ensure exact number
+        
+        # Concatenate input class labels
+        input_class_labels = np.concatenate(input_class_labels, axis=0)
+        input_class_labels = input_class_labels[:self.config.num_samples]  # Ensure exact number
+        
+        # Store input class labels as instance variable for later use
+        self.input_class_labels = input_class_labels
 
         # --- FLATTEN TO (N, 67) ---
         samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
         samples = samples[:, :67]  # Keep only the first 67 values
 
-        # Extract class labels (normalized halo energies) and model outputs separately
-        # This matches the 1D implementation approach
-        class_labels_normalized = samples[:, 0]  # First column is normalized class labels
+        # Extract model outputs (skip the generated class label)
         model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
+        
+        # Use INPUT class labels for simulation (like original GTO Halo implementation)
+        class_labels_normalized = input_class_labels.flatten()  # Use input class labels
 
         # Skip mean/std unnormalization - model outputs are already in [0,1] range
         # With spherical dataset: model learns to output (alpha_norm, beta_norm, r_norm) directly
@@ -502,6 +680,9 @@ class GTOHaloBenchmarker:
         # Unnormalize halo energy (exactly as in 1D implementation)
         halo_energies = class_labels_normalized * (max_halo_energy - min_halo_energy) + min_halo_energy
         
+        # Print unnormalized halo energies for verification
+        print(f"Unnormalized halo energies: {halo_energies}")
+        
         # Combine halo energies with model outputs (exactly as in 1D implementation)
         samples = np.column_stack((halo_energies, model_outputs))
 
@@ -540,7 +721,7 @@ class GTOHaloBenchmarker:
         
         # Create arguments for each sample with thread ID
         for i in range(num_samples):
-            halo_energy = samples[i, 0]  # First column is already the physical halo energy
+            halo_energy = samples[i, 0]  # First column is the physical halo energy (unnormalized input class label)
             initial_guess = samples[i, 1:]  # Rest is the initial guess data
             thread_id = i % self.config.max_workers  # Distribute across threads
             sample_args.append((i, initial_guess, halo_energy, self.config.output_dir, thread_id))
@@ -620,14 +801,251 @@ class GTOHaloBenchmarker:
         # Sort results by sample index to maintain order
         all_results.sort(key=lambda x: x['sample_idx'])
         
-        # Extract result data and initial guesses
-        result_data_list = [result['result_data'] for result in all_results]
-        initial_guesses_list = [result['initial_guess'] for result in all_results]
+        # Save the comprehensive dataset
+        self.save_comprehensive_dataset(all_results)
+        
+        # Extract result data and initial guesses for legacy statistics computation
+        result_data_list = []
+        initial_guesses_list = []
+        
+        for result in all_results:
+            # Extract legacy format for compatibility with existing statistics
+            if 'snopt_results' in result:
+                legacy_result = {
+                    'feasibility': result['snopt_results'].get('feasibility', False),
+                    'snopt_inform': result['snopt_results'].get('snopt_inform', None),
+                    'solving_time': result['snopt_results'].get('solving_time', None),
+                    'results.control': None
+                }
+                
+                # Extract control vector if available
+                if 'converged_trajectory' in result and 'control_vector' in result['converged_trajectory']:
+                    legacy_result['results.control'] = np.array(result['converged_trajectory']['control_vector'])
+                
+                result_data_list.append(legacy_result)
+            else:
+                # Handle old format (backward compatibility)
+                result_data_list.append(result.get('result_data', {}))
+            
+            # Extract initial guess
+            if 'generated_sample' in result:
+                initial_guesses_list.append(np.array(result['generated_sample']['trajectory_params']))
+            else:
+                # Handle old format (backward compatibility)
+                initial_guesses_list.append(result.get('initial_guess', []))
         
         # Compute statistics
         physical_metrics = self.compute_cr3bp_statistics(result_data_list, initial_guesses_list)
         
+        # Add dataset information to metrics
+        physical_metrics['comprehensive_dataset_saved'] = True
+        physical_metrics['dataset_entries'] = len(all_results)
+        
         return physical_metrics
+    
+    def save_comprehensive_dataset(self, all_results: List[Dict]):
+        """Save the comprehensive dataset with all sample data, SNOPT results, and trajectory information."""
+        print("Saving comprehensive dataset...")
+        
+        # Create dataset directory
+        dataset_dir = os.path.join(self.config.output_dir, 'comprehensive_dataset')
+        os.makedirs(dataset_dir, exist_ok=True)
+        
+        # Organize data by convergence status for easier analysis
+        dataset_by_status = {
+            'LOCALLY_OPTIMAL': [],
+            'FEASIBLE': [],
+            'INFEASIBLE': [],
+            'PROCESSING_ERROR': [],
+            'UNKNOWN': []
+        }
+        
+        for result in all_results:
+            status = result.get('processing_metadata', {}).get('convergence_status', 'UNKNOWN')
+            dataset_by_status[status].append(result)
+        
+        # Save complete dataset as pickle for easy loading in Python
+        complete_dataset_path = os.path.join(dataset_dir, 'complete_dataset.pkl')
+        with open(complete_dataset_path, 'wb') as f:
+            pickle.dump(all_results, f)
+        print(f"✓ Complete dataset saved to {complete_dataset_path}")
+        
+        # Save complete dataset as JSON for readability
+        complete_dataset_json_path = os.path.join(dataset_dir, 'complete_dataset.json')
+        with open(complete_dataset_json_path, 'w') as f:
+            json.dump(all_results, f, indent=2, default=str)
+        print(f"✓ Complete dataset (JSON) saved to {complete_dataset_json_path}")
+        
+        # Save datasets by convergence status
+        for status, data in dataset_by_status.items():
+            if data:  # Only save if there's data for this status
+                status_path = os.path.join(dataset_dir, f'dataset_{status.lower()}.pkl')
+                with open(status_path, 'wb') as f:
+                    pickle.dump(data, f)
+                print(f"✓ {status} dataset saved to {status_path} ({len(data)} samples)")
+        
+        # Save feasible trajectories separately for quick access
+        feasible_trajectories = []
+        for result in all_results:
+            if (result.get('processing_metadata', {}).get('convergence_status') in ['FEASIBLE', 'LOCALLY_OPTIMAL'] 
+                and 'converged_trajectory' in result 
+                and result['converged_trajectory']):
+                feasible_trajectories.append({
+                    'sample_idx': result['sample_idx'],
+                    'halo_energy': result['generated_sample']['halo_energy'],
+                    'convergence_status': result['processing_metadata']['convergence_status'],
+                    'snopt_inform': result['snopt_results']['snopt_inform'],
+                    'solving_time': result['snopt_results']['solving_time'],
+                    'trajectory_parameters': result['converged_trajectory']['trajectory_parameters'],
+                    'control_vector': result['converged_trajectory']['control_vector'],
+                    'control_segments': result['converged_trajectory']['control_segments']
+                })
+        
+        if feasible_trajectories:
+            feasible_traj_path = os.path.join(dataset_dir, 'feasible_trajectories.pkl')
+            with open(feasible_traj_path, 'wb') as f:
+                pickle.dump(feasible_trajectories, f)
+            print(f"✓ Feasible trajectories saved to {feasible_traj_path} ({len(feasible_trajectories)} trajectories)")
+        
+        # Create dataset summary
+        summary = {
+            'total_samples': len(all_results),
+            'by_status': {status: len(data) for status, data in dataset_by_status.items()},
+            'feasible_trajectories': len(feasible_trajectories),
+            'dataset_structure': {
+                'sample_identification': ['sample_idx', 'thread_id'],
+                'input_data': ['generated_sample'],
+                'simulation_config': ['simulation_config'],
+                'snopt_results': ['snopt_results'],
+                'converged_trajectory': ['converged_trajectory'],
+                'physical_trajectories': ['physical_trajectories'],
+                'processing_metadata': ['processing_metadata']
+            },
+            'files_saved': [
+                'complete_dataset.pkl',
+                'complete_dataset.json',
+                'feasible_trajectories.pkl'
+            ] + [f'dataset_{status.lower()}.pkl' for status, data in dataset_by_status.items() if data]
+        }
+        
+        # Save dataset summary
+        summary_path = os.path.join(dataset_dir, 'dataset_summary.json')
+        with open(summary_path, 'w') as f:
+            json.dump(summary, f, indent=2)
+        print(f"✓ Dataset summary saved to {summary_path}")
+        
+        # Create usage guide
+        usage_guide = """
+# GTO Halo Comprehensive Dataset Usage Guide
+
+This directory contains a comprehensive dataset with all generated samples, 
+SNOPT simulation results, converged trajectory data, and physical orbital trajectories.
+
+## Files:
+
+1. **complete_dataset.pkl**: Full dataset in Python pickle format
+   - Load with: `data = pickle.load(open('complete_dataset.pkl', 'rb'))`
+   
+2. **complete_dataset.json**: Full dataset in JSON format (human-readable)
+
+3. **feasible_trajectories.pkl**: Only the feasible/optimal trajectory data
+   - Quick access to successful convergence results
+   
+4. **dataset_[status].pkl**: Data organized by convergence status
+   - dataset_locally_optimal.pkl: SNOPT inform = 1 solutions
+   - dataset_feasible.pkl: Feasible but not necessarily optimal
+   - dataset_infeasible.pkl: Failed convergence
+   - dataset_processing_error.pkl: Processing errors
+
+5. **dataset_summary.json**: Overview of dataset contents
+
+## Data Structure:
+
+Each entry contains:
+- **sample_idx**: Sample identifier
+- **generated_sample**: Original diffusion model output
+  - halo_energy: Physical halo energy parameter
+  - trajectory_params: 66-dimensional trajectory parameters  
+  - full_sample_vector: Complete input vector for SNOPT
+- **simulation_config**: SNOPT simulation parameters used
+- **snopt_results**: SNOPT convergence statistics
+  - feasibility: Boolean success flag
+  - snopt_inform: SNOPT convergence code
+  - solving_time: Computation time in seconds
+  - snopt_control_evaluations: Full SNOPT evaluation history (if available)
+- **converged_trajectory**: Complete trajectory data (if feasible)
+  - control_vector: Full SNOPT control solution
+  - trajectory_parameters: Key trajectory parameters
+  - control_segments: Thrust control for each segment
+- **physical_trajectories**: Physical orbital state trajectories
+  - converged_states: SNOPT converged trajectory states [x,y,z,vx,vy,vz,...]
+  - predicted_states: Predicted trajectory states from initial guess
+  - converged_manifold: Converged manifold arc states
+  - predicted_manifold: Predicted manifold arc states
+  - gto_states: GTO spiral trajectory states
+- **processing_metadata**: Timestamps and convergence status
+
+## Example Usage:
+
+```python
+import pickle
+import numpy as np
+
+# Load complete dataset
+with open('complete_dataset.pkl', 'rb') as f:
+    data = pickle.load(f)
+
+# Filter for locally optimal solutions
+optimal_solutions = [entry for entry in data 
+                    if entry['processing_metadata']['convergence_status'] == 'LOCALLY_OPTIMAL']
+
+# Extract feasible trajectories
+feasible_controls = [entry['converged_trajectory']['control_vector'] 
+                    for entry in data 
+                    if entry['snopt_results']['feasibility']]
+
+# Analyze solving times
+solving_times = [entry['snopt_results']['solving_time'] 
+                for entry in data 
+                if entry['snopt_results']['solving_time'] is not None]
+
+# Extract physical trajectory states for orbital path analysis
+predicted_trajectories = [np.array(entry['physical_trajectories']['predicted_states'])
+                         for entry in data 
+                         if 'physical_trajectories' in entry and 
+                            entry['physical_trajectories'].get('predicted_states') is not None]
+
+converged_trajectories = [np.array(entry['physical_trajectories']['converged_states'])
+                        for entry in data 
+                        if 'physical_trajectories' in entry and 
+                           entry['physical_trajectories'].get('converged_states') is not None]
+
+# Extract GTO spiral trajectory states
+gto_trajectories = [np.array(entry['physical_trajectories']['gto_states'])
+                   for entry in data 
+                   if 'physical_trajectories' in entry and 
+                      entry['physical_trajectories'].get('gto_states') is not None]
+
+# Extract manifold arcs for trajectory analysis  
+converged_manifolds = [np.array(entry['physical_trajectories']['converged_manifold'])
+                      for entry in data 
+                      if 'physical_trajectories' in entry and 
+                         entry['physical_trajectories'].get('converged_manifold') is not None]
+```
+"""
+        
+        usage_guide_path = os.path.join(dataset_dir, 'README.md')
+        with open(usage_guide_path, 'w') as f:
+            f.write(usage_guide)
+        print(f"✓ Usage guide saved to {usage_guide_path}")
+        
+        print(f"✓ Comprehensive dataset completed:")
+        print(f"   - Total samples: {len(all_results)}")
+        print(f"   - Locally optimal: {len(dataset_by_status['LOCALLY_OPTIMAL'])}")
+        print(f"   - Feasible: {len(dataset_by_status['FEASIBLE'])}")
+        print(f"   - Infeasible: {len(dataset_by_status['INFEASIBLE'])}")
+        print(f"   - Processing errors: {len(dataset_by_status['PROCESSING_ERROR'])}")
+        print(f"   - Feasible trajectories: {len(feasible_trajectories)}")
     
     def compute_gto_halo_metrics(self, samples: np.ndarray) -> Dict[str, Any]:
         """Compute GTO Halo specific metrics."""
@@ -833,6 +1251,16 @@ class GTOHaloBenchmarker:
                 for key, value in physical_metrics.items():
                     f.write(f"  {key}: {value}\n")
                 f.write("\n")
+                
+                # Add dataset information if available
+                if physical_metrics.get('comprehensive_dataset_saved', False):
+                    f.write("COMPREHENSIVE DATASET:\n")
+                    f.write(f"  dataset_saved: {physical_metrics.get('comprehensive_dataset_saved', False)}\n")
+                    f.write(f"  total_entries: {physical_metrics.get('dataset_entries', 0)}\n")
+                    f.write(f"  location: {self.config.output_dir}/comprehensive_dataset/\n")
+                    f.write("  files: complete_dataset.pkl, feasible_trajectories.pkl, dataset_summary.json\n")
+                    f.write("  usage_guide: comprehensive_dataset/README.md\n")
+                    f.write("\n")
             
             # Sampling efficiency metrics
             sampling_metrics = results.get('sampling_efficiency_metrics', {})
@@ -849,6 +1277,14 @@ class GTOHaloBenchmarker:
                 for key, value in multithreading_config.items():
                     f.write(f"  {key}: {value}\n")
                 f.write("\n")
+            
+            # Add important file locations
+            f.write("OUTPUT FILES:\n")
+            f.write(f"  benchmark_results: gto_halo_benchmark_results.json\n")
+            f.write(f"  generated_samples: samples.npy\n")
+            f.write(f"  comprehensive_dataset: comprehensive_dataset/\n")
+            f.write(f"  cr3bp_simulation_results: cr3bp_results/\n")
+            f.write(f"  summary: summary.txt\n")
         
         print(f"✓ Summary saved to {summary_path}")
     
@@ -904,7 +1340,14 @@ def main():
     print(f"Feasible ratio: {results['physical_validation_metrics'].get('feasible_ratio', 0):.3f}")
     print(f"Local optimal ratio: {results['physical_validation_metrics'].get('local_optimal_ratio', 0):.3f}")
     print(f"Results saved to: {args.output_dir}")
-    print("Check the summary.txt files in each subdirectory for detailed results.")
+    
+    # Comprehensive dataset information
+    if results['physical_validation_metrics'].get('comprehensive_dataset_saved', False):
+        print(f"Comprehensive dataset: {args.output_dir}/comprehensive_dataset/")
+        print(f"Dataset entries: {results['physical_validation_metrics'].get('dataset_entries', 0)}")
+        print("Dataset includes: complete_dataset.pkl, feasible_trajectories.pkl, and usage guide")
+    
+    print("Check the summary.txt and comprehensive_dataset/README.md for detailed results.")
 
 
 if __name__ == "__main__":

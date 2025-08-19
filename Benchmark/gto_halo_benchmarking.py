@@ -220,6 +220,7 @@ class GTOHaloBenchmarker:
         
         samples = []
         sampling_times = []
+        input_class_labels = []  # Store original input class labels
         
         num_batches = (self.config.num_samples + self.config.batch_size - 1) // self.config.batch_size
         
@@ -228,6 +229,9 @@ class GTOHaloBenchmarker:
             
             # For GTO Halo data, use uniform sampling of class labels in [0, 1]
             class_labels = torch.rand(batch_size, 1, device=self.device)
+            
+            # Store input class labels for later use (like original GTO Halo implementation)
+            input_class_labels.append(class_labels.cpu().numpy())
             
             # Generate samples
             start_time = time.time()
@@ -256,15 +260,20 @@ class GTOHaloBenchmarker:
         # Concatenate all samples
         all_samples = np.concatenate(samples, axis=0)
         all_samples = all_samples[:self.config.num_samples]  # Ensure exact number
+        
+        # Concatenate input class labels
+        input_class_labels = np.concatenate(input_class_labels, axis=0)
+        input_class_labels = input_class_labels[:self.config.num_samples]  # Ensure exact number
 
         # --- FLATTEN TO (N, 67) ---
         samples = all_samples.reshape(all_samples.shape[0], -1)  # (N, 81)
         samples = samples[:, :67]  # Keep only the first 67 values
 
-        # Extract class labels (normalized halo energies) and model outputs separately
-        # This matches the 1D implementation approach
-        class_labels_normalized = samples[:, 0]  # First column is normalized class labels
+        # Extract model outputs (skip the generated class label)
         model_outputs = samples[:, 1:]  # Rest is the model output (66 values)
+        
+        # Use INPUT class labels for simulation (like original GTO Halo implementation)
+        class_labels_normalized = input_class_labels.flatten()  # Use input class labels
 
         # Skip mean/std unnormalization - model outputs are already in [0,1] range
         # With spherical dataset: model learns to output (alpha_norm, beta_norm, r_norm) directly

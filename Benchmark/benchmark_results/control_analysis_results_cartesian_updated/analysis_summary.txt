@@ -1,0 +1,38 @@
+CONTROL VECTOR COMPLEXITY AND DIVERSITY ANALYSIS
+============================================================
+
+DATASET OVERVIEW:
+  Total samples: 100000
+  Control vector dimension: 63
+  Halo energy range: [0.000015, 0.999997]
+
+DIVERSITY METRICS:
+  Mean variance: 0.011256
+  Mean entropy: 1.011136
+  Mean uniqueness: 0.271518
+  Mean pairwise distance: 1.125309 ± 0.300108
+
+DIMENSIONALITY ANALYSIS:
+  Components for 95% variance: 57
+  First 5 components explain: 0.2178 of variance
+
+CLUSTERING ANALYSIS:
+  Number of clusters: 5
+  Silhouette score: 0.2609
+  Cluster distribution:
+    Cluster 0: 13271 samples (13.3%), mean energy: 0.500879
+    Cluster 1: 68767 samples (68.8%), mean energy: 0.508274
+    Cluster 2: 7414 samples (7.4%), mean energy: 0.339615
+    Cluster 3: 6136 samples (6.1%), mean energy: 0.568756
+    Cluster 4: 4412 samples (4.4%), mean energy: 0.509739
+
+PARAMETER COMPLEXITY:
+  Most complex parameter: Final Coast (score: 1.342148)
+  Least complex parameter: Seg7_R (score: 0.291544)
+
+INTERPRETATION:
+  - High variance indicates parameters with wide value ranges
+  - High entropy indicates parameters with diverse distributions
+  - High uniqueness indicates parameters with many distinct values
+  - Low PCA components needed suggests some redundancy in parameters
+  - High silhouette score indicates well-separated trajectory clusters

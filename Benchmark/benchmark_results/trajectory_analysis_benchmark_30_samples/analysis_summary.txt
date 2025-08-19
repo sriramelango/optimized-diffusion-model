@@ -1,0 +1,34 @@
+TRAJECTORY COMPARISON ANALYSIS SUMMARY
+==================================================
+
+Dataset: test_30_samples_benchmark/comprehensive_dataset/complete_dataset.pkl
+Total samples: 30
+Feasible samples analyzed: 26
+Physical trajectory samples: 30
+
+OVERALL PREDICTION ACCURACY:
+  Mean Absolute Error: 1.886038
+  Mean Absolute Percentage Error: 82423835426.88%
+  Correlation coefficient: 0.9902
+
+WORST PREDICTED PARAMETERS:
+  Final Fuel Mass: MAE = 24.373398
+  Shooting Time: MAE = 3.313100
+  Seg19_Beta: MAE = 3.240082
+  Seg10_Alpha: MAE = 2.979635
+  Seg19_Alpha: MAE = 2.863421
+
+BEST PREDICTED PARAMETERS:
+  Seg9_Thrust: MAE = 0.119135
+  Seg8_Thrust: MAE = 0.150616
+  Seg2_Thrust: MAE = 0.198397
+  Seg10_Thrust: MAE = 0.214543
+  Seg7_Thrust: MAE = 0.218522
+
+PHYSICAL TRAJECTORY DEVIATIONS:
+  Valid trajectory pairs: 26
+  Mean max position deviation: 1.849649 DU
+  Mean max velocity deviation: 2.670567 DU/TU
+  Mean final position deviation: 0.533984 DU
+
+Analysis plots saved to: trajectory_analysis_benchmark_30_samples

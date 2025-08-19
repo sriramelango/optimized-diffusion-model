@@ -1,45 +1,126 @@
-# Only ignore essential system files
+# Large dataset files that exceed GitHub's 100MB limit
+*.pkl
+*.npy
+**/complete_dataset.json
+**/complete_dataset.pkl
+**/dataset_*.pkl
+**/temp_samples.pkl
+**/training_data_*.pkl
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db
-
-# Python cache files (optional - can be tracked if needed)
-# __pycache__/
-# *.py[cod]
-# *$py.class
-
-# Git internal files
-.git/
-
-# Checkpoint files and large model files (excluding already tracked files)
-# Only exclude new .pth files, not ones already in repository
-Training Runs/2025.07.31_161304/checkpoints/*.pth
-Reflected-Diffusion/Training Runs/2025.07.31_161304/checkpoints/*.pth
-*.ckpt
-*.pt
-*.safetensors
-*.bin
-*.h5
-*.hdf5
-*.pkl
-*.pickle
-
-# Training runs and logs (optional - uncomment if you want to exclude these)
-# Training Runs/
-# logs/
-
-# Large data files (excluding sample files from training runs)
-# *.npy  # Commented out to allow sample files
-*.npz
-*.mat
-*.csv
-*.tsv
-
-# Temporary files
-*.tmp
-*.temp
-*~ 
+Thumbs.db 

@@ -1,0 +1,89 @@
+{
+  "dataset_info": {
+    "total_samples": 100000,
+    "control_vector_dimension": 63,
+    "halo_energy_range": [
+      1.4817810695349756e-05,
+      0.999996922591847
+    ]
+  },
+  "diversity_metrics": {
+    "mean_variance": 0.011256235963228754,
+    "mean_entropy": 1.011135626102929,
+    "mean_uniqueness": 0.2715180952380953,
+    "mean_pairwise_distance": 1.1253085290366207,
+    "std_pairwise_distance": 0.3001082587759336
+  },
+  "pca_analysis": {
+    "n_components_95_variance": 57,
+    "first_5_components_variance": 0.2177582209382347
+  },
+  "clustering_analysis": {
+    "n_clusters": 5,
+    "silhouette_score": 0.2609342340977706,
+    "cluster_distribution": {
+      "cluster_0": {
+        "size": 13271,
+        "percentage": 13.270999999999999,
+        "mean_energy": 0.5008785977167044,
+        "std_energy": 0.2870394100818034,
+        "energy_range": [
+          0.00018044120623762045,
+          0.9999876303212392
+        ]
+      },
+      "cluster_1": {
+        "size": 68767,
+        "percentage": 68.767,
+        "mean_energy": 0.5082742458618698,
+        "std_energy": 0.2938248893663698,
+        "energy_range": [
+          2.049206951980992e-05,
+          0.999996922591847
+        ]
+      },
+      "cluster_2": {
+        "size": 7414,
+        "percentage": 7.414,
+        "mean_energy": 0.3396150399256991,
+        "std_energy": 0.26161806155163975,
+        "energy_range": [
+          1.4817810695349756e-05,
+          0.9992168996078392
+        ]
+      },
+      "cluster_3": {
+        "size": 6136,
+        "percentage": 6.136,
+        "mean_energy": 0.5687559454346994,
+        "std_energy": 0.27611716523490154,
+        "energy_range": [
+          0.0004830759443324966,
+          0.9999228119833891
+        ]
+      },
+      "cluster_4": {
+        "size": 4412,
+        "percentage": 4.412,
+        "mean_energy": 0.5097388300287978,
+        "std_energy": 0.27648907279436297,
+        "energy_range": [
+          0.00018361107297259864,
+          0.9948043844934644
+        ]
+      }
+    }
+  },
+  "parameter_analysis": {
+    "most_complex_parameter": {
+      "name": "Final Coast",
+      "index": 2,
+      "score": 1.3421482976759567
+    },
+    "least_complex_parameter": {
+      "name": "Seg7_R",
+      "index": 23,
+      "score": 0.29154406230331575
+    }
+  }
+}

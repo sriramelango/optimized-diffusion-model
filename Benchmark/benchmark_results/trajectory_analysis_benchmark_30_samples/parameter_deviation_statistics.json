@@ -1,0 +1,1230 @@
+{
+  "parameter_deviations": {
+    "mean_abs_error": [
+      3.3130998504060583,
+      1.873510299027482,
+      2.4974598232646206,
+      2.0073196212804607,
+      2.2640597976072745,
+      0.2558532273558697,
+      2.1982298293521425,
+      1.7852539204005764,
+      0.1983974701119788,
+      2.627098316562118,
+      2.24429243955096,
+      0.2744177481811349,
+      2.3276095861504085,
+      2.842131819817369,
+      0.223114777601617,
+      1.9315481484217316,
+      2.5613785499773747,
+      0.23845812765899704,
+      2.118325619577662,
+      2.139348668427438,
+      0.22149283140677933,
+      2.6130716733957695,
+      1.9921591652391877,
+      0.21852182980100504,
+      2.5181327344162763,
+      1.8934154769799203,
+      0.1506160280998719,
+      2.085941946355497,
+      2.050179539336765,
+      0.11913484053740991,
+      2.9796351300255646,
+      2.3668979724876134,
+      0.21454304365727375,
+      1.7634352240462197,
+      1.663182773450053,
+      0.22823765017751158,
+      2.0339878518896204,
+      2.0571401081157616,
+      0.3541105167797113,
+      2.01202319061381,
+      1.4295662392762762,
+      0.3388380670163182,
+      1.9110263300207668,
+      1.5435132638285614,
+      0.3205472182430711,
+      2.5695460226868914,
+      2.3972096823635574,
+      0.2602549133345894,
+      2.3522309229163634,
+      1.6552552909048708,
+      0.26025387198701977,
+      1.5409730802808501,
+      1.4612674205570906,
+      0.28339370263742164,
+      2.3885350811823254,
+      2.2319575609816553,
+      0.23332035149515898,
+      2.863421495116315,
+      3.2400824414804563,
+      0.23105309417073644,
+      1.8059354589929955,
+      1.5041295203254106,
+      0.29286896598700823,
+      24.373398332636377,
+      0.3835904569146464,
+      1.1495812878839191
+    ],
+    "std_abs_error": [
+      2.9193639373801203,
+      1.3990019641680065,
+      2.1968225479556063,
+      1.9270463893412548,
+      2.0061221822196544,
+      0.31025582775067334,
+      2.0414786711559567,
+      2.062805633681573,
+      0.2224490017489372,
+      2.246855979155636,
+      1.8080231940981102,
+      0.3372482376627863,
+      2.0093389826976775,
+      2.3461196620853424,
+      0.33627421249035555,
+      2.0242955883346485,
+      2.387844404782945,
+      0.3195675279299115,
+      1.8199181987079724,
+      2.2238893902531633,
+      0.30893817686853553,
+      2.1544509976129116,
+      1.9772050873091367,
+      0.326939966062433,
+      2.136022170782364,
+      2.227808947600972,
+      0.2218504420719328,
+      1.9260782696359873,
+      2.276351209156963,
+      0.2417392132152613,
+      2.083180818148582,
+      2.13209960944524,
+      0.28242448055583913,
+      1.8217745307297573,
+      1.7932181694615377,
+      0.2957817822992986,
+      1.7081746875118342,
+      1.8197505973400792,
+      0.364959023772713,
+      1.7860716881179237,
+      1.5739022208783007,
+      0.3833555176780033,
+      1.7786752496763572,
+      1.8649669654821581,
+      0.32302405123399275,
+      2.0601753739944124,
+      2.170187340029015,
+      0.3609380334483824,
+      2.0084610129334277,
+      1.7492242708613608,
+      0.3428269299118709,
+      1.584437393732176,
+      1.6722271459964304,
+      0.37811612243260234,
+      1.9313019677054366,
+      2.0420706327284566,
+      0.31289844768657166,
+      2.0879857937999633,
+      2.339839027128704,
+      0.3534710782716932,
+      2.020139791027037,
+      1.9462233737841133,
+      0.3485298856985338,
+      49.82728877094693,
+      0.3999294302086352,
+      1.1969650767934992
+    ],
+    "mean_rel_error": [
+      0.4219551248496315,
+      0.4509651119225324,
+      2.494320016092191,
+      2121877834.249268,
+      85855253.2361482,
+      784329298.1176165,
+      1903688212.5374653,
+      493536070.24514616,
+      1221064750.9343686,
+      73255754.9033525,
+      203962929.41882592,
+      1870758740.1749048,
+      5403.884943063922,
+      2250889951.6665673,
+      1308698561.2656534,
+      1598549649.5907626,
+      194712650.48800966,
+      1222541790.240242,
+      1.318847574372279,
+      3.538645145889707,
+      1232813520.231764,
+      361153489.9779534,
+      327372119.3585117,
+      475762849.06040645,
+      148585874.98376673,
+      348238542.3214498,
+      1083663020.8681073,
+      1373920349.66323,
+      698584969.281174,
+      1101493944.2968745,
+      5583195205.718861,
+      360666265.268248,
+      1287340916.2678466,
+      2146471306.9859877,
+      722565085.9567586,
+      1230736399.4568028,
+      1177016064.0758142,
+      24239359.9374007,
+      1006825678.0195293,
+      235882214.95193127,
+      23904450.890163176,
+      1949531815.3229573,
+      735376328.8374553,
+      318160905.89989996,
+      1112644044.2538471,
+      1038404881.5742233,
+      2485311484.9938536,
+      1270264761.002246,
+      373694708.3193851,
+      484821756.9885371,
+      1248319072.9556124,
+      290150905.3290839,
+      147721076.74837154,
+      1382568848.0128329,
+      169513587.46274254,
+      1388556063.8127735,
+      662293464.3669006,
+      457678856.3358356,
+      325307861.19287753,
+      771734983.9704685,
+      353080643.80615354,
+      351631114.92410725,
+      709860208.8622148,
+      0.0998284643623665,
+      88945519.76082754,
+      0.15412170340677264
+    ],
+    "max_abs_error": [
+      11.653320776121369,
+      4.906049806628134,
+      9.66451415241475,
+      6.112177301782911,
+      6.272275302802221,
+      0.9875814188271761,
+      6.224018869357918,
+      6.253708367511801,
+      0.7754714628451668,
+      6.175592843686239,
+      5.974613968526022,
+      0.9737421274185181,
+      6.171763052413458,
+      6.204264540468351,
+      0.9707257021218538,
+      6.176151383911268,
+      6.2713971997248095,
+      0.9750805888324976,
+      6.278847017568545,
+      6.281840826860638,
+      0.9857306713238358,
+      6.213833552096979,
+      6.2664622387485664,
+      0.98962842073501,
+      5.943557922040121,
+      6.271261566561655,
+      0.9334646463394165,
+      6.105990518127577,
+      6.235566132013695,
+      0.9607981443405151,
+      6.268731594085693,
+      6.282379549589017,
+      0.9399583276372783,
+      5.806148698773853,
+      6.048373721048003,
+      0.9824405663849675,
+      5.957598726729999,
+      5.628681111883311,
+      0.980560939759016,
+      6.005773050705405,
+      5.391404873071416,
+      0.996658205986023,
+      6.144230563436643,
+      6.104282727398965,
+      0.9696634768472737,
+      6.246749289576904,
+      6.258560547848241,
+      0.9667950868606567,
+      5.9770758501931,
+      6.259683357794778,
+      0.9989887991687283,
+      6.196326007066262,
+      5.925826583300726,
+      0.9875999065116048,
+      6.265625575800435,
+      6.217806604002611,
+      0.9640273594507864,
+      6.227392532145045,
+      6.275184692126707,
+      0.9933043173514307,
+      6.2641041597919624,
+      6.0740375260459345,
+      0.9891529493033886,
+      268.8851609751256,
+      1.4704458236459668,
+      3.3998761556662904
+    ],
+    "parameter_names": [
+      "Shooting Time",
+      "Initial Coast",
+      "Final Coast",
+      "Seg1_Alpha",
+      "Seg1_Beta",
+      "Seg1_Thrust",
+      "Seg2_Alpha",
+      "Seg2_Beta",
+      "Seg2_Thrust",
+      "Seg3_Alpha",
+      "Seg3_Beta",
+      "Seg3_Thrust",
+      "Seg4_Alpha",
+      "Seg4_Beta",
+      "Seg4_Thrust",
+      "Seg5_Alpha",
+      "Seg5_Beta",
+      "Seg5_Thrust",
+      "Seg6_Alpha",
+      "Seg6_Beta",
+      "Seg6_Thrust",
+      "Seg7_Alpha",
+      "Seg7_Beta",
+      "Seg7_Thrust",
+      "Seg8_Alpha",
+      "Seg8_Beta",
+      "Seg8_Thrust",
+      "Seg9_Alpha",
+      "Seg9_Beta",
+      "Seg9_Thrust",
+      "Seg10_Alpha",
+      "Seg10_Beta",
+      "Seg10_Thrust",
+      "Seg11_Alpha",
+      "Seg11_Beta",
+      "Seg11_Thrust",
+      "Seg12_Alpha",
+      "Seg12_Beta",
+      "Seg12_Thrust",
+      "Seg13_Alpha",
+      "Seg13_Beta",
+      "Seg13_Thrust",
+      "Seg14_Alpha",
+      "Seg14_Beta",
+      "Seg14_Thrust",
+      "Seg15_Alpha",
+      "Seg15_Beta",
+      "Seg15_Thrust",
+      "Seg16_Alpha",
+      "Seg16_Beta",
+      "Seg16_Thrust",
+      "Seg17_Alpha",
+      "Seg17_Beta",
+      "Seg17_Thrust",
+      "Seg18_Alpha",
+      "Seg18_Beta",
+      "Seg18_Thrust",
+      "Seg19_Alpha",
+      "Seg19_Beta",
+      "Seg19_Thrust",
+      "Seg20_Alpha",
+      "Seg20_Beta",
+      "Seg20_Thrust",
+      "Final Fuel Mass",
+      "Halo Period",
+      "Manifold Length"
+    ]
+  },
+  "parameter_ranking": {
+    "by_mean_abs_error": [
+      {
+        "parameter": "Final Fuel Mass",
+        "value": 24.373398332636377
+      },
+      {
+        "parameter": "Shooting Time",
+        "value": 3.3130998504060583
+      },
+      {
+        "parameter": "Seg19_Beta",
+        "value": 3.2400824414804563
+      },
+      {
+        "parameter": "Seg10_Alpha",
+        "value": 2.9796351300255646
+      },
+      {
+        "parameter": "Seg19_Alpha",
+        "value": 2.863421495116315
+      },
+      {
+        "parameter": "Seg4_Beta",
+        "value": 2.842131819817369
+      },
+      {
+        "parameter": "Seg3_Alpha",
+        "value": 2.627098316562118
+      },
+      {
+        "parameter": "Seg7_Alpha",
+        "value": 2.6130716733957695
+      },
+      {
+        "parameter": "Seg15_Alpha",
+        "value": 2.5695460226868914
+      },
+      {
+        "parameter": "Seg5_Beta",
+        "value": 2.5613785499773747
+      },
+      {
+        "parameter": "Seg8_Alpha",
+        "value": 2.5181327344162763
+      },
+      {
+        "parameter": "Final Coast",
+        "value": 2.4974598232646206
+      },
+      {
+        "parameter": "Seg15_Beta",
+        "value": 2.3972096823635574
+      },
+      {
+        "parameter": "Seg18_Alpha",
+        "value": 2.3885350811823254
+      },
+      {
+        "parameter": "Seg10_Beta",
+        "value": 2.3668979724876134
+      },
+      {
+        "parameter": "Seg16_Alpha",
+        "value": 2.3522309229163634
+      },
+      {
+        "parameter": "Seg4_Alpha",
+        "value": 2.3276095861504085
+      },
+      {
+        "parameter": "Seg1_Beta",
+        "value": 2.2640597976072745
+      },
+      {
+        "parameter": "Seg3_Beta",
+        "value": 2.24429243955096
+      },
+      {
+        "parameter": "Seg18_Beta",
+        "value": 2.2319575609816553
+      },
+      {
+        "parameter": "Seg2_Alpha",
+        "value": 2.1982298293521425
+      },
+      {
+        "parameter": "Seg6_Beta",
+        "value": 2.139348668427438
+      },
+      {
+        "parameter": "Seg6_Alpha",
+        "value": 2.118325619577662
+      },
+      {
+        "parameter": "Seg9_Alpha",
+        "value": 2.085941946355497
+      },
+      {
+        "parameter": "Seg12_Beta",
+        "value": 2.0571401081157616
+      },
+      {
+        "parameter": "Seg9_Beta",
+        "value": 2.050179539336765
+      },
+      {
+        "parameter": "Seg12_Alpha",
+        "value": 2.0339878518896204
+      },
+      {
+        "parameter": "Seg13_Alpha",
+        "value": 2.01202319061381
+      },
+      {
+        "parameter": "Seg1_Alpha",
+        "value": 2.0073196212804607
+      },
+      {
+        "parameter": "Seg7_Beta",
+        "value": 1.9921591652391877
+      },
+      {
+        "parameter": "Seg5_Alpha",
+        "value": 1.9315481484217316
+      },
+      {
+        "parameter": "Seg14_Alpha",
+        "value": 1.9110263300207668
+      },
+      {
+        "parameter": "Seg8_Beta",
+        "value": 1.8934154769799203
+      },
+      {
+        "parameter": "Initial Coast",
+        "value": 1.873510299027482
+      },
+      {
+        "parameter": "Seg20_Alpha",
+        "value": 1.8059354589929955
+      },
+      {
+        "parameter": "Seg2_Beta",
+        "value": 1.7852539204005764
+      },
+      {
+        "parameter": "Seg11_Alpha",
+        "value": 1.7634352240462197
+      },
+      {
+        "parameter": "Seg11_Beta",
+        "value": 1.663182773450053
+      },
+      {
+        "parameter": "Seg16_Beta",
+        "value": 1.6552552909048708
+      },
+      {
+        "parameter": "Seg14_Beta",
+        "value": 1.5435132638285614
+      },
+      {
+        "parameter": "Seg17_Alpha",
+        "value": 1.5409730802808501
+      },
+      {
+        "parameter": "Seg20_Beta",
+        "value": 1.5041295203254106
+      },
+      {
+        "parameter": "Seg17_Beta",
+        "value": 1.4612674205570906
+      },
+      {
+        "parameter": "Seg13_Beta",
+        "value": 1.4295662392762762
+      },
+      {
+        "parameter": "Manifold Length",
+        "value": 1.1495812878839191
+      },
+      {
+        "parameter": "Halo Period",
+        "value": 0.3835904569146464
+      },
+      {
+        "parameter": "Seg12_Thrust",
+        "value": 0.3541105167797113
+      },
+      {
+        "parameter": "Seg13_Thrust",
+        "value": 0.3388380670163182
+      },
+      {
+        "parameter": "Seg14_Thrust",
+        "value": 0.3205472182430711
+      },
+      {
+        "parameter": "Seg20_Thrust",
+        "value": 0.29286896598700823
+      },
+      {
+        "parameter": "Seg17_Thrust",
+        "value": 0.28339370263742164
+      },
+      {
+        "parameter": "Seg3_Thrust",
+        "value": 0.2744177481811349
+      },
+      {
+        "parameter": "Seg15_Thrust",
+        "value": 0.2602549133345894
+      },
+      {
+        "parameter": "Seg16_Thrust",
+        "value": 0.26025387198701977
+      },
+      {
+        "parameter": "Seg1_Thrust",
+        "value": 0.2558532273558697
+      },
+      {
+        "parameter": "Seg5_Thrust",
+        "value": 0.23845812765899704
+      },
+      {
+        "parameter": "Seg18_Thrust",
+        "value": 0.23332035149515898
+      },
+      {
+        "parameter": "Seg19_Thrust",
+        "value": 0.23105309417073644
+      },
+      {
+        "parameter": "Seg11_Thrust",
+        "value": 0.22823765017751158
+      },
+      {
+        "parameter": "Seg4_Thrust",
+        "value": 0.223114777601617
+      },
+      {
+        "parameter": "Seg6_Thrust",
+        "value": 0.22149283140677933
+      },
+      {
+        "parameter": "Seg7_Thrust",
+        "value": 0.21852182980100504
+      },
+      {
+        "parameter": "Seg10_Thrust",
+        "value": 0.21454304365727375
+      },
+      {
+        "parameter": "Seg2_Thrust",
+        "value": 0.1983974701119788
+      },
+      {
+        "parameter": "Seg8_Thrust",
+        "value": 0.1506160280998719
+      },
+      {
+        "parameter": "Seg9_Thrust",
+        "value": 0.11913484053740991
+      }
+    ],
+    "by_mean_rel_error": [
+      {
+        "parameter": "Seg10_Alpha",
+        "value": 5583195205.718861
+      },
+      {
+        "parameter": "Seg15_Beta",
+        "value": 2485311484.9938536
+      },
+      {
+        "parameter": "Seg4_Beta",
+        "value": 2250889951.6665673
+      },
+      {
+        "parameter": "Seg11_Alpha",
+        "value": 2146471306.9859877
+      },
+      {
+        "parameter": "Seg1_Alpha",
+        "value": 2121877834.249268
+      },
+      {
+        "parameter": "Seg13_Thrust",
+        "value": 1949531815.3229573
+      },
+      {
+        "parameter": "Seg2_Alpha",
+        "value": 1903688212.5374653
+      },
+      {
+        "parameter": "Seg3_Thrust",
+        "value": 1870758740.1749048
+      },
+      {
+        "parameter": "Seg5_Alpha",
+        "value": 1598549649.5907626
+      },
+      {
+        "parameter": "Seg18_Beta",
+        "value": 1388556063.8127735
+      },
+      {
+        "parameter": "Seg17_Thrust",
+        "value": 1382568848.0128329
+      },
+      {
+        "parameter": "Seg9_Alpha",
+        "value": 1373920349.66323
+      },
+      {
+        "parameter": "Seg4_Thrust",
+        "value": 1308698561.2656534
+      },
+      {
+        "parameter": "Seg10_Thrust",
+        "value": 1287340916.2678466
+      },
+      {
+        "parameter": "Seg15_Thrust",
+        "value": 1270264761.002246
+      },
+      {
+        "parameter": "Seg16_Thrust",
+        "value": 1248319072.9556124
+      },
+      {
+        "parameter": "Seg6_Thrust",
+        "value": 1232813520.231764
+      },
+      {
+        "parameter": "Seg11_Thrust",
+        "value": 1230736399.4568028
+      },
+      {
+        "parameter": "Seg5_Thrust",
+        "value": 1222541790.240242
+      },
+      {
+        "parameter": "Seg2_Thrust",
+        "value": 1221064750.9343686
+      },
+      {
+        "parameter": "Seg12_Alpha",
+        "value": 1177016064.0758142
+      },
+      {
+        "parameter": "Seg14_Thrust",
+        "value": 1112644044.2538471
+      },
+      {
+        "parameter": "Seg9_Thrust",
+        "value": 1101493944.2968745
+      },
+      {
+        "parameter": "Seg8_Thrust",
+        "value": 1083663020.8681073
+      },
+      {
+        "parameter": "Seg15_Alpha",
+        "value": 1038404881.5742233
+      },
+      {
+        "parameter": "Seg12_Thrust",
+        "value": 1006825678.0195293
+      },
+      {
+        "parameter": "Seg1_Thrust",
+        "value": 784329298.1176165
+      },
+      {
+        "parameter": "Seg19_Thrust",
+        "value": 771734983.9704685
+      },
+      {
+        "parameter": "Seg14_Alpha",
+        "value": 735376328.8374553
+      },
+      {
+        "parameter": "Seg11_Beta",
+        "value": 722565085.9567586
+      },
+      {
+        "parameter": "Seg20_Thrust",
+        "value": 709860208.8622148
+      },
+      {
+        "parameter": "Seg9_Beta",
+        "value": 698584969.281174
+      },
+      {
+        "parameter": "Seg18_Thrust",
+        "value": 662293464.3669006
+      },
+      {
+        "parameter": "Seg2_Beta",
+        "value": 493536070.24514616
+      },
+      {
+        "parameter": "Seg16_Beta",
+        "value": 484821756.9885371
+      },
+      {
+        "parameter": "Seg7_Thrust",
+        "value": 475762849.06040645
+      },
+      {
+        "parameter": "Seg19_Alpha",
+        "value": 457678856.3358356
+      },
+      {
+        "parameter": "Seg16_Alpha",
+        "value": 373694708.3193851
+      },
+      {
+        "parameter": "Seg7_Alpha",
+        "value": 361153489.9779534
+      },
+      {
+        "parameter": "Seg10_Beta",
+        "value": 360666265.268248
+      },
+      {
+        "parameter": "Seg20_Alpha",
+        "value": 353080643.80615354
+      },
+      {
+        "parameter": "Seg20_Beta",
+        "value": 351631114.92410725
+      },
+      {
+        "parameter": "Seg8_Beta",
+        "value": 348238542.3214498
+      },
+      {
+        "parameter": "Seg7_Beta",
+        "value": 327372119.3585117
+      },
+      {
+        "parameter": "Seg19_Beta",
+        "value": 325307861.19287753
+      },
+      {
+        "parameter": "Seg14_Beta",
+        "value": 318160905.89989996
+      },
+      {
+        "parameter": "Seg17_Alpha",
+        "value": 290150905.3290839
+      },
+      {
+        "parameter": "Seg13_Alpha",
+        "value": 235882214.95193127
+      },
+      {
+        "parameter": "Seg3_Beta",
+        "value": 203962929.41882592
+      },
+      {
+        "parameter": "Seg5_Beta",
+        "value": 194712650.48800966
+      },
+      {
+        "parameter": "Seg18_Alpha",
+        "value": 169513587.46274254
+      },
+      {
+        "parameter": "Seg8_Alpha",
+        "value": 148585874.98376673
+      },
+      {
+        "parameter": "Seg17_Beta",
+        "value": 147721076.74837154
+      },
+      {
+        "parameter": "Halo Period",
+        "value": 88945519.76082754
+      },
+      {
+        "parameter": "Seg1_Beta",
+        "value": 85855253.2361482
+      },
+      {
+        "parameter": "Seg3_Alpha",
+        "value": 73255754.9033525
+      },
+      {
+        "parameter": "Seg12_Beta",
+        "value": 24239359.9374007
+      },
+      {
+        "parameter": "Seg13_Beta",
+        "value": 23904450.890163176
+      },
+      {
+        "parameter": "Seg4_Alpha",
+        "value": 5403.884943063922
+      },
+      {
+        "parameter": "Seg6_Beta",
+        "value": 3.538645145889707
+      },
+      {
+        "parameter": "Final Coast",
+        "value": 2.494320016092191
+      },
+      {
+        "parameter": "Seg6_Alpha",
+        "value": 1.318847574372279
+      },
+      {
+        "parameter": "Initial Coast",
+        "value": 0.4509651119225324
+      },
+      {
+        "parameter": "Shooting Time",
+        "value": 0.4219551248496315
+      },
+      {
+        "parameter": "Manifold Length",
+        "value": 0.15412170340677264
+      },
+      {
+        "parameter": "Final Fuel Mass",
+        "value": 0.0998284643623665
+      }
+    ],
+    "by_max_abs_error": [
+      {
+        "parameter": "Final Fuel Mass",
+        "value": 268.8851609751256
+      },
+      {
+        "parameter": "Shooting Time",
+        "value": 11.653320776121369
+      },
+      {
+        "parameter": "Final Coast",
+        "value": 9.66451415241475
+      },
+      {
+        "parameter": "Seg10_Beta",
+        "value": 6.282379549589017
+      },
+      {
+        "parameter": "Seg6_Beta",
+        "value": 6.281840826860638
+      },
+      {
+        "parameter": "Seg6_Alpha",
+        "value": 6.278847017568545
+      },
+      {
+        "parameter": "Seg19_Beta",
+        "value": 6.275184692126707
+      },
+      {
+        "parameter": "Seg1_Beta",
+        "value": 6.272275302802221
+      },
+      {
+        "parameter": "Seg5_Beta",
+        "value": 6.2713971997248095
+      },
+      {
+        "parameter": "Seg8_Beta",
+        "value": 6.271261566561655
+      },
+      {
+        "parameter": "Seg10_Alpha",
+        "value": 6.268731594085693
+      },
+      {
+        "parameter": "Seg7_Beta",
+        "value": 6.2664622387485664
+      },
+      {
+        "parameter": "Seg18_Alpha",
+        "value": 6.265625575800435
+      },
+      {
+        "parameter": "Seg20_Alpha",
+        "value": 6.2641041597919624
+      },
+      {
+        "parameter": "Seg16_Beta",
+        "value": 6.259683357794778
+      },
+      {
+        "parameter": "Seg15_Beta",
+        "value": 6.258560547848241
+      },
+      {
+        "parameter": "Seg2_Beta",
+        "value": 6.253708367511801
+      },
+      {
+        "parameter": "Seg15_Alpha",
+        "value": 6.246749289576904
+      },
+      {
+        "parameter": "Seg9_Beta",
+        "value": 6.235566132013695
+      },
+      {
+        "parameter": "Seg19_Alpha",
+        "value": 6.227392532145045
+      },
+      {
+        "parameter": "Seg2_Alpha",
+        "value": 6.224018869357918
+      },
+      {
+        "parameter": "Seg18_Beta",
+        "value": 6.217806604002611
+      },
+      {
+        "parameter": "Seg7_Alpha",
+        "value": 6.213833552096979
+      },
+      {
+        "parameter": "Seg4_Beta",
+        "value": 6.204264540468351
+      },
+      {
+        "parameter": "Seg17_Alpha",
+        "value": 6.196326007066262
+      },
+      {
+        "parameter": "Seg5_Alpha",
+        "value": 6.176151383911268
+      },
+      {
+        "parameter": "Seg3_Alpha",
+        "value": 6.175592843686239
+      },
+      {
+        "parameter": "Seg4_Alpha",
+        "value": 6.171763052413458
+      },
+      {
+        "parameter": "Seg14_Alpha",
+        "value": 6.144230563436643
+      },
+      {
+        "parameter": "Seg1_Alpha",
+        "value": 6.112177301782911
+      },
+      {
+        "parameter": "Seg9_Alpha",
+        "value": 6.105990518127577
+      },
+      {
+        "parameter": "Seg14_Beta",
+        "value": 6.104282727398965
+      },
+      {
+        "parameter": "Seg20_Beta",
+        "value": 6.0740375260459345
+      },
+      {
+        "parameter": "Seg11_Beta",
+        "value": 6.048373721048003
+      },
+      {
+        "parameter": "Seg13_Alpha",
+        "value": 6.005773050705405
+      },
+      {
+        "parameter": "Seg16_Alpha",
+        "value": 5.9770758501931
+      },
+      {
+        "parameter": "Seg3_Beta",
+        "value": 5.974613968526022
+      },
+      {
+        "parameter": "Seg12_Alpha",
+        "value": 5.957598726729999
+      },
+      {
+        "parameter": "Seg8_Alpha",
+        "value": 5.943557922040121
+      },
+      {
+        "parameter": "Seg17_Beta",
+        "value": 5.925826583300726
+      },
+      {
+        "parameter": "Seg11_Alpha",
+        "value": 5.806148698773853
+      },
+      {
+        "parameter": "Seg12_Beta",
+        "value": 5.628681111883311
+      },
+      {
+        "parameter": "Seg13_Beta",
+        "value": 5.391404873071416
+      },
+      {
+        "parameter": "Initial Coast",
+        "value": 4.906049806628134
+      },
+      {
+        "parameter": "Manifold Length",
+        "value": 3.3998761556662904
+      },
+      {
+        "parameter": "Halo Period",
+        "value": 1.4704458236459668
+      },
+      {
+        "parameter": "Seg16_Thrust",
+        "value": 0.9989887991687283
+      },
+      {
+        "parameter": "Seg13_Thrust",
+        "value": 0.996658205986023
+      },
+      {
+        "parameter": "Seg19_Thrust",
+        "value": 0.9933043173514307
+      },
+      {
+        "parameter": "Seg7_Thrust",
+        "value": 0.98962842073501
+      },
+      {
+        "parameter": "Seg20_Thrust",
+        "value": 0.9891529493033886
+      },
+      {
+        "parameter": "Seg17_Thrust",
+        "value": 0.9875999065116048
+      },
+      {
+        "parameter": "Seg1_Thrust",
+        "value": 0.9875814188271761
+      },
+      {
+        "parameter": "Seg6_Thrust",
+        "value": 0.9857306713238358
+      },
+      {
+        "parameter": "Seg11_Thrust",
+        "value": 0.9824405663849675
+      },
+      {
+        "parameter": "Seg12_Thrust",
+        "value": 0.980560939759016
+      },
+      {
+        "parameter": "Seg5_Thrust",
+        "value": 0.9750805888324976
+      },
+      {
+        "parameter": "Seg3_Thrust",
+        "value": 0.9737421274185181
+      },
+      {
+        "parameter": "Seg4_Thrust",
+        "value": 0.9707257021218538
+      },
+      {
+        "parameter": "Seg14_Thrust",
+        "value": 0.9696634768472737
+      },
+      {
+        "parameter": "Seg15_Thrust",
+        "value": 0.9667950868606567
+      },
+      {
+        "parameter": "Seg18_Thrust",
+        "value": 0.9640273594507864
+      },
+      {
+        "parameter": "Seg9_Thrust",
+        "value": 0.9607981443405151
+      },
+      {
+        "parameter": "Seg10_Thrust",
+        "value": 0.9399583276372783
+      },
+      {
+        "parameter": "Seg8_Thrust",
+        "value": 0.9334646463394165
+      },
+      {
+        "parameter": "Seg2_Thrust",
+        "value": 0.7754714628451668
+      }
+    ]
+  },
+  "category_deviations": {
+    "time_parameters": {
+      "mean_abs_error": 2.5613566575660536,
+      "mean_rel_error": 1.1224134176214515,
+      "parameters": [
+        "Shooting Time",
+        "Initial Coast",
+        "Final Coast"
+      ]
+    },
+    "control_parameters": {
+      "mean_abs_error": 1.5147979531772071,
+      "mean_rel_error": 905179764.3059288,
+      "parameters": [
+        "Seg1_Alpha",
+        "Seg1_Beta",
+        "Seg1_Thrust",
+        "Seg2_Alpha",
+        "Seg2_Beta",
+        "Seg2_Thrust",
+        "Seg3_Alpha",
+        "Seg3_Beta",
+        "Seg3_Thrust",
+        "Seg4_Alpha",
+        "Seg4_Beta",
+        "Seg4_Thrust",
+        "Seg5_Alpha",
+        "Seg5_Beta",
+        "Seg5_Thrust",
+        "Seg6_Alpha",
+        "Seg6_Beta",
+        "Seg6_Thrust",
+        "Seg7_Alpha",
+        "Seg7_Beta",
+        "Seg7_Thrust",
+        "Seg8_Alpha",
+        "Seg8_Beta",
+        "Seg8_Thrust",
+        "Seg9_Alpha",
+        "Seg9_Beta",
+        "Seg9_Thrust",
+        "Seg10_Alpha",
+        "Seg10_Beta",
+        "Seg10_Thrust",
+        "Seg11_Alpha",
+        "Seg11_Beta",
+        "Seg11_Thrust",
+        "Seg12_Alpha",
+        "Seg12_Beta",
+        "Seg12_Thrust",
+        "Seg13_Alpha",
+        "Seg13_Beta",
+        "Seg13_Thrust",
+        "Seg14_Alpha",
+        "Seg14_Beta",
+        "Seg14_Thrust",
+        "Seg15_Alpha",
+        "Seg15_Beta",
+        "Seg15_Thrust",
+        "Seg16_Alpha",
+        "Seg16_Beta",
+        "Seg16_Thrust",
+        "Seg17_Alpha",
+        "Seg17_Beta",
+        "Seg17_Thrust",
+        "Seg18_Alpha",
+        "Seg18_Beta",
+        "Seg18_Thrust",
+        "Seg19_Alpha",
+        "Seg19_Beta",
+        "Seg19_Thrust",
+        "Seg20_Alpha",
+        "Seg20_Beta",
+        "Seg20_Thrust"
+      ]
+    },
+    "final_parameters": {
+      "mean_abs_error": 8.635523359144981,
+      "mean_rel_error": 29648506.671592567,
+      "parameters": [
+        "Final Fuel Mass",
+        "Halo Period",
+        "Manifold Length"
+      ]
+    }
+  }
+}
