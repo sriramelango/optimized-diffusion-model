@@ -79,15 +79,32 @@ def get_sde_loss_fn(sde, train, reduce_mean=True, likelihood_weighting=True, eps
         t = torch.rand(batch.shape[0], device=batch.device) * (sde.T - eps) + eps
         z = torch.randn_like(batch)
         mean, std = sde.marginal_prob(batch, t)
-        perturbed_data = cube.reflect(mean + std[:, None, None, None] * z)
-        score = score_fn(perturbed_data, t, class_labels=class_labels)
-        score_hk = cube.score_hk(perturbed_data, mean, std)
-
-        if not likelihood_weighting:
-            losses = (std ** 2)[:, None, None, None] * (score - score_hk).pow(2)
-        else:
-            g2 = sde.sde(torch.zeros_like(batch), t)[1] ** 2
-            losses = g2[:, None, None, None] * (score - score_hk).pow(2)
+        
+        # Adaptive tensor reshaping based on batch dimensions
+        # For 1D sequences: batch shape is [B, C, L] -> use [:, None, None]
+        # For 2D images: batch shape is [B, C, H, W] -> use [:, None, None, None]
+        if len(batch.shape) == 3:  # 1D sequence data: [batch, channels, length]
+            std_expand = std[:, None, None]
+            perturbed_data = cube.reflect(mean + std_expand * z)
+            score = score_fn(perturbed_data, t, class_labels=class_labels)
+            score_hk = cube.score_hk(perturbed_data, mean, std)
+            
+            if not likelihood_weighting:
+                losses = (std ** 2)[:, None, None] * (score - score_hk).pow(2)
+            else:
+                g2 = sde.sde(torch.zeros_like(batch), t)[1] ** 2
+                losses = g2[:, None, None] * (score - score_hk).pow(2)
+        else:  # 2D image data: [batch, channels, height, width]
+            std_expand = std[:, None, None, None]
+            perturbed_data = cube.reflect(mean + std_expand * z)
+            score = score_fn(perturbed_data, t, class_labels=class_labels)
+            score_hk = cube.score_hk(perturbed_data, mean, std)
+            
+            if not likelihood_weighting:
+                losses = (std ** 2)[:, None, None, None] * (score - score_hk).pow(2)
+            else:
+                g2 = sde.sde(torch.zeros_like(batch), t)[1] ** 2
+                losses = g2[:, None, None, None] * (score - score_hk).pow(2)
 
         losses = reduce_op(losses.reshape(losses.shape[0], -1), dim=-1)
         loss = torch.mean(losses)

@@ -200,7 +200,14 @@ class ReflectedEulerMaruyamaPredictor(Predictor):
         z = torch.randn_like(x)
         drift, diffusion = self.rsde.sde(x, t)
         x_mean = x + drift * dt
-        x = x_mean + diffusion[:, None, None, None] * np.sqrt(-dt) * z
+        
+        # Adaptive tensor reshaping based on x dimensions
+        # For 1D sequences: x shape is [B, C, L] -> use [:, None, None]
+        # For 2D images: x shape is [B, C, H, W] -> use [:, None, None, None]
+        if len(x.shape) == 3:  # 1D sequence data
+            x = x_mean + diffusion[:, None, None] * np.sqrt(-dt) * z
+        else:  # 2D image data
+            x = x_mean + diffusion[:, None, None, None] * np.sqrt(-dt) * z
 
         x, x_mean = cube.reflect(x), cube.reflect(x_mean)
 
@@ -225,8 +232,16 @@ class ReflectedLangevinCorrector(Corrector):
             grad_norm = torch.norm(grad.reshape(grad.shape[0], -1), dim=-1).mean()
             noise_norm = torch.norm(noise.reshape(noise.shape[0], -1), dim=-1).mean()
             step_size = (target_snr * noise_norm / grad_norm) ** 2 * 2 * alpha
-            x_mean = x + step_size[:, None, None, None] * grad
-            x = x_mean + torch.sqrt(step_size * 2)[:, None, None, None] * noise
+            
+            # Adaptive tensor reshaping based on x dimensions
+            # For 1D sequences: x shape is [B, C, L] -> use [:, None, None]
+            # For 2D images: x shape is [B, C, H, W] -> use [:, None, None, None]
+            if len(x.shape) == 3:  # 1D sequence data
+                x_mean = x + step_size[:, None, None] * grad
+                x = x_mean + torch.sqrt(step_size * 2)[:, None, None] * noise
+            else:  # 2D image data
+                x_mean = x + step_size[:, None, None, None] * grad
+                x = x_mean + torch.sqrt(step_size * 2)[:, None, None, None] * noise
 
             x, x_mean = cube.reflect(x), cube.reflect(x_mean)
 

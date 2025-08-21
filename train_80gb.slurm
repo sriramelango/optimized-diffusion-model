@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=diffusion-80gb    # create a short name for your job
+#SBATCH --job-name=gto-1d-diffusion   # create a short name for your job
 #SBATCH --nodes=1                    # node count
 #SBATCH --ntasks=1                   # total number of tasks across all nodes
 #SBATCH --cpus-per-task=4            # cpu-cores per task (set to 4 for 4 DataLoader workers)
@@ -7,8 +7,8 @@
 #SBATCH --gres=gpu:1                 # number of gpus per node
 #SBATCH --constraint=gpu80            # use 80GB GPUs
 #SBATCH --time=48:00:00              # total run time limit (HH:MM:SS)
-#SBATCH --output=logs/diffusion-80gb-%j.out  # standard output log file
-#SBATCH --error=logs/diffusion-80gb-%j.err   # standard error log file
+#SBATCH --output=logs/gto-1d-diffusion-%j.out  # standard output log file
+#SBATCH --error=logs/gto-1d-diffusion-%j.err   # standard error log file
 #SBATCH --mail-type=begin            # send email when job begins
 #SBATCH --mail-type=end              # send email when job ends
 #SBATCH --mail-user=se7159@princeton.edu
@@ -23,8 +23,6 @@ conda activate diffusion-env
 # Print GPU info for debugging
 nvidia-smi
 
-# Run the training script from scratch (no checkpoint)
-cd Reflected-Diffusion && python run_train.py
+# Run the 1D GTO Halo training with optimized configuration
+cd Reflected-Diffusion && python run_train.py --config-name train_gto_1d
 
-# After training, plot the loss curve
-python plot_losses.py

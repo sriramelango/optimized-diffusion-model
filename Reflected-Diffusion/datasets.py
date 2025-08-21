@@ -237,6 +237,137 @@ class GTOHaloOptimalImageDataset(Dataset):
         
         return image_tensor, class_label_tensor
 
+class GTOHalo1DDataset(Dataset):
+    """
+    1D Dataset for GTO Halo trajectories using 3-channel spherical format.
+    
+    This dataset class transforms spherical trajectory data into 1D sequences with 3 channels
+    for use with the 1D U-Net diffusion model, preserving the exact structure used in the
+    original GTO Halo DM implementation but now with spherical coordinates for guaranteed
+    thrust magnitude constraint satisfaction.
+    
+    Data Format:
+    - Input: 67D vector [halo_energy, spherical_trajectory_params(66)]
+    - Output: [3, 22] tensor + halo_energy class label
+    
+    Channel Structure (3 channels × 22 sequence length):
+    - Channel 0: Time vars + Alpha angles (α) + Final fuel mass
+    - Channel 1: Time vars + Beta angles (β) + Halo period  
+    - Channel 2: Time vars + R magnitudes (r) + Manifold length
+    
+    Sequence Layout (22 positions):
+    [0]: Time variables (shooting_time, initial_coast, final_coast)
+    [1-20]: Spherical thrust segments (20 segments × 3 spherical coords: α, β, r each)
+    [21]: Final parameters (final_fuel_mass, halo_period, manifold_length)
+    
+    Key Advantage: Spherical representation guarantees thrust magnitude ≤ 1.0 without clipping!
+    """
+    
+    def __init__(self, pkl_path):
+        """
+        Initialize the 1D GTO Halo dataset.
+        
+        Args:
+            pkl_path (str): Path to the pickle file containing trajectory data
+        """
+        with open(pkl_path, 'rb') as f:
+            data = pickle.load(f)
+        
+        # Handle both old 67-dimensional format and new 3-channel format
+        if isinstance(data, np.ndarray) and len(data.shape) == 2 and data.shape[1] == 67:
+            # Old format: (batch_size, 67) where first column is halo energy
+            self.data = data.astype(np.float32)
+            self.is_old_format = True
+        else:
+            # New format: [halo_energy, 3_channel_data] for each sample
+            self.data = data
+            self.is_old_format = False
+    
+    def __len__(self):
+        """Return the number of samples in the dataset."""
+        return len(self.data)
+    
+    def restructure_to_3_channels_from_67(self, trajectory_params):
+        """
+        Convert 66-dimensional spherical trajectory parameters to 3-channel format.
+        
+        This method organizes the spherical dataset into 3 channels maintaining the exact
+        same structure as the original GTO Halo DM implementation, but now with spherical
+        coordinates (α, β, r) instead of Cartesian coordinates (ux, uy, uz).
+        
+        Args:
+            trajectory_params: Array of shape (66,) with spherical trajectory parameters
+                              - [0:3]: Time variables (shooting_time, initial_coast, final_coast)
+                              - [3:63]: Thrust spherical coords (20 segments × 3 coords: α, β, r)
+                              - [63:66]: Mass variables (final_fuel_mass, halo_period, manifold_length)
+        
+        Returns:
+            channels_data: Array of shape (3, 22) with 3-channel spherical data
+                          - Channel 0: Time vars + Alpha angles + Final fuel mass
+                          - Channel 1: Time vars + Beta angles + Halo period  
+                          - Channel 2: Time vars + R magnitudes + Manifold length
+        """
+        channels_data = np.zeros((3, 22))
+        
+        # Position 0: Time variables (3 parameters from indices [0:3])
+        channels_data[0, 0] = trajectory_params[0]  # shooting_time -> channel 0
+        channels_data[1, 0] = trajectory_params[1]  # initial_coast -> channel 1  
+        channels_data[2, 0] = trajectory_params[2]  # final_coast -> channel 2
+        
+        # Positions 1-20: Spherical thrust coordinates (60 parameters = 20 segments × 3 spherical coords)
+        # Each segment has 3 spherical components: (α, β, r)
+        for i in range(20):
+            # Each segment has 3 spherical coordinate components
+            segment_start = 3 + i * 3  # Start index for segment i in trajectory_params
+            
+            # Spherical coordinates: α (azimuthal), β (polar), r (magnitude)
+            alpha = trajectory_params[segment_start]     # α -> channel 0
+            beta = trajectory_params[segment_start + 1]  # β -> channel 1  
+            r = trajectory_params[segment_start + 2]     # r -> channel 2
+            
+            channels_data[0, i + 1] = alpha  # Alpha angles in channel 0
+            channels_data[1, i + 1] = beta   # Beta angles in channel 1
+            channels_data[2, i + 1] = r      # R magnitudes in channel 2
+        
+        # Position 21: Final parameters (3 parameters from indices [63:66])
+        channels_data[0, 21] = trajectory_params[63]  # final_fuel_mass -> channel 0
+        channels_data[1, 21] = trajectory_params[64]  # halo_period -> channel 1
+        channels_data[2, 21] = trajectory_params[65]  # manifold_length -> channel 2
+        
+        return channels_data
+    
+    def __getitem__(self, idx):
+        """
+        Get a single sample and convert to 1D 3-channel format.
+        
+        Args:
+            idx (int): Sample index
+            
+        Returns:
+            tuple: (sequence_tensor, class_label_tensor)
+                - sequence_tensor: torch.Tensor of shape (3, 22) containing the trajectory
+                - class_label_tensor: torch.Tensor of shape (1,) containing halo energy
+        """
+        if self.is_old_format:
+            # Old format: extract halo energy and trajectory parameters
+            vec = self.data[idx]
+            halo_energy = np.array([vec[0]], dtype=np.float32)
+            trajectory_params = vec[1:]
+            
+            # Restructure to 3-channel format
+            channels_data = self.restructure_to_3_channels_from_67(trajectory_params)
+        else:
+            # New format: directly extract components
+            sample = self.data[idx]
+            halo_energy = np.array([sample[0]], dtype=np.float32)
+            channels_data = sample[1]  # Already in (3, 22) format
+        
+        # Convert to tensors
+        sequence_tensor = torch.tensor(channels_data, dtype=torch.float32)
+        class_label_tensor = torch.tensor(halo_energy, dtype=torch.float32)
+        
+        return sequence_tensor, class_label_tensor
+
 def get_dataset(config, evaluation=False, distributed=True):
     
     dataroot = config.dataroot
@@ -288,6 +419,10 @@ def get_dataset(config, evaluation=False, distributed=True):
     elif config.data.dataset == "GTOHaloOptimalImage":
         train_set = GTOHaloOptimalImageDataset(config.data.pkl_path)
         test_set = GTOHaloOptimalImageDataset(config.data.pkl_path)
+        workers = 4
+    elif config.data.dataset == "GTOHalo1D":
+        train_set = GTOHalo1DDataset(config.data.pkl_path)
+        test_set = GTOHalo1DDataset(config.data.pkl_path)
         workers = 4
     else:
         raise ValueError(f"{config.data.dataset} is not valid")

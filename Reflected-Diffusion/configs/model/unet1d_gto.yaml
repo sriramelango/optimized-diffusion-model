@@ -1,0 +1,21 @@
+name: unet1d_gto
+dim: 128
+class_dim: 1
+seq_length: 22
+cond_drop_prob: 0.1
+mask_val: -1.0
+init_dim: null
+out_dim: null
+dim_mults: [4, 4, 8]
+embed_class_layers_dims: [128, 256, 512]
+channels: 3
+self_condition: false
+resnet_block_groups: 8
+learned_variance: false
+learned_sinusoidal_cond: true
+random_fourier_features: false
+learned_sinusoidal_dim: 16
+sinusoidal_pos_emb_theta: 10000
+attn_dim_head: 32
+attn_heads: 8
+ema_rate: 0.9999  # Exponential moving average rate for model weights

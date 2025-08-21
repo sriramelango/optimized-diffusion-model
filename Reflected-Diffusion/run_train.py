@@ -119,12 +119,18 @@ def _run(rank, world_size, work_dir, cfg, checkpoint_path=None):
                                       reduce_mean=reduce_mean, 
                                       likelihood_weighting=likelihood_weighting)
 
-    # Build samping functions
+    # Build sampling functions
     if cfg.training.snapshot_sampling:
-        sampling_shape = (cfg.training.batch_size // cfg.ngpus, 
-                          cfg.data.num_channels,
-                          cfg.data.image_size, 
-                          cfg.data.image_size)
+        # Adaptive sampling shape based on data type
+        if hasattr(cfg.data, 'sequence_length'):  # 1D sequence data
+            sampling_shape = (cfg.training.batch_size // cfg.ngpus, 
+                              cfg.data.num_channels,
+                              cfg.data.sequence_length)
+        else:  # 2D image data
+            sampling_shape = (cfg.training.batch_size // cfg.ngpus, 
+                              cfg.data.num_channels,
+                              cfg.data.image_size, 
+                              cfg.data.image_size)
         sampling_fn = sampling.get_sampling_fn(
             cfg, sde, sampling_shape, sampling_eps, device)
 
@@ -183,11 +189,17 @@ def _run(rank, world_size, work_dir, cfg, checkpoint_path=None):
 
                 this_sample_dir = os.path.join(sample_dir, "iter_{}".format(step))
                 utils.makedirs(this_sample_dir)
-                nrow = int(np.sqrt(sample.shape[0]))
-                image_grid = make_grid(sample, nrow, padding=2)
-                sample = np.clip(np.round(sample.permute(0, 2, 3, 1).cpu().numpy() * 255), 0, 255).astype(np.uint8)
-                np.save(os.path.join(this_sample_dir, f"sample_{rank}"), sample)
-                save_image(image_grid, os.path.join(this_sample_dir, f"sample_{rank}.png"))
+                # Save samples based on data type
+                if len(sample.shape) == 3:  # 1D sequence data: [batch, channels, length]
+                    # Save as raw numpy array for 1D sequences
+                    sample_np = sample.cpu().numpy()
+                    np.save(os.path.join(this_sample_dir, f"sample_{rank}"), sample_np)
+                else:  # 2D image data: [batch, channels, height, width]
+                    nrow = int(np.sqrt(sample.shape[0]))
+                    image_grid = make_grid(sample, nrow, padding=2)
+                    sample = np.clip(np.round(sample.permute(0, 2, 3, 1).cpu().numpy() * 255), 0, 255).astype(np.uint8)
+                    np.save(os.path.join(this_sample_dir, f"sample_{rank}"), sample)
+                    save_image(image_grid, os.path.join(this_sample_dir, f"sample_{rank}.png"))
                 dist.barrier()
 
 
@@ -241,7 +253,11 @@ def _run_single(cfg, work_dir, checkpoint_path=None):
     train_step_fn = losses.get_step_fn(sde, train=True, optimize_fn=optimize_fn, reduce_mean=reduce_mean, likelihood_weighting=likelihood_weighting)
     eval_step_fn = losses.get_step_fn(sde, train=False, optimize_fn=optimize_fn, reduce_mean=reduce_mean, likelihood_weighting=likelihood_weighting)
     if cfg.training.snapshot_sampling:
-        sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.image_size, cfg.data.image_size)
+        # Adaptive sampling shape based on data type
+        if hasattr(cfg.data, 'sequence_length'):  # 1D sequence data
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.sequence_length)
+        else:  # 2D image data
+            sampling_shape = (cfg.training.batch_size, cfg.data.num_channels, cfg.data.image_size, cfg.data.image_size)
         sampling_fn = sampling.get_sampling_fn(cfg, sde, sampling_shape, sampling_eps, device)
     num_train_steps = cfg.training.n_iters
     mprint(f"Starting training loop at step {initial_step}.")

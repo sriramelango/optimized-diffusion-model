@@ -1,0 +1,11 @@
+dataset: GTOHalo1D
+pkl_path: ../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl
+num_channels: 3
+sequence_length: 22  # Length of 1D sequence
+classes: true 
+ngpus: 1
+# Spherical dataset configuration
+# Data contains spherical coordinates (α, β, r) for thrust components
+# Channel 0: Time variables + Alpha angles + Final fuel mass
+# Channel 1: Time variables + Beta angles + Halo period
+# Channel 2: Time variables + R magnitudes + Manifold length
