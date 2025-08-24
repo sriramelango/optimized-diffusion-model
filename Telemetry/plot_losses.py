@@ -6,7 +6,7 @@ import glob
 
 def find_latest_log():
     """Find the most recent error file in the logs directory."""
-    log_pattern = "logs/diffusion-*.err"
+    log_pattern = "logs/*diffusion*.err"
     log_files = glob.glob(log_pattern)
     if not log_files:
         return None
