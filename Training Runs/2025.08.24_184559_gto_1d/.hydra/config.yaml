@@ -1,0 +1,82 @@
+model:
+  name: unet1d_gto
+  dim: 128
+  class_dim: 1
+  seq_length: 22
+  cond_drop_prob: 0.1
+  mask_val: -1.0
+  init_dim: null
+  out_dim: null
+  dim_mults:
+  - 4
+  - 4
+  - 8
+  embed_class_layers_dims:
+  - 128
+  - 256
+  - 512
+  channels: 3
+  self_condition: false
+  resnet_block_groups: 8
+  learned_variance: false
+  learned_sinusoidal_cond: true
+  random_fourier_features: false
+  learned_sinusoidal_dim: 16
+  sinusoidal_pos_emb_theta: 10000
+  attn_dim_head: 32
+  attn_heads: 8
+  ema_rate: 0.9999
+data:
+  dataset: GTOHalo1D
+  pkl_path: ../GTO_Halo_DM/data/training_data_boundary_100000_spherical.pkl
+  num_channels: 3
+  sequence_length: 22
+  classes: true
+  ngpus: 1
+ngpus: 1
+dataroot: datasets
+training:
+  batch_size: 2000
+  n_iters: 400000
+  continuous: true
+  likelihood_weighting: false
+  reduce_mean: true
+  snapshot_freq: 500
+  snapshot_freq_for_preemption: 10000
+  log_freq: 50
+  eval_freq: 500
+  snapshot_sampling: true
+  drop_label: 0.1
+optim:
+  weight_decay: 0
+  optimizer: Adam
+  lr: 0.0002
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+  warmup: 5000
+  grad_clip: 1.0
+eval:
+  batch_size: 2000
+  num_samples: 10000
+  begin_ckpt: 1
+  end_ckpt: 8
+sde:
+  name: vesde
+  sigma_min: 0.01
+  sigma_max: 50
+  num_scales: 500
+sampling:
+  method: pc
+  predictor: euler_maruyama
+  corrector: none
+  denoiser: none
+  n_steps_each: 1
+  noise_removal: true
+  probability_flow: false
+  snr: 0.005
+  guidance_scale: 1.5
+seed: 42
+device: cuda
+checkpointing: true
+checkpoint_path: null
