@@ -18,7 +18,7 @@ training:
   reduce_mean: true
   snapshot_freq: 500
   snapshot_freq_for_preemption: 10000  # Checkpoint for preemption every 1000 steps
-  log_freq: 50
+  log_freq: 1
   eval_freq: 500
   snapshot_sampling: true
   drop_label: 0.1   # Original cond_drop_prob from GTO Halo DM

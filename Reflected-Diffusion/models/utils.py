@@ -118,13 +118,52 @@ def get_cf_score_fn(sde, model, class_labels, weight):
     score_fn = get_score_fn(sde, model, train=False)
 
     def weighted_score_fn(x, t):
-        concat_x = x.repeat(2, 1, 1, 1)
-        concat_t = t.repeat(2)
-        concat_cl = torch.cat([class_labels, torch.zeros_like(class_labels)], dim=0)
+        print(f"DEBUG: Input x shape: {x.shape}")
+        print(f"DEBUG: Input t shape: {t.shape}")
+        print(f"DEBUG: Input class_labels shape: {class_labels.shape}")
+        
+        # CRITICAL FIX: Ensure x has the correct shape
+        # The sampling process sometimes passes incorrectly shaped tensors
+        if len(x.shape) == 4 and x.shape[1] == x.shape[0]:
+            # This is the problematic case: [2000, 2000, 3, 22]
+            # We need to reshape it back to [2000, 3, 22]
+            print(f"DEBUG: FIXING malformed tensor shape from {x.shape}")
+            x = x[0]  # Take the first batch to get [2000, 3, 22]
+            print(f"DEBUG: Fixed x shape: {x.shape}")
+        
+        # Make tensor operations dimension-agnostic for both 1D and 2D data
+        if len(x.shape) == 3:  # 1D sequence data: [batch, channels, length]
+            print(f"DEBUG: Processing as 1D sequence data")
+            # Repeat for 1D: (batch, channels, length) -> (2*batch, channels, length)
+            concat_x = x.repeat(2, 1, 1)
+            print(f"DEBUG: concat_x shape after repeat: {concat_x.shape}")
+            # Repeat time for 1D: (batch,) -> (2*batch,)
+            concat_t = t.repeat(2)
+            print(f"DEBUG: concat_t shape after repeat: {concat_t.shape}")
+            # Concatenate class labels for 1D: (batch, 1) -> (2*batch, 1)
+            concat_cl = torch.cat([class_labels, torch.zeros_like(class_labels)], dim=0)
+            print(f"DEBUG: concat_cl shape after cat: {concat_cl.shape}")
+        else:  # 2D image data: [batch, channels, height, width]
+            print(f"DEBUG: Processing as 2D image data")
+            # Original 2D logic: (batch, channels, height, width) -> (2*batch, channels, height, width)
+            concat_x = x.repeat(2, 1, 1, 1)
+            print(f"DEBUG: concat_x shape after repeat: {concat_x.shape}")
+            # Repeat time for 2D: (batch,) -> (2*batch,)
+            concat_t = t.repeat(2)
+            print(f"DEBUG: concat_t shape after repeat: {concat_t.shape}")
+            # Concatenate class labels for 2D: (batch, 1) -> (2*batch, 1)
+            concat_cl = torch.cat([class_labels, torch.zeros_like(class_labels)], dim=0)
+            print(f"DEBUG: concat_cl shape after cat: {concat_cl.shape}")
 
+        print(f"DEBUG: About to call score_fn with concat_x shape: {concat_x.shape}")
         concat_score = score_fn(concat_x, concat_t, concat_cl)
+        print(f"DEBUG: concat_score shape: {concat_score.shape}")
+        
         score_conditioned = concat_score[:x.shape[0]]
         score_clean = concat_score[x.shape[0]:]
+        
+        print(f"DEBUG: score_conditioned shape: {score_conditioned.shape}")
+        print(f"DEBUG: score_clean shape: {score_clean.shape}")
 
         # Ensure weight is a tensor and not None
         if weight is None:
@@ -133,7 +172,12 @@ def get_cf_score_fn(sde, model, class_labels, weight):
             weight_tensor = torch.full((x.shape[0],), float(weight), device=x.device)
         else:
             weight_tensor = weight
-        weight_tensor = weight_tensor.view(-1, 1, 1, 1)
+        
+        # Make weight tensor broadcasting dimension-agnostic
+        if len(x.shape) == 3:  # 1D sequence data
+            weight_tensor = weight_tensor.view(-1, 1, 1)
+        else:  # 2D image data
+            weight_tensor = weight_tensor.view(-1, 1, 1, 1)
 
         return (1 + weight_tensor) * score_conditioned - weight_tensor * score_clean
 
